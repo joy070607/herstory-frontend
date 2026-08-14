@@ -1,6 +1,1 @@
-중앙 filter=lfs diff=lfs merge=lfs -text
-해커톤herstory-frontendnode_modules filter=lfs diff=lfs merge=lfs -text
-C:Usersjg758OneDrive바탕 filter=lfs diff=lfs merge=lfs -text
-화면1_작업 filter=lfs diff=lfs merge=lfs -text
-결과물3_협업 filter=lfs diff=lfs merge=lfs -text
-프로젝트멋사 filter=lfs diff=lfs merge=lfs -text
+* text=auto eol=lf
