@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { CheckInResponse } from "@/types/api.types";
+import { ROUTES } from "@/constants/routes";
 
 export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
   return (
@@ -15,6 +17,14 @@ export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
       <span className="text-xs text-neutral-400">
         {checkIn.checkInType} · {checkIn.checkInStatus}
       </span>
+      {checkIn.choiceFitRequested && (
+        <Link
+          href={`${ROUTES.choiceFitPreview}?memberId=${checkIn.memberId}`}
+          className="mt-2 self-start rounded-full bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white"
+        >
+          피팅 상품 준비하기
+        </Link>
+      )}
     </div>
   );
 }
