@@ -1,7 +1,6 @@
+import { redirect } from "next/navigation";
+import { ROUTES } from "@/constants/routes";
+
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold">herstory-frontend</h1>
-    </main>
-  );
+  redirect(ROUTES.login);
 }
