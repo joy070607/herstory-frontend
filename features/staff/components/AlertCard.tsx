@@ -33,6 +33,7 @@ export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
           </span>
           <p className="text-sm text-neutral-900">{reEntry.recommendedAction}</p>
         </div>
+      )}
       {checkIn.choiceFitRequested && (
         <Link
           href={`${ROUTES.choiceFitPreview}?memberId=${checkIn.memberId}`}
