@@ -2,10 +2,12 @@ import { apiClient } from "./client";
 import type {
   CheckInRequest,
   CheckInResponse,
+  CheckoutRequest,
   HealthCheckResponse,
   Journey,
   LoginResponseDto,
   Member,
+  OrderResponse,
   Product,
   ReEntryResponse,
 } from "@/types/api.types";
@@ -67,12 +69,16 @@ export const storeApi = {
   notificationStreamUrl: () => `${apiClient.defaults.baseURL}/store/notifications/stream`,
 };
 
-// VIP 피팅 / 결제는 아직 실제 엔드포인트로 맞추지 않은 자리표시자입니다.
+// VIP 피팅은 아직 실제 엔드포인트로 맞추지 않은 자리표시자입니다.
 export const airportApi = {
   startFitting: (journeyId: string) =>
     apiClient.post(`/airport/${journeyId}/fitting`),
-  checkout: (journeyId: string) =>
-    apiClient.post(`/airport/${journeyId}/checkout`),
+};
+
+// 면세 한도 할인 계산 & Fast Checkout 수령 처리 (현장 즉시 착장 수령 및 결제 처리 시 호출)
+export const orderApi = {
+  checkout: (payload: CheckoutRequest) =>
+    apiClient.post<OrderResponse>("/order/checkout", payload).then((res) => res.data),
 };
 
 export const postflightApi = {

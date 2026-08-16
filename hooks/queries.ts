@@ -3,11 +3,12 @@ import {
   cartApi,
   healthApi,
   journeyApi,
+  orderApi,
   postflightApi,
   storeApi,
   styleApi,
 } from "@/api/endpoints";
-import type { CheckInRequest } from "@/types/api.types";
+import type { CheckInRequest, CheckoutRequest } from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
@@ -82,6 +83,15 @@ export function useReEntryOptions(memberId: number | null) {
     queryKey: queryKeys.reEntryOptions(memberId ?? 0),
     queryFn: () => storeApi.getReEntryOptions(memberId as number),
     enabled: memberId != null,
+  });
+}
+
+export function useCheckout(journeyId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CheckoutRequest) => orderApi.checkout(payload),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart(journeyId) }),
   });
 }
 

@@ -10,10 +10,10 @@ export const ROUTES = {
   popupSpot: "/popup",
   smartCart: "/cart",
 
-  autoCheckIn: "/airport/check-in",
-  vipFitting: "/airport/fitting",
-  fastCheckout: "/airport/checkout",
-  reEntry: "/airport/re-entry",
+  autoCheckIn: "/check-in",
+  vipFitting: "/fitting",
+  fastCheckout: "/checkout",
+  reEntry: "/re-entry",
 
   leatherCare: "/care",
   visetosMap: "/map",
