@@ -75,3 +75,29 @@ export interface ReEntryResponse {
   recommendedAction: string;
   availableOptions: string[];
 }
+
+// 실제 API 스키마 그대로 (POST /api/v1/order/checkout)
+export interface CheckoutRequest {
+  memberId: number;
+  journeyId: number;
+}
+
+export interface OrderItemDetail {
+  productId: number;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderResponse {
+  orderId: number;
+  memberId: number;
+  journeyId: number;
+  totalAmount: number;
+  dutyFreeDiscount: number;
+  finalAmount: number;
+  earnedMiles: number;
+  orderStatus: string;
+  items: OrderItemDetail[];
+  createdAt: string;
+}
