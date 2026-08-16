@@ -20,6 +20,7 @@ export const ROUTES = {
   nomadMiles: "/miles",
 
   staffTablet: "/staff",
+  choiceFitPreview: "/staff/choice-fit",
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

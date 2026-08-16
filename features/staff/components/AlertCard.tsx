@@ -1,5 +1,7 @@
+import Link from "next/link";
 import type { CheckInResponse } from "@/types/api.types";
 import { useReEntryOptions } from "@/hooks/queries";
+import { ROUTES } from "@/constants/routes";
 
 export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
   const isPendingReEntry = checkIn.purchaseStatus === "PENDING_REENTRY";
@@ -16,6 +18,11 @@ export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
         </span>
       </div>
       <p className="text-sm text-neutral-600">{checkIn.welcomeCouponMessage}</p>
+      {checkIn.choiceFitRequested && (
+        <span className="w-fit rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">
+          피팅 신청
+        </span>
+      )}
       <span className="text-xs text-neutral-400">
         {checkIn.checkInType} · {checkIn.checkInStatus}
       </span>
@@ -26,6 +33,13 @@ export function AlertCard({ checkIn }: { checkIn: CheckInResponse }) {
           </span>
           <p className="text-sm text-neutral-900">{reEntry.recommendedAction}</p>
         </div>
+      {checkIn.choiceFitRequested && (
+        <Link
+          href={`${ROUTES.choiceFitPreview}?memberId=${checkIn.memberId}`}
+          className="mt-2 self-start rounded-full bg-neutral-900 px-4 py-1.5 text-xs font-medium text-white"
+        >
+          피팅 상품 준비하기
+        </Link>
       )}
     </div>
   );
