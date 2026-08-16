@@ -2,12 +2,14 @@
 
 import { useNotificationStream } from "@/features/staff/hooks/useNotificationStream";
 import { AlertCard } from "@/features/staff/components/AlertCard";
+import { CheckInPopup } from "@/features/staff/components/CheckInPopup";
 
 export function StaffTabletPage() {
-  const { alerts, isConnected } = useNotificationStream();
+  const { alerts, isConnected, popupAlert, dismissPopup } = useNotificationStream();
 
   return (
     <div className="flex flex-1 flex-col gap-4 px-6 py-8">
+      {popupAlert && <CheckInPopup checkIn={popupAlert} onDismiss={dismissPopup} />}
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold">Staff Tablet</h1>
         <span
