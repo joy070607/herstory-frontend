@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/endpoints";
 import { useAuthStore } from "@/store/authStore";
 import { ROUTES } from "@/constants/routes";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
-import logoFull from "@/public/logo/logo-full.png";
+import { Logo } from "@/components/Logo";
 
 export function LoginPage() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export function LoginPage() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-col items-center bg-sky-50 pb-9 pt-16">
-        <Image src={logoFull} alt="Her-Story" className="h-auto w-56" priority />
+        <Logo variant="full" className="w-56" />
       </div>
 
       <form
@@ -123,7 +123,9 @@ export function LoginPage() {
           </button>
           <p className="text-sm">
             <span className="text-neutral-400">계정이 없으신가요? </span>
-            <span className="text-sky-700">회원가입하기</span>
+            <Link href={ROUTES.signup} className="text-sky-700">
+              회원가입하기
+            </Link>
           </p>
         </div>
       </form>
