@@ -16,18 +16,25 @@ export const healthApi = {
   check: () => apiClient.get<HealthCheckResponse>("/health"),
 };
 
+function toMember(dto: LoginResponseDto): Member {
+  return {
+    id: String(dto.memberId),
+    name: dto.name,
+    email: dto.email,
+    vipTier: dto.vipTier,
+    nomadMiles: dto.nomadMiles,
+  };
+}
+
 export const authApi = {
-  // 이메일 + 이름으로 로그인하며, 신규 이메일이면 자동으로 회원 등록됩니다.
-  login: (payload: { email: string; name: string }) =>
-    apiClient.post<LoginResponseDto>("/auth/login", payload).then(
-      (res): Member => ({
-        id: String(res.data.memberId),
-        name: res.data.name,
-        email: res.data.email,
-        vipTier: res.data.vipTier,
-        nomadMiles: res.data.nomadMiles,
-      })
-    ),
+  login: (payload: { email: string; password: string }) =>
+    apiClient
+      .post<LoginResponseDto>("/auth/login", payload)
+      .then((res) => toMember(res.data)),
+  register: (payload: { email: string; password: string; name: string; phone: string }) =>
+    apiClient
+      .post<LoginResponseDto>("/auth/register", payload)
+      .then((res) => toMember(res.data)),
 };
 
 export const preflightApi = {
