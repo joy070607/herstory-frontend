@@ -31,7 +31,6 @@ export function LoginPage() {
         loginMutation.mutate();
       }}
     >
-      <h1 className="text-xl font-semibold">HERSTORY</h1>
       <Field
         id="email"
         label="Email"
