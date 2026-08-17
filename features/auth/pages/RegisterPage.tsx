@@ -26,6 +26,51 @@ interface Terms {
 
 const REQUIRED_TERMS: (keyof Terms)[] = ["age", "service", "privacy"];
 
+type ViewableTerm = "service" | "privacy" | "marketing";
+
+const TERMS_CONTENT: Record<ViewableTerm, { title: string; body: string }> = {
+  service: {
+    title: "서비스 이용약관",
+    body: `제1조 (목적)
+이 약관은 HER-STORY(이하 "회사")가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+
+제2조 (회원가입)
+회원가입은 이용자가 약관 내용에 동의하고 회사가 정한 가입 양식에 따라 회원정보를 기입한 후 가입을 신청하면, 회사가 이를 승낙함으로써 체결됩니다.
+
+제3조 (서비스의 제공)
+회사는 공항 라운지 안내, 여정 관리, 상품 추천 등의 서비스를 회원에게 제공하며, 서비스의 내용은 회사 사정에 따라 변경될 수 있습니다.
+
+제4조 (회원의 의무)
+회원은 관계 법령과 이 약관의 규정을 준수해야 하며, 타인의 정보를 도용하거나 회사의 서비스 운영을 방해해서는 안 됩니다.`,
+  },
+  privacy: {
+    title: "개인정보 수집 및 이용 동의",
+    body: `1. 수집 항목
+이름, 이메일 주소, 휴대전화번호, 비밀번호
+
+2. 수집 목적
+회원 가입 및 본인 확인, 서비스 제공 및 상담, 부정 이용 방지
+
+3. 보유 및 이용 기간
+회원 탈퇴 시까지 보유하며, 관계 법령에 따라 보존이 필요한 경우 해당 기간 동안 보관합니다.
+
+4. 동의 거부 권리 안내
+회원은 개인정보 수집·이용에 대한 동의를 거부할 권리가 있으며, 다만 필수 항목에 동의하지 않을 경우 서비스 이용에 제한이 있을 수 있습니다.`,
+  },
+  marketing: {
+    title: "마케팅 정보 수신 동의",
+    body: `1. 수신 목적
+이벤트 및 프로모션 안내, 신규 서비스 소식, 맞춤형 혜택 정보 제공
+
+2. 수신 방법
+이메일, 앱 푸시 알림
+
+3. 동의는 선택 사항이며, 동의하지 않아도 서비스 이용에 제한이 없습니다.
+
+4. 동의 이후에도 마이페이지 또는 설정 메뉴에서 언제든지 수신을 거부할 수 있습니다.`,
+  },
+};
+
 function SquareCheckbox({
   checked,
   onChange,
@@ -71,6 +116,7 @@ export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [activeTerm, setActiveTerm] = useState<ViewableTerm | null>(null);
   const [terms, setTerms] = useState<Terms>({
     age: false,
     service: false,
@@ -259,7 +305,13 @@ export function RegisterPage() {
                 />
                 <span className="text-sm text-neutral-900">서비스 이용약관 동의 (필수)</span>
               </label>
-              <span className="text-sm text-neutral-900 underline">내용보기</span>
+              <button
+                type="button"
+                onClick={() => setActiveTerm("service")}
+                className="text-sm text-neutral-900 underline"
+              >
+                내용보기
+              </button>
             </div>
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2.5">
@@ -269,7 +321,13 @@ export function RegisterPage() {
                 />
                 <span className="text-sm text-neutral-900">개인정보 수집 및 이용 동의 (필수)</span>
               </label>
-              <span className="text-sm text-neutral-900 underline">내용보기</span>
+              <button
+                type="button"
+                onClick={() => setActiveTerm("privacy")}
+                className="text-sm text-neutral-900 underline"
+              >
+                내용보기
+              </button>
             </div>
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2.5">
@@ -279,7 +337,13 @@ export function RegisterPage() {
                 />
                 <span className="text-sm text-neutral-900">마케팅 수신 동의 (선택)</span>
               </label>
-              <span className="text-sm text-neutral-900 underline">내용보기</span>
+              <button
+                type="button"
+                onClick={() => setActiveTerm("marketing")}
+                className="text-sm text-neutral-900 underline"
+              >
+                내용보기
+              </button>
             </div>
           </div>
         </div>
@@ -300,6 +364,35 @@ export function RegisterPage() {
           뒤로가기
         </Link>
       </form>
+
+      {activeTerm && (
+        <div
+          className="fixed inset-0 z-50 mx-auto flex max-w-md flex-col justify-end bg-black/40"
+          onClick={() => setActiveTerm(null)}
+        >
+          <div
+            className="max-h-[70vh] overflow-y-auto rounded-t-2xl bg-white p-6 pb-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-neutral-900">
+                {TERMS_CONTENT[activeTerm].title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setActiveTerm(null)}
+                aria-label="닫기"
+                className="text-neutral-400"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="whitespace-pre-line text-sm leading-relaxed text-neutral-600">
+              {TERMS_CONTENT[activeTerm].body}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
