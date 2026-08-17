@@ -9,7 +9,7 @@ import { BottomNav } from "@/components/layout/BottomNav";
 export function JourneyTimelinePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: journey } = useJourney(journeyId);
-  const { hours, minutes, seconds } = useCountdown(journey?.departureAt ?? null);
+  const { hours, minutes, seconds } = useCountdown(journey?.departureDateTime ?? null);
 
   return (
     <div className="flex flex-1 flex-col">

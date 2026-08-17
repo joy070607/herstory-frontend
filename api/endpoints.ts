@@ -5,6 +5,8 @@ import type {
   CheckoutRequest,
   HealthCheckResponse,
   Journey,
+  JourneyScanRequest,
+  JourneyScanResponse,
   LoginResponseDto,
   Member,
   OrderResponse,
@@ -17,8 +19,7 @@ export const healthApi = {
 };
 
 export const authApi = {
-  // 이메일 + 이름으로 로그인하며, 신규 이메일이면 자동으로 회원 등록됩니다.
-  login: (payload: { email: string; name: string }) =>
+  login: (payload: { email: string; password: string }) =>
     apiClient.post<LoginResponseDto>("/auth/login", payload).then(
       (res): Member => ({
         id: String(res.data.memberId),
@@ -39,6 +40,8 @@ export const preflightApi = {
 
 export const journeyApi = {
   get: (journeyId: string) => apiClient.get<Journey>(`/journeys/${journeyId}`),
+  scan: (payload: JourneyScanRequest) =>
+    apiClient.post<JourneyScanResponse>("/journey/scan", payload),
   createBoardingPass: (journeyId: string) =>
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>

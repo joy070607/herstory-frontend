@@ -8,7 +8,7 @@ import {
   storeApi,
   styleApi,
 } from "@/api/endpoints";
-import type { CheckInRequest, CheckoutRequest } from "@/types/api.types";
+import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
@@ -33,6 +33,13 @@ export function useJourney(journeyId: string | null) {
     queryKey: queryKeys.journey(journeyId ?? ""),
     queryFn: () => journeyApi.get(journeyId as string).then((res) => res.data),
     enabled: Boolean(journeyId),
+  });
+}
+
+export function useScanJourney() {
+  return useMutation({
+    mutationFn: (payload: JourneyScanRequest) =>
+      journeyApi.scan(payload).then((res) => res.data),
   });
 }
 

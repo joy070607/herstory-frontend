@@ -13,10 +13,10 @@ export function LoginPage() {
   const router = useRouter();
   const setMember = useAuthStore((state) => state.setMember);
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
-    mutationFn: () => authApi.login({ email, name }),
+    mutationFn: () => authApi.login({ email, password }),
     onSuccess: (member) => {
       setMember(member);
       router.push(ROUTES.hub);
@@ -40,11 +40,11 @@ export function LoginPage() {
         required
       />
       <Field
-        id="name"
-        label="Name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        id="password"
+        label="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         required
       />
       {loginMutation.isError && (
