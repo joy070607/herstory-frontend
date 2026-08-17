@@ -3,7 +3,7 @@ import { ROUTES } from "./routes";
 export const SCREENS = {
   "SCR-001": { name: "LoginPage", route: ROUTES.login },
 
-  "SCR-101": { name: "NomadHubPage", route: ROUTES.hub },
+  "SCR-101": { name: "HomePage", route: ROUTES.home },
   "SCR-102": { name: "LiveCardPage", route: ROUTES.liveCard },
   "SCR-201": { name: "BoardingPassPage", route: ROUTES.boardingPass },
   "SCR-202": { name: "JourneyTimelinePage", route: ROUTES.journeyTimeline },

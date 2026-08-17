@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
 
 const NAV_ITEMS = [
-  { label: "Hub", href: ROUTES.hub },
+  { label: "Home", href: ROUTES.home },
   { label: "Journey", href: ROUTES.journeyTimeline },
   { label: "Cart", href: ROUTES.smartCart },
   { label: "Miles", href: ROUTES.nomadMiles },

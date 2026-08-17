@@ -1,7 +1,7 @@
 export const ROUTES = {
   login: "/login",
 
-  hub: "/hub",
+  home: "/home",
   liveCard: "/live-card",
   boardingPass: "/boarding-pass",
   journeyTimeline: "/journey",
