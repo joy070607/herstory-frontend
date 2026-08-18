@@ -1,0 +1,112 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  cartApi,
+  healthApi,
+  journeyApi,
+  orderApi,
+  postflightApi,
+  storeApi,
+  styleApi,
+} from "@/api/endpoints";
+import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
+
+export const queryKeys = {
+  health: ["health"] as const,
+  journey: (journeyId: string) => ["journey", journeyId] as const,
+  styleRecommendations: (journeyId: string) =>
+    ["style", "recommendations", journeyId] as const,
+  cart: (journeyId: string) => ["cart", journeyId] as const,
+  nomadMiles: (memberId: string) => ["postflight", "miles", memberId] as const,
+  reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
+};
+
+export function useHealthCheck() {
+  return useQuery({
+    queryKey: queryKeys.health,
+    queryFn: () => healthApi.check().then((res) => res.data),
+    retry: false,
+  });
+}
+
+export function useJourney(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.journey(journeyId ?? ""),
+    queryFn: () => journeyApi.get(journeyId as string).then((res) => res.data),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useScanJourney() {
+  return useMutation({
+    mutationFn: (payload: JourneyScanRequest) =>
+      journeyApi.scan(payload).then((res) => res.data),
+  });
+}
+
+export function useSubmitChoiceFit(journeyId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (choiceFit: boolean) =>
+      journeyApi.submitChoiceFit(journeyId, choiceFit),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.journey(journeyId) }),
+  });
+}
+
+export function useStyleRecommendations(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.styleRecommendations(journeyId ?? ""),
+    queryFn: () =>
+      styleApi.getRecommendations(journeyId as string).then((res) => res.data),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useCart(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.cart(journeyId ?? ""),
+    queryFn: () => cartApi.get(journeyId as string).then((res) => res.data),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useAddToCart(journeyId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (productId: string) => cartApi.addItem(journeyId, productId),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart(journeyId) }),
+  });
+}
+
+export function useCheckIn() {
+  return useMutation({
+    mutationFn: (payload: CheckInRequest) => storeApi.checkIn(payload),
+  });
+}
+
+export function useReEntryOptions(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.reEntryOptions(memberId ?? 0),
+    queryFn: () => storeApi.getReEntryOptions(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useCheckout(journeyId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CheckoutRequest) => orderApi.checkout(payload),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart(journeyId) }),
+  });
+}
+
+export function useNomadMiles(memberId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.nomadMiles(memberId ?? ""),
+    queryFn: () =>
+      postflightApi.getNomadMiles(memberId as string).then((res) => res.data),
+    enabled: Boolean(memberId),
+  });
+}
