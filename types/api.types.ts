@@ -20,16 +20,41 @@ export interface LoginResponseDto {
   message?: string;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/journeys/{journeyId})
 export interface Journey {
-  journeyId: string;
-  memberId: string;
-  choiceFit: boolean;
-  purchaseStatus: PurchaseStatus;
-  departureAt: string;
-  lang: "ko" | "en" | "ja" | "zh";
+  journeyId: number;
+  memberId: number;
+  memberName: string;
+  pnr: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  flightStatus: FlightStatus;
+  destinationWeather: string;
+  recommendationReason: string;
 }
 
+export type FlightStatus = "SCHEDULED" | "BOARDING" | "COMPLETED" | "CANCELLED";
+
 export type PurchaseStatus = "PURCHASED" | "PENDING_REENTRY" | "ABANDONED";
+
+// 실제 API 스키마 그대로 (POST /api/v1/journey/scan)
+// 탑승권 OCR 스캔(rawOcrText) 또는 PNR 직접 입력, 두 경로 중 하나로 여정을 생성합니다.
+export interface JourneyScanRequest {
+  memberId: number;
+  pnr?: string;
+  rawOcrText?: string;
+  origin?: string;
+  destination?: string;
+}
+
+export interface JourneyScanResponse {
+  journeyId: number;
+  pnr: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+}
 
 export interface Product {
   id: string;
