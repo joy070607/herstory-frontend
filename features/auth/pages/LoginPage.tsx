@@ -22,7 +22,7 @@ export function LoginPage() {
     mutationFn: () => authApi.login({ email, password }),
     onSuccess: (member) => {
       setMember(member);
-      router.push(ROUTES.hub);
+      router.push(ROUTES.home);
     },
   });
 

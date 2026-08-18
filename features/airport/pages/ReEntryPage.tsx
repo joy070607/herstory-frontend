@@ -23,8 +23,8 @@ export function ReEntryPage() {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
         <h1 className="text-lg font-semibold">재방문 대상이 아닙니다</h1>
-        <Link href={ROUTES.hub}>
-          <Button variant="cognac">허브로 이동</Button>
+        <Link href={ROUTES.home}>
+          <Button variant="cognac">홈으로 이동</Button>
         </Link>
       </div>
     );
@@ -39,7 +39,7 @@ export function ReEntryPage() {
       </p>
       <div className="flex flex-col gap-2">
         {reEntry.availableOptions.map((option) => (
-          <Link key={option} href={ROUTES.hub}>
+          <Link key={option} href={ROUTES.home}>
             <Button variant="cognac">{option}</Button>
           </Link>
         ))}

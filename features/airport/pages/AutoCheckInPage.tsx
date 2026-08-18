@@ -19,7 +19,7 @@ export function AutoCheckInPage() {
       { memberId: Number(member.id), checkInType: "QR", qrCode: `MEMBER-${member.id}` },
       {
         onSuccess: (res) =>
-          router.push(res.choiceFitRequested ? ROUTES.vipFitting : ROUTES.hub),
+          router.push(res.choiceFitRequested ? ROUTES.vipFitting : ROUTES.home),
       }
     );
   };

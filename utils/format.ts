@@ -16,3 +16,11 @@ export function formatMinutes(totalMinutes: number): string {
   if (hours <= 0) return `${minutes}min`;
   return `${hours}h ${minutes}min`;
 }
+
+export function formatFlightTime(isoDateTime: string): string {
+  return new Intl.DateTimeFormat("ko-KR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(isoDateTime));
+}

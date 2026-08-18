@@ -2,7 +2,7 @@ export const ROUTES = {
   login: "/login",
   signup: "/signup",
 
-  hub: "/hub",
+  home: "/home",
   liveCard: "/live-card",
   boardingPass: "/boarding-pass",
   journeyTimeline: "/journey",

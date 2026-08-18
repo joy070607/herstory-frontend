@@ -135,7 +135,7 @@ export function RegisterPage() {
     mutationFn: () => authApi.register({ email, password, name, phone }),
     onSuccess: (member) => {
       setMember(member);
-      router.push(ROUTES.hub);
+      router.push(ROUTES.home);
     },
   });
 
