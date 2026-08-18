@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useLiveCard } from "@/hooks/queries";
+import { useCountdown } from "@/hooks/useCountdown";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { ROUTES } from "@/constants/routes";
@@ -39,6 +40,8 @@ function resolveStageIndex(liveCard: LiveCardResponse): number {
 export function LiveCardPage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: liveCard, isLoading } = useLiveCard(journeyId);
+  // 30초마다 오는 서버 값 대신, 남은 시간은 초 단위로 직접 카운트다운합니다.
+  const countdown = useCountdown(liveCard?.departureDateTime ?? null);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -63,7 +66,11 @@ export function LiveCardPage() {
           </Link>
         )}
 
-        {journeyId && liveCard && (
+        {journeyId && liveCard && (() => {
+          // 현재 단계 칸(grid-cols-4)의 정중앙 지점 — 진행바 끝과 위 라벨을 여기에 맞춰 정확히 그 단계를 가리키게 합니다.
+          const progressPercent = ((resolveStageIndex(liveCard) + 0.5) / STAGES.length) * 100;
+          const labelPosition = Math.min(Math.max(progressPercent, 12), 88);
+          return (
           <>
             <div className="rounded-[20px] bg-[#121111] px-4 py-5">
               <div className="mb-6 flex items-center gap-2.5">
@@ -84,32 +91,37 @@ export function LiveCardPage() {
 
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-lg text-[#E6F7FF]">{liveCard.origin}</span>
-                <PlaneIcon className="h-4 w-4 shrink-0 text-[#E6F7FF]" />
+                <PlaneIcon className="h-4 w-4 shrink-0" />
                 <span className="text-lg text-[#E6F7FF]">{liveCard.destination}</span>
               </div>
 
-              {liveCard.remainingMinutesToDeparture > 0 && (
-                <p className="mb-1.5 text-center text-[11px] text-[#F3A5A5]">
-                  예상 소요시간
-                  <br />
-                  {formatMinutesKorean(liveCard.remainingMinutesToDeparture)}
-                </p>
+              {countdown.remainingMs > 0 && (
+                <div className="relative mb-3 h-[26px]">
+                  <p
+                    className="absolute top-0 -translate-x-1/2 whitespace-nowrap text-center text-[11px] transition-[left] duration-700 ease-out"
+                    style={{ left: `${labelPosition}%` }}
+                  >
+                    <span className="text-[#A73D3D]">예상 소요시간</span>
+                    <br />
+                    <span className="text-white">
+                      {formatMinutesKorean(countdown.hours * 60 + countdown.minutes)}
+                    </span>
+                  </p>
+                </div>
               )}
 
               <div className="mb-3.5 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
                 <div
-                  className="h-full rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] transition-all"
-                  style={{
-                    width: `${((resolveStageIndex(liveCard) + 1) / STAGES.length) * 100}%`,
-                  }}
+                  className="h-full rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)] transition-all duration-700 ease-out"
+                  style={{ width: `${progressPercent}%` }}
                 />
               </div>
 
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 grid grid-cols-4">
                 {STAGES.map((stage, index) => (
                   <span
                     key={stage}
-                    className={`text-[11px] ${
+                    className={`text-center text-[11px] transition-colors duration-500 ${
                       index <= resolveStageIndex(liveCard) ? "font-medium text-white" : "text-white/40"
                     }`}
                   >
@@ -119,9 +131,9 @@ export function LiveCardPage() {
               </div>
 
               <div className="flex items-center rounded-[20px] bg-[#E6F7FF4D] px-4 py-3">
-                <div className="flex flex-1 items-center gap-2.5">
+                <div className="flex flex-1 items-center justify-center gap-2.5">
                   <GateIcon className="h-4 w-4 shrink-0 text-white" />
-                  <div>
+                  <div className="text-center">
                     <p className="text-[11px] text-white">게이트</p>
                     <p className="text-base font-bold text-white">{liveCard.gate || "-"}</p>
                   </div>
@@ -137,26 +149,25 @@ export function LiveCardPage() {
                   </div>
                 </div>
               </div>
-
-              {liveCard.liveGuideMessage && (
-                <p className="mt-4 text-center text-xs text-[#E6F7FF]/80">
-                  {liveCard.liveGuideMessage}
-                </p>
-              )}
             </div>
 
             {liveCard.loungeLocation && (
               <div className="rounded-[20px] bg-[#E7F6FD] px-4 pb-5 pt-4">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-                  <LoungeIcon className="h-5 w-5" />
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#B9E4F8]">
+                    <LoungeIcon className="h-5 w-5 text-[#006397]" />
+                  </div>
+                  <span className="rounded-full bg-sky-500 px-3.5 py-1.5 text-xs text-sky-50">
+                    가장 가까움
+                  </span>
                 </div>
                 <p className="mb-1.5 text-base text-neutral-900">{liveCard.loungeLocation}</p>
                 {liveCard.loungeGateLocation && (
                   <p className="mb-3 text-sm text-neutral-500">{liveCard.loungeGateLocation}</p>
                 )}
                 {liveCard.loungeWalkingMinutes > 0 && (
-                  <div className="flex items-center gap-1.5 text-sky-700">
-                    <ClockIcon className="h-3 w-3" />
+                  <div className="flex items-center gap-1.5 text-[#006397]">
+                    <ClockIcon className="h-3.5 w-3.5" />
                     <span className="text-xs">도보 {liveCard.loungeWalkingMinutes}분</span>
                   </div>
                 )}
@@ -167,12 +178,13 @@ export function LiveCardPage() {
               <div className="flex items-center gap-3 rounded-[20px] border border-sky-700 px-4 py-3.5">
                 <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FACC15]" />
                 <span className="text-sm text-neutral-900">
-                  라운지 대기시간 {liveCard.loungeWaitTime || formatMinutesKorean(liveCard.loungeWaitMinutes)}
+                  {liveCard.loungeWaitTime || `라운지 대기시간 ${formatMinutesKorean(liveCard.loungeWaitMinutes)}`}
                 </span>
               </div>
             )}
           </>
-        )}
+          );
+        })()}
       </div>
 
       <div className="mt-auto">
