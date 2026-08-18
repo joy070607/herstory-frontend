@@ -180,11 +180,7 @@ export function JourneyTimelinePage() {
           </Link>
         )}
 
-        {journeyId && isLoading && (
-          <div className="h-[320px] animate-pulse rounded-[20px] bg-neutral-100" />
-        )}
-
-        {journeyId && journey && analysis && (
+        {journeyId && journey && (
           <>
             <h1 className="mb-5 text-2xl font-bold text-neutral-900">여정 분석</h1>
 
@@ -214,6 +210,17 @@ export function JourneyTimelinePage() {
               </div>
             </div>
 
+            {isLoading && (
+              <div className="flex flex-col items-center justify-center gap-3 rounded-[20px] bg-neutral-50 px-6 py-14 text-center">
+                <span className="h-8 w-8 animate-spin rounded-full border-2 border-sky-200 border-t-sky-500" />
+                <p className="text-sm text-neutral-500">AI가 여정을 분석하고 있어요...</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {journeyId && journey && analysis && (
+          <>
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
