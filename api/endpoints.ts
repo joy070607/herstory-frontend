@@ -43,8 +43,6 @@ export const authApi = {
 export const preflightApi = {
   getHub: () => apiClient.get("/preflight/hub"),
   getLiveCard: () => apiClient.get("/preflight/live-card"),
-  getClimateGuide: (journeyId: string) =>
-    apiClient.get(`/preflight/${journeyId}/climate`),
 };
 
 export const journeyApi = {

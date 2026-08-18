@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useJourneyStore } from "@/store/journeyStore";
@@ -151,6 +152,7 @@ export function JourneyTimelinePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: journey } = useJourney(journeyId);
   const { data: analysis, isLoading } = useJourneyAnalysis(journeyId);
+  const [showRain, setShowRain] = useState(true);
 
   const currentStage = journey ? resolveJourneyStage(journey) : 0;
   const stageLabels = [
@@ -212,11 +214,12 @@ export function JourneyTimelinePage() {
               </div>
             </div>
 
-            <Link
-              href={ROUTES.climateGuide}
-              className="relative mb-8 flex items-center gap-4 overflow-hidden rounded-[20px] bg-[#E7F6FD] px-5 py-4"
+            <button
+              type="button"
+              onClick={() => setShowRain((prev) => !prev)}
+              className="relative mb-8 flex w-full items-center gap-4 overflow-hidden rounded-[20px] bg-[#E7F6FD] px-5 py-4 text-left"
             >
-              <RainOverlay />
+              {showRain && <RainOverlay />}
               <WeatherIcon className="relative z-10 h-9 w-8 shrink-0 text-sky-500" />
               <div className="relative z-10 flex-1">
                 <p className="text-xs font-medium uppercase tracking-wide text-sky-500">
@@ -227,7 +230,7 @@ export function JourneyTimelinePage() {
                 </p>
                 <p className="text-xs leading-relaxed text-sky-700/80">{analysis.climateSummary}</p>
               </div>
-            </Link>
+            </button>
 
             <div className="mb-4 flex items-center gap-2">
               <span className="h-4 w-1 rounded-full bg-sky-500" />
