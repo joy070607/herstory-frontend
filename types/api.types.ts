@@ -56,6 +56,42 @@ export interface JourneyScanResponse {
   departureDateTime: string;
 }
 
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send)
+export interface SendVerificationCodeRequest {
+  phone: string;
+}
+
+export interface SendVerificationCodeResponse {
+  phone: string;
+  verificationCode: string;
+  message: string;
+  expiresInSeconds: number;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify)
+export interface VerifyCodeRequest {
+  phone: string;
+  verificationCode: string;
+}
+
+export interface VerifyCodeResponse {
+  phone: string;
+  verified: boolean;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/auth/password/find)
+export interface ResetPasswordRequest {
+  email: string;
+  phone: string;
+  newPassword: string;
+}
+
+export interface PasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export interface Product {
   id: string;
   name: string;

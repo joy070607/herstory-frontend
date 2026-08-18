@@ -10,8 +10,13 @@ import type {
   LoginResponseDto,
   Member,
   OrderResponse,
+  PasswordResponse,
   Product,
   ReEntryResponse,
+  ResetPasswordRequest,
+  SendVerificationCodeResponse,
+  VerifyCodeRequest,
+  VerifyCodeResponse,
 } from "@/types/api.types";
 
 export const healthApi = {
@@ -37,6 +42,14 @@ export const authApi = {
     apiClient
       .post<LoginResponseDto>("/auth/register", payload)
       .then((res) => toMember(res.data)),
+  sendPhoneCode: (phone: string) =>
+    apiClient
+      .post<SendVerificationCodeResponse>("/auth/phone/send", { phone })
+      .then((res) => res.data),
+  verifyPhoneCode: (payload: VerifyCodeRequest) =>
+    apiClient.post<VerifyCodeResponse>("/auth/phone/verify", payload).then((res) => res.data),
+  findPassword: (payload: ResetPasswordRequest) =>
+    apiClient.post<PasswordResponse>("/auth/password/find", payload).then((res) => res.data),
 };
 
 export const preflightApi = {
