@@ -2,7 +2,9 @@
 
 import { useJourneyStore } from "@/store/journeyStore";
 import { useJourney } from "@/hooks/queries";
+import { AppHeader } from "@/components/layout/AppHeader";
 import { BoardingPassCard } from "@/features/preflight/components/BoardingPassCard";
+import { BoardingPassScanForm } from "@/features/preflight/components/BoardingPassScanForm";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 
@@ -11,11 +13,17 @@ export function BoardingPassPage() {
   const { data: journey, isLoading, isError, refetch } = useJourney(journeyId);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-6 py-8">
-      <h1 className="text-lg font-semibold">Boarding Pass</h1>
-      {isLoading && <WakingScreen />}
-      {isError && <ErrorState onRetry={() => refetch()} />}
-      {journey && <BoardingPassCard journey={journey} />}
-    </div>
+    <>
+      <AppHeader />
+      {!journeyId && <BoardingPassScanForm />}
+      {journeyId && (
+        <div className="flex flex-1 flex-col gap-6 px-6 py-8">
+          <h1 className="text-lg font-semibold">Boarding Pass</h1>
+          {isLoading && <WakingScreen />}
+          {isError && <ErrorState onRetry={() => refetch()} />}
+          {journey && <BoardingPassCard journey={journey} />}
+        </div>
+      )}
+    </>
   );
 }
