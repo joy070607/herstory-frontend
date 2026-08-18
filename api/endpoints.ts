@@ -5,6 +5,7 @@ import type {
   CheckoutRequest,
   HealthCheckResponse,
   Journey,
+  JourneyAnalysisResponse,
   JourneyScanRequest,
   JourneyScanResponse,
   LoginResponseDto,
@@ -50,6 +51,8 @@ export const journeyApi = {
   get: (journeyId: string) => apiClient.get<Journey>(`/journeys/${journeyId}`),
   scan: (payload: JourneyScanRequest) =>
     apiClient.post<JourneyScanResponse>("/journey/scan", payload),
+  getAnalysis: (journeyId: string) =>
+    apiClient.get<JourneyAnalysisResponse>(`/journey/analysis/${journeyId}`).then((res) => res.data),
   createBoardingPass: (journeyId: string) =>
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>

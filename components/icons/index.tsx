@@ -171,14 +171,69 @@ export function PlaneIcon(props: SVGProps<SVGSVGElement>) {
     <svg
       width="20"
       height="20"
-      viewBox="0 0 20 20"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
-        d="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z"
+        d="M12 2L13.2 11L21 15L13.2 13.6L13.2 17.5L16 20L12.9 18.6L12 19.3L11.1 18.6L8 20L10.8 17.5L10.8 13.6L3 15L10.8 11Z"
         fill="currentColor"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function PlaneDepartureIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="21"
+      height="19"
+      viewBox="0 0 21 19"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M2 18.15V16.15H20V18.15H2ZM3.75 13.15L0 6.9L2.4 6.25L5.2 8.6L8.7 7.675L3.525 0.775L6.425 0L13.9 6.275L18.15 5.125C18.6833 4.975 19.1875 5.0375 19.6625 5.3125C20.1375 5.5875 20.45 5.99167 20.6 6.525C20.75 7.05833 20.6875 7.5625 20.4125 8.0375C20.1375 8.5125 19.7333 8.825 19.2 8.975L3.75 13.15Z"
+        fill="#3F4851"
+      />
+    </svg>
+  );
+}
+
+export function PlaneInFlightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="16"
+      viewBox="0 0 20 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M0 16L11 0H20L17 16H0ZM12.5 10C13.2 10 13.7917 9.75833 14.275 9.275C14.7583 8.79167 15 8.2 15 7.5C15 6.8 14.7583 6.20833 14.275 5.725C13.7917 5.24167 13.2 5 12.5 5C11.8 5 11.2083 5.24167 10.725 5.725C10.2417 6.20833 10 6.8 10 7.5C10 8.2 10.2417 8.79167 10.725 9.275C11.2083 9.75833 11.8 10 12.5 10Z"
+        fill="#E8F6FD"
+      />
+    </svg>
+  );
+}
+
+export function PlaneArrivalIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="18"
+      height="21"
+      viewBox="0 0 18 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M0 20.2V18.2H18V20.2H0ZM15.55 15.15L0 10.725V3.45L2.4 4.125L3.6 7.6L7.05 8.575L6.175 0L9.05 0.85L12.25 10.075L16.55 11.3C16.9667 11.4333 17.3125 11.675 17.5875 12.025C17.8625 12.375 18 12.775 18 13.225C18 13.8083 17.7625 14.3208 17.2875 14.7625C16.8125 15.2042 16.2333 15.3333 15.55 15.15Z"
+        fill="#3F4851"
       />
     </svg>
   );

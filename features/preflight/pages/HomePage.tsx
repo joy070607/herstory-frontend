@@ -76,7 +76,7 @@ export function HomePage() {
             <p className="mb-5 font-mono text-2xl font-bold text-[#E6F7FF]">{journey.pnr}</p>
             <div className="mb-5 flex items-center justify-between">
               <span className="text-lg text-[#E6F7FF]">{journey.origin}</span>
-              <PlaneIcon className="shrink-0 text-[#E6F7FF]" />
+              <PlaneIcon className="shrink-0 rotate-90 text-[#E6F7FF]" />
               <span className="text-lg text-[#E6F7FF]">{journey.destination}</span>
             </div>
             <div className="flex items-center rounded-[20px] bg-[#E6F7FF4D] px-4 py-3">
