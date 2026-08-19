@@ -18,6 +18,7 @@ import type {
   NomadMilesResponse,
   OrderResponse,
   PasswordResponse,
+  Product,
   ReEntryResponse,
   ResetPasswordRequest,
   SendPhoneCodeRequest,

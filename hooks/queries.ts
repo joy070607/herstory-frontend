@@ -9,6 +9,7 @@ import {
   orderApi,
   postflightApi,
   storeApi,
+  styleApi,
 } from "@/api/endpoints";
 import { saveBlobResponse } from "@/utils/download";
 import { useAuthStore } from "@/store/authStore";
@@ -34,7 +35,6 @@ export const queryKeys = {
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
-  cart: (journeyId: string) => ["cart", journeyId] as const,
   nomadMiles: (memberId: string) => ["postflight", "miles", memberId] as const,
   reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
 };
@@ -175,14 +175,7 @@ export function useCart(memberId: number | null) {
     queryKey: queryKeys.cart(memberId ?? 0),
     queryFn: () => cartApi.get(memberId as number),
     enabled: memberId != null,
-export function useCart(journeyId: string | null) {
-  const query = useQuery({
-    queryKey: queryKeys.cart(journeyId ?? ""),
-    queryFn: () => cartApi.get(journeyId as string).then((res) => res.data),
-    enabled: Boolean(journeyId),
   });
-  useClearStaleJourney(journeyId, query.isError);
-  return query;
 }
 
 export function useAddToCart(memberId: number | null) {
