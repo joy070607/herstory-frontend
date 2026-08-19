@@ -24,3 +24,11 @@ export function formatFlightTime(isoDateTime: string): string {
     hour12: false,
   }).format(new Date(isoDateTime));
 }
+
+export function formatMinutesKorean(totalMinutes: number): string {
+  if (totalMinutes <= 0) return "0분";
+  if (totalMinutes < 60) return `약 ${totalMinutes}분`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes === 0 ? `약 ${hours}시간` : `약 ${hours}시간 ${minutes}분`;
+}

@@ -34,7 +34,7 @@ export interface Journey {
   recommendationReason: string;
 }
 
-export type FlightStatus = "SCHEDULED" | "BOARDING" | "COMPLETED" | "CANCELLED";
+export type FlightStatus = "SCHEDULED" | "BOARDING" | "DELAYED" | "COMPLETED" | "CANCELLED";
 
 export type PurchaseStatus = "PURCHASED" | "PENDING_REENTRY" | "ABANDONED";
 
@@ -54,6 +54,28 @@ export interface JourneyScanResponse {
   origin: string;
   destination: string;
   departureDateTime: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
+export interface LiveCardResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  remainingMinutesToDeparture: number;
+  gate: string;
+  flightStatus: FlightStatus;
+  currentStep: string;
+  currentStepLabel: string;
+  estimatedSecurityMinutes: number;
+  loungeLocation: string;
+  loungeGateLocation: string;
+  loungeWalkingMinutes: number;
+  loungeWaitMinutes: number;
+  loungeWaitTime: string;
+  liveGuideMessage: string;
 }
 
 export interface Product {
