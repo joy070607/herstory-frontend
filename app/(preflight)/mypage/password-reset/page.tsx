@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { MyPagePasswordResetPage } from "@/features/preflight/pages/MyPagePasswordResetPage";
 
 export default function Page() {
-  return <PlaceholderPage title="비밀번호 재설정" />;
+  return <MyPagePasswordResetPage />;
 }

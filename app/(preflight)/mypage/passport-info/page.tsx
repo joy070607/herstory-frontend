@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { MyPagePassportInfoPage } from "@/features/preflight/pages/MyPagePassportInfoPage";
 
 export default function Page() {
-  return <PlaceholderPage title="여권 · 탑승객 정보" />;
+  return <MyPagePassportInfoPage />;
 }

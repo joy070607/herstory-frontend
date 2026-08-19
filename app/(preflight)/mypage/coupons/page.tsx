@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { MyPageCouponsPage } from "@/features/preflight/pages/MyPageCouponsPage";
 
 export default function Page() {
-  return <PlaceholderPage title="쿠폰 · 혜택" />;
+  return <MyPageCouponsPage />;
 }
