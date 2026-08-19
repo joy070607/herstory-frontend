@@ -7,7 +7,6 @@ export const ROUTES = {
   liveCard: "/live-card",
   boardingPass: "/boarding-pass",
   journeyTimeline: "/journey",
-  climateGuide: "/climate",
   styleEngine: "/style",
   popupSpot: "/popup",
   smartCart: "/cart",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/endpoints";
+import type { ApiError } from "@/api/client";
 import { ROUTES } from "@/constants/routes";
 import {
   ChevronLeftIcon,
@@ -42,8 +43,11 @@ export function ForgotPasswordPage() {
     onSuccess: (res) => setPhoneVerified(res.verified),
   });
 
-  const resetMutation = useMutation({
-    mutationFn: () => authApi.findPassword({ email, phone, newPassword: password }),
+  const resetMutation = useMutation<
+    Awaited<ReturnType<typeof authApi.resetPassword>>,
+    ApiError
+  >({
+    mutationFn: () => authApi.resetPassword({ email, newPassword: password }),
   });
 
   if (resetMutation.isSuccess) {
@@ -228,7 +232,9 @@ export function ForgotPasswordPage() {
         )}
 
         {resetMutation.isError && (
-          <p className="-mt-4 text-xs text-red-600">비밀번호 재설정에 실패했습니다.</p>
+          <p className="-mt-4 text-xs text-red-600">
+            {resetMutation.error.message || "비밀번호 재설정에 실패했습니다."}
+          </p>
         )}
 
         <button

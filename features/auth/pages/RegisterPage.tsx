@@ -110,7 +110,9 @@ export function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -131,6 +133,16 @@ export function RegisterPage() {
     setTerms({ age: checked, service: checked, privacy: checked, marketing: checked });
   };
 
+  const sendCodeMutation = useMutation({
+    mutationFn: () => authApi.sendPhoneCode(phone),
+    onSuccess: () => setCodeSent(true),
+  });
+
+  const verifyCodeMutation = useMutation({
+    mutationFn: () => authApi.verifyPhoneCode({ phone, verificationCode }),
+    onSuccess: (data) => setPhoneVerified(data.verified),
+  });
+
   const registerMutation = useMutation({
     mutationFn: () => authApi.register({ email, password, name, phone }),
     onSuccess: (member) => {
@@ -141,12 +153,15 @@ export function RegisterPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AppHeader showMenu={false} />
+      <AppHeader showMyButton={false} />
 
       <form
         className="flex flex-col px-6 pb-8 pt-6"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!phoneVerified) {
+            return;
+          }
           if (password !== passwordConfirm) {
             setPasswordMismatch(true);
             return;
@@ -190,7 +205,14 @@ export function RegisterPage() {
               <input
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setCodeSent(false);
+                  sendCodeMutation.reset();
+                  setVerificationCode("");
+                  setPhoneVerified(false);
+                  verifyCodeMutation.reset();
+                }}
                 placeholder="휴대전화"
                 required
                 className="w-full text-lg text-neutral-900 outline-none placeholder:text-neutral-400"
@@ -198,12 +220,20 @@ export function RegisterPage() {
             </div>
             <button
               type="button"
-              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50"
+              onClick={() => sendCodeMutation.mutate()}
+              disabled={!phone || sendCodeMutation.isPending}
+              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
             >
-              인증번호 전송
+              {sendCodeMutation.isPending ? "전송 중..." : "인증번호 전송"}
             </button>
           </div>
           <div className="border-b border-black/30" />
+          {codeSent && (
+            <p className="mt-1 text-xs text-sky-600">인증번호가 전송되었습니다.</p>
+          )}
+          {sendCodeMutation.isError && (
+            <p className="mt-1 text-xs text-red-600">인증번호 전송에 실패했습니다.</p>
+          )}
         </div>
 
         <div className="mb-10">
@@ -213,19 +243,48 @@ export function RegisterPage() {
               <input
                 type="text"
                 value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
+                onChange={(e) => {
+                  setVerificationCode(e.target.value);
+                  setPhoneVerified(false);
+                  verifyCodeMutation.reset();
+                }}
                 placeholder="인증번호"
-                className="w-full text-lg text-neutral-900 outline-none placeholder:text-neutral-400"
+                disabled={phoneVerified}
+                className="w-full text-lg text-neutral-900 outline-none placeholder:text-neutral-400 disabled:text-neutral-400"
               />
             </div>
-            <button
-              type="button"
-              className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50"
-            >
-              재전송
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => verifyCodeMutation.mutate()}
+                disabled={!verificationCode || phoneVerified || verifyCodeMutation.isPending}
+                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+              >
+                {verifyCodeMutation.isPending ? "확인 중..." : "확인"}
+              </button>
+              <button
+                type="button"
+                onClick={() => sendCodeMutation.mutate()}
+                disabled={!phone || sendCodeMutation.isPending || phoneVerified}
+                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+              >
+                재전송
+              </button>
+            </div>
           </div>
           <div className="border-b border-black/30" />
+          {verifyCodeMutation.data && (
+            <p
+              className={`mt-1 text-xs ${
+                verifyCodeMutation.data.verified ? "text-sky-600" : "text-red-600"
+              }`}
+            >
+              {verifyCodeMutation.data.message}
+            </p>
+          )}
+          {verifyCodeMutation.isError && (
+            <p className="mt-1 text-xs text-red-600">인증번호 확인에 실패했습니다.</p>
+          )}
         </div>
 
         <div className="mb-6">
@@ -354,7 +413,7 @@ export function RegisterPage() {
 
         <button
           type="submit"
-          disabled={!requiredTermsChecked || registerMutation.isPending}
+          disabled={!phoneVerified || !requiredTermsChecked || registerMutation.isPending}
           className="mb-5 w-full rounded-[20px] bg-sky-500 py-4 text-lg font-bold text-sky-50 transition-colors hover:bg-sky-600 disabled:opacity-40"
         >
           회원가입

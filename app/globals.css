@@ -14,3 +14,26 @@
 .animate-popup-in {
   animation: popup-in 0.25s ease-out;
 }
+
+@keyframes rainfall {
+  0% {
+    transform: translateY(-30%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(320%);
+    opacity: 0;
+  }
+}
+
+.animate-rainfall {
+  animation-name: rainfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

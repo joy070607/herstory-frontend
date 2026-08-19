@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cartApi,
+  flightApi,
   healthApi,
   journeyApi,
   orderApi,
@@ -8,11 +9,16 @@ import {
   storeApi,
   styleApi,
 } from "@/api/endpoints";
+import { saveBlobResponse } from "@/utils/download";
 import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
   journey: (journeyId: string) => ["journey", journeyId] as const,
+  journeyAnalysis: (journeyId: string) => ["journey", "analysis", journeyId] as const,
+  liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
+  appleWalletPass: (journeyId: string) => ["journey", "apple-wallet-pass", journeyId] as const,
+  flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -36,10 +42,53 @@ export function useJourney(journeyId: string | null) {
   });
 }
 
+export function useJourneyAnalysis(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.journeyAnalysis(journeyId ?? ""),
+    queryFn: () => journeyApi.getAnalysis(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useLiveCard(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.liveCard(journeyId ?? ""),
+    queryFn: () => journeyApi.getLiveCard(journeyId as string),
+    enabled: Boolean(journeyId),
+    refetchInterval: 30_000,
+  });
+}
+
+export function useFlightLookup(flightNumber: string | null | undefined) {
+  return useQuery({
+    queryKey: queryKeys.flightLookup(flightNumber ?? ""),
+    queryFn: () => flightApi.lookup(flightNumber as string),
+    enabled: Boolean(flightNumber),
+    refetchInterval: 60_000,
+  });
+}
+
 export function useScanJourney() {
   return useMutation({
     mutationFn: (payload: JourneyScanRequest) =>
       journeyApi.scan(payload).then((res) => res.data),
+  });
+}
+
+export function useAppleWalletPass(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.appleWalletPass(journeyId ?? ""),
+    queryFn: () => journeyApi.getAppleWalletPass(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useDownloadAppleWalletPass() {
+  return useMutation({
+    mutationFn: async (journeyId: string) => {
+      const res = await journeyApi.downloadAppleWalletPassFile(journeyId);
+      saveBlobResponse(res, `herstory-pass-${journeyId}.pkpass`);
+    },
   });
 }
 

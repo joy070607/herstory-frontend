@@ -10,6 +10,30 @@ export interface Member {
 
 export type VipTier = "SILVER" | "GOLD" | "PLATINUM" | "VIP";
 
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send-code)
+export interface SendPhoneCodeRequest {
+  phone: string;
+}
+
+export interface SendPhoneCodeResponse {
+  phone: string;
+  verificationCode: string;
+  message: string;
+  expiresInSeconds: number;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify-code)
+export interface VerifyPhoneCodeRequest {
+  phone: string;
+  verificationCode: string;
+}
+
+export interface VerifyPhoneCodeResponse {
+  phone: string;
+  verified: boolean;
+  message: string;
+}
+
 // 실제 API 응답 그대로 (POST /api/v1/auth/login)
 export interface LoginResponseDto {
   memberId: number;
@@ -34,7 +58,7 @@ export interface Journey {
   recommendationReason: string;
 }
 
-export type FlightStatus = "SCHEDULED" | "BOARDING" | "COMPLETED" | "CANCELLED";
+export type FlightStatus = "SCHEDULED" | "BOARDING" | "DELAYED" | "COMPLETED" | "CANCELLED";
 
 export type PurchaseStatus = "PURCHASED" | "PENDING_REENTRY" | "ABANDONED";
 
@@ -56,40 +80,100 @@ export interface JourneyScanResponse {
   departureDateTime: string;
 }
 
-// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send)
-export interface SendVerificationCodeRequest {
-  phone: string;
-}
-
-export interface SendVerificationCodeResponse {
-  phone: string;
-  verificationCode: string;
-  message: string;
-  expiresInSeconds: number;
-}
-
-// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify)
-export interface VerifyCodeRequest {
-  phone: string;
-  verificationCode: string;
-}
-
-export interface VerifyCodeResponse {
-  phone: string;
-  verified: boolean;
-  message: string;
-}
-
-// 실제 API 스키마 그대로 (POST /api/v1/auth/password/find)
+// 실제 API 스키마 그대로 (POST /api/v1/auth/password/reset)
 export interface ResetPasswordRequest {
   email: string;
-  phone: string;
   newPassword: string;
 }
 
 export interface PasswordResponse {
   success: boolean;
   message: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
+export interface LiveCardResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber?: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  flightStatus: FlightStatus;
+  gate?: string;
+  currentStep: string;
+  currentStepLabel: string;
+  loungeLocation?: string;
+  loungeGateLocation?: string;
+  loungeWalkingMinutes: number;
+  loungeWaitTime?: string;
+  loungeWaitMinutes: number;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/flight/lookup?flightNumber=)
+// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
+export interface FlightLookupResponse {
+  flightNumber: string;
+  airlineName: string;
+  originCode: string;
+  originName: string;
+  originTerminal: string;
+  destinationCode: string;
+  destinationName: string;
+  gate: string;
+  flightStatus: FlightStatus;
+  scheduledDepartureTime: string;
+  estimatedDepartureTime: string;
+  scheduledArrivalTime: string;
+  scheduledDepartureFormatted: string;
+  scheduledArrivalFormatted: string;
+  flightDuration: string;
+  checkinCounter: string;
+  remark: string;
+  delayMinutes: number;
+  dataSource: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
+export interface TimelineItem {
+  stepType: string;
+  title: string;
+  time: string;
+  description: string;
+  tipMessage: string;
+  iconType: string;
+}
+
+export type RecommendedProductCategory =
+  | "WATERPROOF"
+  | "BACKPACK"
+  | "TRAVEL_BAG"
+  | "ACCESSORY"
+  | "LEATHER_CARE"
+  | "READY_TO_WEAR"
+  | "LIMITED_EDITION";
+
+export interface RecommendedProduct {
+  id: number;
+  name: string;
+  brand: string;
+  category: RecommendedProductCategory;
+  price: number;
+  stock: number;
+  imageUrl: string;
+  description: string;
+  isVipExclusive: boolean;
+}
+
+export interface JourneyAnalysisResponse {
+  journeyId: number;
+  destination: string;
+  weatherInfo: string;
+  rainProbability: string;
+  climateSummary: string;
+  recommendationReason: string;
+  timeline: TimelineItem[];
+  recommendedProducts: RecommendedProduct[];
 }
 
 export interface Product {
@@ -101,6 +185,30 @@ export interface Product {
 
 export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
+export interface AppleWalletPassField {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface AppleWalletPassResponse {
+  passTypeIdentifier: string;
+  serialNumber: string;
+  teamIdentifier: string;
+  organizationName: string;
+  description: string;
+  logoText: string;
+  boardingPassDetails: {
+    transitType: string;
+    headerFields: AppleWalletPassField;
+    primaryFields: AppleWalletPassField;
+    secondaryFields: AppleWalletPassField;
+    auxiliaryFields: AppleWalletPassField;
+  };
+  pkpassDownloadUrl: string;
 }
 
 // 실제 API 스키마 그대로 (POST /api/v1/store/check-in, SSE VIP_CHECKIN_EVENT 페이로드와 동일)
