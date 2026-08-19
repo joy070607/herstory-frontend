@@ -3,7 +3,7 @@
 import { useJourneyStore } from "@/store/journeyStore";
 import { useCart } from "@/hooks/queries";
 import { ProductRow } from "@/components/ui/ProductRow";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 
 export function SmartCartPage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
@@ -19,7 +19,7 @@ export function SmartCartPage() {
         </div>
       </div>
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );
