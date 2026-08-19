@@ -13,6 +13,10 @@ import type {
   OrderResponse,
   Product,
   ReEntryResponse,
+  SendPhoneCodeRequest,
+  SendPhoneCodeResponse,
+  VerifyPhoneCodeRequest,
+  VerifyPhoneCodeResponse,
 } from "@/types/api.types";
 
 export const healthApi = {
@@ -38,6 +42,14 @@ export const authApi = {
     apiClient
       .post<LoginResponseDto>("/auth/register", payload)
       .then((res) => toMember(res.data)),
+  sendPhoneCode: (phone: string) =>
+    apiClient
+      .post<SendPhoneCodeResponse>("/auth/phone/send-code", { phone } satisfies SendPhoneCodeRequest)
+      .then((res) => res.data),
+  verifyPhoneCode: (payload: VerifyPhoneCodeRequest) =>
+    apiClient
+      .post<VerifyPhoneCodeResponse>("/auth/phone/verify-code", payload)
+      .then((res) => res.data),
 };
 
 export const preflightApi = {
