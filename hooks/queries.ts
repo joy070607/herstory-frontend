@@ -193,8 +193,7 @@ export function useCheckout(journeyId: string) {
 export function useNomadMiles(memberId: string | null) {
   return useQuery({
     queryKey: queryKeys.nomadMiles(memberId ?? ""),
-    queryFn: () =>
-      postflightApi.getNomadMiles(memberId as string).then((res) => res.data),
+    queryFn: () => postflightApi.getNomadMiles(memberId as string),
     enabled: Boolean(memberId),
   });
 }
