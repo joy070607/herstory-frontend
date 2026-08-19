@@ -1,6 +1,7 @@
 "use client";
 
 import { AirportMiniMap } from "@/features/preflight/components/AirportMiniMap";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 
 const POPUP_SPOTS = [
   { id: "gate-12", label: "Gate 12 Popup", x: 30, y: 40 },
@@ -9,9 +10,15 @@ const POPUP_SPOTS = [
 
 export function PopupSpotPage() {
   return (
-    <div className="flex flex-1 flex-col gap-6 px-6 py-8">
-      <h1 className="text-lg font-semibold">Popup Spot</h1>
-      <AirportMiniMap spots={POPUP_SPOTS} />
+    <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col gap-6 px-6 py-8">
+        <h1 className="text-lg font-semibold">Popup Spot</h1>
+        <AirportMiniMap spots={POPUP_SPOTS} />
+      </div>
+
+      <div className="mt-auto">
+        <AiHotBar />
+      </div>
     </div>
   );
 }

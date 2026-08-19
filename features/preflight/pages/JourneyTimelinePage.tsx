@@ -7,7 +7,7 @@ import { useJourneyStore } from "@/store/journeyStore";
 import { useJourney, useJourneyAnalysis } from "@/hooks/queries";
 import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { formatKRW } from "@/utils/format";
@@ -260,7 +260,7 @@ export function JourneyTimelinePage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );
