@@ -22,6 +22,7 @@ export const queryKeys = {
   flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
   careGoogleMaps: (destination: string, brand: string) =>
     ["care", "google-maps", destination, brand] as const,
+  popupSpots: (memberId: number) => ["style", "popup-spots", memberId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -78,6 +79,13 @@ export function useCareGoogleMapsSpots(destination?: string, brand?: string) {
     queryKey: queryKeys.careGoogleMaps(resolvedDestination, resolvedBrand),
     queryFn: () =>
       careApi.getGoogleMapsSpots({ destination: resolvedDestination, brand: resolvedBrand }),
+  });
+}
+
+export function usePopupSpots(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.popupSpots(memberId ?? 0),
+    queryFn: () => styleApi.getPopupSpots(memberId ?? undefined),
   });
 }
 

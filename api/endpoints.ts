@@ -3,6 +3,7 @@ import type {
   AppleWalletPassResponse,
   CareGoogleMapsSpot,
   CheckInRequest,
+  PopupSpotsResponse,
   CheckInResponse,
   CheckoutRequest,
   FlightLookupResponse,
@@ -99,7 +100,10 @@ export const flightApi = {
 export const styleApi = {
   getRecommendations: (journeyId: string) =>
     apiClient.get<Product[]>(`/journeys/${journeyId}/style-engine`),
-  getPopupSpots: () => apiClient.get("/style/popup-spots"),
+  getPopupSpots: (memberId?: number) =>
+    apiClient
+      .get<PopupSpotsResponse>("/style/popup-spots", { params: { memberId } })
+      .then((res) => res.data),
 };
 
 export const cartApi = {

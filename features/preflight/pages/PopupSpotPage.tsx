@@ -1,17 +1,100 @@
 "use client";
 
-import { AirportMiniMap } from "@/features/preflight/components/AirportMiniMap";
+import { AppHeader } from "@/components/layout/AppHeader";
+import { BottomNav } from "@/components/layout/BottomNav";
+import { WakingScreen } from "@/components/system/WakingScreen";
+import { ErrorState } from "@/components/system/ErrorState";
+import { useAuthStore } from "@/store/authStore";
+import { usePopupSpots } from "@/hooks/queries";
+import { MapPinIcon } from "@/components/icons";
+import type { CareGoogleMapsSpot } from "@/types/api.types";
 
-const POPUP_SPOTS = [
-  { id: "gate-12", label: "Gate 12 Popup", x: 30, y: 40 },
-  { id: "duty-free", label: "Duty Free", x: 65, y: 55 },
-];
+const AIRPORT_POPUP_BRAND = "HERSTORY";
+
+const LIMITED_ITEMS = [
+  {
+    id: "trench-coat",
+    name: "한정판 트렌치코트",
+    description:
+      "MCM의 상징인 코냑 비세토스(Cognac Visetos) 패턴과 공항 테마의 유니크한 디테일이 결합된 하이라이트 아이템입니다.",
+  },
+  {
+    id: "sneakers",
+    name: "한정판 하이탑 스니커즈",
+    description:
+      "여행자의 편안함과 스타일을 모두 만족시키는 공항 한정판 하이탑 스니커즈입니다.",
+  },
+  {
+    id: "backpack-charm",
+    name: "한정판 백팩 키링",
+    description:
+      "MCM의 아이코닉한 스타크 백팩을 미니멀하게 축소한 이 키링은 공항 방문을 기념하는 완벽한 컬렉터스 아이템입니다.",
+  },
+] as const;
 
 export function PopupSpotPage() {
+  const member = useAuthStore((state) => state.member);
+  const { data, isLoading, isError, refetch } = usePopupSpots(member ? Number(member.id) : null);
+
+  // 이 엔드포인트는 목적지 도시 부티크(샤넬/LV 등)와 공항 팝업 스팟을 한 배열에 같이 내려줘서,
+  // 공항 한정 팝업 스팟(HERSTORY 브랜드)만 걸러냅니다.
+  const spots = data?.visetosSpots.filter((spot) => spot.brand === AIRPORT_POPUP_BRAND);
+
   return (
-    <div className="flex flex-1 flex-col gap-6 px-6 py-8">
-      <h1 className="text-lg font-semibold">Popup Spot</h1>
-      <AirportMiniMap spots={POPUP_SPOTS} />
+    <div className="flex flex-1 flex-col">
+      <AppHeader />
+
+      <div className="flex flex-1 flex-col gap-5 px-6 py-6">
+        <h1 className="text-2xl font-bold text-neutral-900">POP-UP STORE</h1>
+
+        <div className="flex aspect-[4/3] w-full items-center justify-center rounded-[20px] bg-neutral-200">
+          <MapPinIcon className="h-9 w-9 text-black" />
+        </div>
+
+        {isLoading && <WakingScreen />}
+        {isError && <ErrorState onRetry={() => refetch()} />}
+
+        {spots && spots.length > 0 && (
+          <div className="flex flex-col divide-y divide-neutral-200">
+            {spots.map((spot) => (
+              <SpotRow key={spot.spotName} spot={spot} />
+            ))}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-3">
+          <p className="text-base font-semibold text-neutral-900">공항에서만 만날 수 있어요!</p>
+          {LIMITED_ITEMS.map((item) => (
+            <div key={item.id} className="flex gap-3 rounded-[20px] bg-neutral-100 p-3">
+              <div className="h-16 w-16 shrink-0 rounded-xl bg-neutral-300" />
+              <div className="flex flex-col justify-center gap-1">
+                <p className="text-sm font-semibold text-neutral-900">{item.name}</p>
+                <p className="text-xs leading-relaxed text-neutral-500">{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-auto">
+        <BottomNav />
+      </div>
+    </div>
+  );
+}
+
+function SpotRow({ spot }: { spot: CareGoogleMapsSpot }) {
+  return (
+    <div className="flex items-center justify-between gap-3 py-3.5">
+      <div>
+        <p className="text-base font-semibold text-neutral-900">{spot.spotName}</p>
+        <p className="text-sm text-neutral-500">{spot.address}</p>
+      </div>
+      {spot.walkingMinutes != null && (
+        <span className="shrink-0 rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700">
+          {spot.walkingMinutes}분
+        </span>
+      )}
     </div>
   );
 }
