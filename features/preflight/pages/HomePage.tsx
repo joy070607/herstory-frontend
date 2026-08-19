@@ -106,7 +106,7 @@ export function HomePage() {
             href={ROUTES.styleEngine}
             className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#0099E51A] py-5"
           >
-            <ShirtIcon />
+            <ShirtIcon className="text-sky-500" />
             <span className="text-sm text-sky-500">스타일</span>
           </Link>
           <Link

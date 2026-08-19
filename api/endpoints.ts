@@ -87,9 +87,7 @@ export const styleApi = {
 
 export const cartApi = {
   get: (memberId: number) =>
-    apiClient
-      .get<CartResponse>("/cart/my", { params: { memberId } })
-      .then((res) => res.data),
+    apiClient.get<CartResponse>("/cart/my", { params: { memberId } }).then((res) => res.data),
   addItem: (payload: { memberId: number; productId: number; quantity: number }) =>
     apiClient.post<CartResponse>("/cart/add", payload).then((res) => res.data),
 };
