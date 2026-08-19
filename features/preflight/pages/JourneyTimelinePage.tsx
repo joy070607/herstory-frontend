@@ -10,7 +10,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
-import { formatKRW } from "@/utils/format";
+import { formatKRW, stripAiTagPrefix } from "@/utils/format";
 import type { Journey, JourneyAnalysisResponse, TimelineItem } from "@/types/api.types";
 import {
   BagIcon,
@@ -114,7 +114,7 @@ function RecommendedSection({ analysis }: { analysis: JourneyAnalysisResponse })
       </div>
       {analysis.recommendationReason && (
         <p className="mb-4 text-xs leading-relaxed text-neutral-500">
-          {analysis.recommendationReason}
+          {stripAiTagPrefix(analysis.recommendationReason)}
         </p>
       )}
       <div className="flex flex-col gap-3">

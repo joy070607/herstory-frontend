@@ -12,6 +12,7 @@ import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { WeatherIcon, TicketIcon } from "@/components/icons";
 import { parseWeatherInfo } from "@/utils/weather";
+import { stripAiTagPrefix } from "@/utils/format";
 import type { Product, ProductCategory } from "@/types/api.types";
 
 const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
@@ -36,7 +37,7 @@ export function StyleEnginePage() {
     analysis?.recommendedProducts[0];
   const recommendLabel = selectedProduct
     ? CATEGORY_RECOMMEND_LABEL[selectedProduct.category]
-    : analysis?.recommendationReason;
+    : analysis && stripAiTagPrefix(analysis.recommendationReason);
 
   return (
     <div className="flex flex-1 flex-col">
