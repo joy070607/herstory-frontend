@@ -8,11 +8,16 @@ import type {
   JourneyAnalysisResponse,
   JourneyScanRequest,
   JourneyScanResponse,
+  LiveCardResponse,
   LoginResponseDto,
   Member,
   OrderResponse,
   Product,
   ReEntryResponse,
+  SendPhoneCodeRequest,
+  SendPhoneCodeResponse,
+  VerifyPhoneCodeRequest,
+  VerifyPhoneCodeResponse,
 } from "@/types/api.types";
 
 export const healthApi = {
@@ -38,6 +43,14 @@ export const authApi = {
     apiClient
       .post<LoginResponseDto>("/auth/register", payload)
       .then((res) => toMember(res.data)),
+  sendPhoneCode: (phone: string) =>
+    apiClient
+      .post<SendPhoneCodeResponse>("/auth/phone/send-code", { phone } satisfies SendPhoneCodeRequest)
+      .then((res) => res.data),
+  verifyPhoneCode: (payload: VerifyPhoneCodeRequest) =>
+    apiClient
+      .post<VerifyPhoneCodeResponse>("/auth/phone/verify-code", payload)
+      .then((res) => res.data),
 };
 
 export const preflightApi = {
@@ -51,6 +64,8 @@ export const journeyApi = {
     apiClient.post<JourneyScanResponse>("/journey/scan", payload),
   getAnalysis: (journeyId: string) =>
     apiClient.get<JourneyAnalysisResponse>(`/journey/analysis/${journeyId}`).then((res) => res.data),
+  getLiveCard: (journeyId: string) =>
+    apiClient.get<LiveCardResponse>(`/journey/live-card/${journeyId}`).then((res) => res.data),
   createBoardingPass: (journeyId: string) =>
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>

@@ -10,6 +10,30 @@ export interface Member {
 
 export type VipTier = "SILVER" | "GOLD" | "PLATINUM" | "VIP";
 
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send-code)
+export interface SendPhoneCodeRequest {
+  phone: string;
+}
+
+export interface SendPhoneCodeResponse {
+  phone: string;
+  verificationCode: string;
+  message: string;
+  expiresInSeconds: number;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify-code)
+export interface VerifyPhoneCodeRequest {
+  phone: string;
+  verificationCode: string;
+}
+
+export interface VerifyPhoneCodeResponse {
+  phone: string;
+  verified: boolean;
+  message: string;
+}
+
 // 실제 API 응답 그대로 (POST /api/v1/auth/login)
 export interface LoginResponseDto {
   memberId: number;
@@ -34,7 +58,7 @@ export interface Journey {
   recommendationReason: string;
 }
 
-export type FlightStatus = "SCHEDULED" | "BOARDING" | "COMPLETED" | "CANCELLED";
+export type FlightStatus = "SCHEDULED" | "BOARDING" | "DELAYED" | "COMPLETED" | "CANCELLED";
 
 export type PurchaseStatus = "PURCHASED" | "PENDING_REENTRY" | "ABANDONED";
 
