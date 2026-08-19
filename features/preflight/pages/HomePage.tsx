@@ -113,7 +113,7 @@ export function HomePage() {
             <span className="text-sm text-neutral-900">보딩패스</span>
           </Link>
           <Link
-            href={ROUTES.styleEngine}
+            href={ROUTES.smartCart}
             className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#0099E51A] py-5"
           >
             <ShirtIcon className="text-sky-500" />
