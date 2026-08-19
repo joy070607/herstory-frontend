@@ -1,5 +1,6 @@
 import { apiClient } from "./client";
 import type {
+  AppleWalletPassResponse,
   CheckInRequest,
   CheckInResponse,
   CheckoutRequest,
@@ -74,6 +75,15 @@ export const journeyApi = {
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>
     apiClient.patch(`/journeys/${journeyId}/choice-fit`, { choiceFit }),
+  getAppleWalletPass: (journeyId: string) =>
+    apiClient
+      .get<AppleWalletPassResponse>(`/journey/apple-wallet-pass/${journeyId}`)
+      .then((res) => res.data),
+  // Safari 보안 차단 없이 파일 앱으로 바로 받을 수 있는 .pkpass 바이너리 다운로드
+  downloadAppleWalletPassFile: (journeyId: string) =>
+    apiClient.get(`/journey/apple-wallet-pass/download-file/${journeyId}`, {
+      responseType: "blob",
+    }),
 };
 
 export const styleApi = {

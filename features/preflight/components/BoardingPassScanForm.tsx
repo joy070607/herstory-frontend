@@ -116,15 +116,6 @@ export function BoardingPassScanForm() {
         </div>
       )}
 
-      <button
-        type="button"
-        disabled
-        title="준비 중입니다"
-        className="mx-6 mb-[60px] rounded-[20px] bg-[#0A0A0A] py-3 text-2xl text-[#E6F7FF] opacity-60"
-      >
-        Apple Wallet 연동
-      </button>
-
       <div className="h-[60px] bg-[#E7F6FC]" aria-hidden />
     </div>
   );

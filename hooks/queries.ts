@@ -8,6 +8,7 @@ import {
   storeApi,
   styleApi,
 } from "@/api/endpoints";
+import { saveBlobResponse } from "@/utils/download";
 import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
 
 export const queryKeys = {
@@ -15,6 +16,7 @@ export const queryKeys = {
   journey: (journeyId: string) => ["journey", journeyId] as const,
   journeyAnalysis: (journeyId: string) => ["journey", "analysis", journeyId] as const,
   liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
+  appleWalletPass: (journeyId: string) => ["journey", "apple-wallet-pass", journeyId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -59,6 +61,23 @@ export function useScanJourney() {
   return useMutation({
     mutationFn: (payload: JourneyScanRequest) =>
       journeyApi.scan(payload).then((res) => res.data),
+  });
+}
+
+export function useAppleWalletPass(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.appleWalletPass(journeyId ?? ""),
+    queryFn: () => journeyApi.getAppleWalletPass(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useDownloadAppleWalletPass() {
+  return useMutation({
+    mutationFn: async (journeyId: string) => {
+      const res = await journeyApi.downloadAppleWalletPassFile(journeyId);
+      saveBlobResponse(res, `herstory-pass-${journeyId}.pkpass`);
+    },
   });
 }
 
