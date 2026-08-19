@@ -3,6 +3,7 @@ import type {
   CheckInRequest,
   CheckInResponse,
   CheckoutRequest,
+  FlightLookupResponse,
   HealthCheckResponse,
   Journey,
   JourneyAnalysisResponse,
@@ -74,6 +75,14 @@ export const journeyApi = {
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>
     apiClient.patch(`/journeys/${journeyId}/choice-fit`, { choiceFit }),
+};
+
+// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
+export const flightApi = {
+  lookup: (flightNumber: string) =>
+    apiClient
+      .get<FlightLookupResponse>("/flight/lookup", { params: { flightNumber } })
+      .then((res) => res.data),
 };
 
 export const styleApi = {
