@@ -15,16 +15,23 @@ import type {
   LiveCardResponse,
   LoginResponseDto,
   Member,
-  NomadMilesResponse,
+  MilesBalanceResponse,
+  MilesHistoryResponse,
   OrderResponse,
   PasswordResponse,
   Product,
+  RedeemBenefitRequest,
+  RedeemBenefitResponse,
   ReEntryResponse,
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
   StampCheckInRequest,
   StampCheckInResponse,
+  TransferMilesRequest,
+  TransferMilesResponse,
+  UseMilesRequest,
+  UseMilesResponse,
   VerifyPhoneCodeRequest,
   VerifyPhoneCodeResponse,
 } from "@/types/api.types";
@@ -139,14 +146,24 @@ export const orderApi = {
     apiClient.post<OrderResponse>("/order/checkout", payload).then((res) => res.data),
 };
 
+// 마일리지 잔액/거래내역/사용/양도/혜택교환 (SCR-501 마일리지 화면)
+export const milesApi = {
+  getBalance: (memberId: number) =>
+    apiClient.get<MilesBalanceResponse>(`/miles/${memberId}`).then((res) => res.data),
+  getHistory: (memberId: number) =>
+    apiClient.get<MilesHistoryResponse>(`/miles/history/${memberId}`).then((res) => res.data),
+  use: (payload: UseMilesRequest) =>
+    apiClient.post<UseMilesResponse>("/miles/use", payload).then((res) => res.data),
+  transfer: (payload: TransferMilesRequest) =>
+    apiClient.post<TransferMilesResponse>("/miles/transfer", payload).then((res) => res.data),
+  redeem: (payload: RedeemBenefitRequest) =>
+    apiClient.post<RedeemBenefitResponse>("/miles/redeem", payload).then((res) => res.data),
+};
+
 export const postflightApi = {
   getLeatherCareGuide: (lang: string) =>
     apiClient.get(`/postflight/leather-care?lang=${lang}`),
   getVisetosSpots: () => apiClient.get("/postflight/visetos-map"),
-  getNomadMiles: (memberId: string) =>
-    apiClient
-      .get<NomadMilesResponse>(`/postflight/miles/${memberId}`)
-      .then((res) => res.data),
 };
 
 // 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크) + 가죽 케어 AI 가이드 (GPT-4o)
