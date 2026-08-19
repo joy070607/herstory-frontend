@@ -153,7 +153,7 @@ export function RegisterPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <AppHeader showMyButton={false} />
+      <AppHeader showMenuButton={false} />
 
       <form
         className="flex flex-col px-6 pb-8 pt-6"
