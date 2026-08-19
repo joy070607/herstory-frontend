@@ -5,6 +5,7 @@ import { useJourneyStore } from "@/store/journeyStore";
 import { useAiCareTip, useJourney } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 
@@ -32,6 +33,10 @@ export function LeatherCarePage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col pb-[60px] pt-5">
+        <div className="mb-3 px-6">
+          <BackButton />
+        </div>
+
         <div className="mx-6 mb-5 rounded-[30px] bg-[#0EA5E9] px-[23px] pb-[18px] pt-5">
           <p className="mb-3.5 text-[15px] text-[#E6F7FF]">현재 환경</p>
           <p className="mb-6 ml-px text-[22px] font-bold text-[#E6F7FF]">

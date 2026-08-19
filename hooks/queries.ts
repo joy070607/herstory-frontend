@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  airportApi,
   cartApi,
   careApi,
   flightApi,
@@ -35,6 +36,7 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
+  popupSpots: (memberId: number) => ["style", "popup-spots", memberId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
@@ -131,6 +133,13 @@ export function useCityStampCheckIn() {
   });
 }
 
+export function usePopupSpots(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.popupSpots(memberId ?? 0),
+    queryFn: () => styleApi.getPopupSpots(memberId ?? undefined),
+  });
+}
+
 export function useScanJourney() {
   return useMutation({
     mutationFn: (payload: JourneyScanRequest) =>
@@ -192,6 +201,12 @@ export function useAddToCart(memberId: number | null) {
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.cart(memberId ?? 0) }),
+  });
+}
+
+export function useStartFitting() {
+  return useMutation({
+    mutationFn: (journeyId: string) => airportApi.startFitting(journeyId),
   });
 }
 

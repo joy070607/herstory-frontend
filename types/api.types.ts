@@ -314,6 +314,14 @@ export interface CareGoogleMapsSpot {
   careServiceAvailable: string;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/style/popup-spots?memberId=)
+export interface PopupSpotsResponse {
+  destination: string;
+  pushNotificationMessage: string;
+  visetosSpots: CareGoogleMapsSpot[];
+  recommendedItems: Product[];
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
 export interface AppleWalletPassField {
   key: string;
@@ -359,6 +367,14 @@ export interface CheckInResponse {
   welcomeCouponMessage: string;
   purchaseStatus: PurchaseStatus;
   visitedAt: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/airport/{journeyId}/fitting)
+export interface FittingResponse {
+  journeyId: number;
+  memberId: number;
+  choiceFit: boolean;
+  message: string;
 }
 
 // GET /api/v1/store/re-entry-options/{memberId}
