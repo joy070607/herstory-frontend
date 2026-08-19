@@ -80,6 +80,19 @@ export interface JourneyScanResponse {
   departureDateTime: string;
 }
 
+// 실제 API 스키마 그대로 (POST /api/v1/auth/password/reset)
+export interface ResetPasswordRequest {
+  email: string;
+  newPassword: string;
+}
+
+export interface PasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
+export interface LiveCardResponse {
 // 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
 export interface TimelineItem {
   stepType: string;

@@ -12,8 +12,10 @@ import type {
   LoginResponseDto,
   Member,
   OrderResponse,
+  PasswordResponse,
   Product,
   ReEntryResponse,
+  ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
   VerifyPhoneCodeRequest,
@@ -51,6 +53,8 @@ export const authApi = {
     apiClient
       .post<VerifyPhoneCodeResponse>("/auth/phone/verify-code", payload)
       .then((res) => res.data),
+  resetPassword: (payload: ResetPasswordRequest) =>
+    apiClient.post<PasswordResponse>("/auth/password/reset", payload).then((res) => res.data),
 };
 
 export const preflightApi = {
