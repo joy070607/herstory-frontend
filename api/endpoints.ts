@@ -140,10 +140,12 @@ export const postflightApi = {
     apiClient.get(`/postflight/miles/${memberId}`),
 };
 
-// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크)
+// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크) + 가죽 케어 AI 가이드 (GPT-4o)
 export const careApi = {
   getGoogleMapsSpots: (params: { destination?: string; brand?: string }) =>
     apiClient
       .get<CareGoogleMapsSpot[]>("/care/google-maps", { params })
       .then((res) => res.data),
+  getAiCareTip: (params: { productName?: string; weather?: string; lang?: string }) =>
+    apiClient.get<string>("/care/ai-care-tip", { params }).then((res) => res.data),
 };
