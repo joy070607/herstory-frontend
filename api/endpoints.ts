@@ -1,6 +1,7 @@
 import { apiClient } from "./client";
 import type {
   AppleWalletPassResponse,
+  CareGoogleMapsSpot,
   CheckInRequest,
   CheckInResponse,
   CheckoutRequest,
@@ -137,4 +138,12 @@ export const postflightApi = {
   getVisetosSpots: () => apiClient.get("/postflight/visetos-map"),
   getNomadMiles: (memberId: string) =>
     apiClient.get(`/postflight/miles/${memberId}`),
+};
+
+// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크)
+export const careApi = {
+  getGoogleMapsSpots: (params: { destination?: string; brand?: string }) =>
+    apiClient
+      .get<CareGoogleMapsSpot[]>("/care/google-maps", { params })
+      .then((res) => res.data),
 };

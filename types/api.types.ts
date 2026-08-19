@@ -187,6 +187,18 @@ export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/care/google-maps?destination=&brand=)
+export interface CareGoogleMapsSpot {
+  spotName: string;
+  brand: string;
+  address: string;
+  locationType: string;
+  latitude: number;
+  longitude: number;
+  walkingMinutes: number | null;
+  careServiceAvailable: string;
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
 export interface AppleWalletPassField {
   key: string;
