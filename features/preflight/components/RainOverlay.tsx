@@ -1,21 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState } from "react";
 
 const DROP_COUNT = 16;
 
+function createDrops() {
+  return Array.from({ length: DROP_COUNT }, (_, index) => ({
+    id: index,
+    left: Math.round(Math.random() * 100),
+    duration: 1.1 + Math.random() * 1.2,
+    delay: Math.random() * 2,
+    height: 14 + Math.random() * 10,
+  }));
+}
+
 export function RainOverlay() {
-  const drops = useMemo(
-    () =>
-      Array.from({ length: DROP_COUNT }, (_, index) => ({
-        id: index,
-        left: Math.round(Math.random() * 100),
-        duration: 1.1 + Math.random() * 1.2,
-        delay: Math.random() * 2,
-        height: 14 + Math.random() * 10,
-      })),
-    []
-  );
+  const [drops] = useState(createDrops);
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[20px]" aria-hidden>

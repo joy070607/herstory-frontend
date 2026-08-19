@@ -1,7 +1,7 @@
 "use client";
 
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { useAuthStore } from "@/store/authStore";
@@ -95,7 +95,7 @@ export function PopupSpotPage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );

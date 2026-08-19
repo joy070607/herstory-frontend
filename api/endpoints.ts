@@ -1,5 +1,6 @@
 import { apiClient } from "./client";
 import type {
+  CartResponse,
   AppleWalletPassResponse,
   CareGoogleMapsSpot,
   CheckInRequest,
@@ -15,6 +16,7 @@ import type {
   LiveCardResponse,
   LoginResponseDto,
   Member,
+  NomadMilesResponse,
   OrderResponse,
   PasswordResponse,
   Product,
@@ -22,6 +24,8 @@ import type {
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
+  StampCheckInRequest,
+  StampCheckInResponse,
   VerifyPhoneCodeRequest,
   VerifyPhoneCodeResponse,
 } from "@/types/api.types";
@@ -99,7 +103,9 @@ export const flightApi = {
 
 export const styleApi = {
   getRecommendations: (journeyId: string) =>
-    apiClient.get<Product[]>(`/journeys/${journeyId}/style-engine`),
+    apiClient
+      .get<Product[]>(`/style/${journeyId}/recommendations`)
+      .then((res) => res.data),
   getPopupSpots: (memberId?: number) =>
     apiClient
       .get<PopupSpotsResponse>("/style/popup-spots", { params: { memberId } })
@@ -107,9 +113,10 @@ export const styleApi = {
 };
 
 export const cartApi = {
-  get: (journeyId: string) => apiClient.get(`/journeys/${journeyId}/cart`),
-  addItem: (journeyId: string, productId: string) =>
-    apiClient.post(`/journeys/${journeyId}/cart/items`, { productId }),
+  get: (memberId: number) =>
+    apiClient.get<CartResponse>("/cart/my", { params: { memberId } }).then((res) => res.data),
+  addItem: (payload: { memberId: number; productId: number; quantity: number }) =>
+    apiClient.post<CartResponse>("/cart/add", payload).then((res) => res.data),
 };
 
 // SCR-401 (고객 체크인) / SCR-402 (직원 태블릿) 이 공유하는 실제 백엔드 "Store API" 도메인
@@ -141,13 +148,21 @@ export const postflightApi = {
     apiClient.get(`/postflight/leather-care?lang=${lang}`),
   getVisetosSpots: () => apiClient.get("/postflight/visetos-map"),
   getNomadMiles: (memberId: string) =>
-    apiClient.get(`/postflight/miles/${memberId}`),
+    apiClient
+      .get<NomadMilesResponse>(`/postflight/miles/${memberId}`)
+      .then((res) => res.data),
 };
 
-// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크)
+// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크) + 가죽 케어 AI 가이드 (GPT-4o)
 export const careApi = {
   getGoogleMapsSpots: (params: { destination?: string; brand?: string }) =>
     apiClient
       .get<CareGoogleMapsSpot[]>("/care/google-maps", { params })
+      .then((res) => res.data),
+  getAiCareTip: (params: { productName?: string; weather?: string; lang?: string }) =>
+    apiClient.get<string>("/care/ai-care-tip", { params }).then((res) => res.data),
+  checkInCityStamp: (payload: StampCheckInRequest) =>
+    apiClient
+      .post<StampCheckInResponse>("/care/stamp-checkin", payload)
       .then((res) => res.data),
 };
