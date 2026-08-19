@@ -31,6 +31,9 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
+  styleRecommendations: (journeyId: string) =>
+    ["style", "recommendations", journeyId] as const,
+  cart: (memberId: number) => ["cart", memberId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
   nomadMiles: (memberId: string) => ["postflight", "miles", memberId] as const,
   reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
@@ -159,6 +162,19 @@ export function useSubmitChoiceFit(journeyId: string) {
   });
 }
 
+export function useStyleRecommendations(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.styleRecommendations(journeyId ?? ""),
+    queryFn: () => styleApi.getRecommendations(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useCart(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.cart(memberId ?? 0),
+    queryFn: () => cartApi.get(memberId as number),
+    enabled: memberId != null,
 export function useCart(journeyId: string | null) {
   const query = useQuery({
     queryKey: queryKeys.cart(journeyId ?? ""),
@@ -169,12 +185,17 @@ export function useCart(journeyId: string | null) {
   return query;
 }
 
-export function useAddToCart(journeyId: string) {
+export function useAddToCart(memberId: number | null) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (productId: string) => cartApi.addItem(journeyId, productId),
+    mutationFn: (payload: { productId: number; quantity?: number }) =>
+      cartApi.addItem({
+        memberId: memberId as number,
+        productId: payload.productId,
+        quantity: payload.quantity ?? 1,
+      }),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart(journeyId) }),
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart(memberId ?? 0) }),
   });
 }
 
@@ -192,12 +213,12 @@ export function useReEntryOptions(memberId: number | null) {
   });
 }
 
-export function useCheckout(journeyId: string) {
+export function useCheckout() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: CheckoutRequest) => orderApi.checkout(payload),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart(journeyId) }),
+    onSuccess: (_data, variables) =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart(variables.memberId) }),
   });
 }
 

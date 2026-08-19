@@ -7,13 +7,13 @@ import { useJourneyStore } from "@/store/journeyStore";
 import { useJourneyAnalysis } from "@/hooks/queries";
 import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { WeatherIcon, TicketIcon } from "@/components/icons";
-import type { RecommendedProduct, RecommendedProductCategory } from "@/types/api.types";
+import type { Product, ProductCategory } from "@/types/api.types";
 
-const CATEGORY_RECOMMEND_LABEL: Record<RecommendedProductCategory, string> = {
+const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
   WATERPROOF: "방수 아이템을 추천해요",
   BACKPACK: "백팩 아이템을 추천해요",
   TRAVEL_BAG: "여행 가방을 추천해요",
@@ -134,7 +134,7 @@ export function StyleEnginePage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );
@@ -146,7 +146,7 @@ function ProductCard({
   selected,
   onSelect,
 }: {
-  product: RecommendedProduct;
+  product: Product;
   index: number;
   selected: boolean;
   onSelect: () => void;

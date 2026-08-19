@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useJourney } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { ROUTES } from "@/constants/routes";
 import { formatFlightTime } from "@/utils/format";
 import { FLIGHT_STATUS_STYLE } from "@/constants/flightStatus";
@@ -106,7 +106,7 @@ export function HomePage() {
             href={ROUTES.styleEngine}
             className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#0099E51A] py-5"
           >
-            <ShirtIcon />
+            <ShirtIcon className="text-sky-500" />
             <span className="text-sm text-sky-500">스타일</span>
           </Link>
           <Link
@@ -152,7 +152,7 @@ export function HomePage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );
