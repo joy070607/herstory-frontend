@@ -1,5 +1,6 @@
 import { apiClient } from "./client";
 import type {
+  CartResponse,
   CheckInRequest,
   CheckInResponse,
   CheckoutRequest,
@@ -78,14 +79,19 @@ export const journeyApi = {
 
 export const styleApi = {
   getRecommendations: (journeyId: string) =>
-    apiClient.get<Product[]>(`/journeys/${journeyId}/style-engine`),
+    apiClient
+      .get<Product[]>(`/style/${journeyId}/recommendations`)
+      .then((res) => res.data),
   getPopupSpots: () => apiClient.get("/style/popup-spots"),
 };
 
 export const cartApi = {
-  get: (journeyId: string) => apiClient.get(`/journeys/${journeyId}/cart`),
-  addItem: (journeyId: string, productId: string) =>
-    apiClient.post(`/journeys/${journeyId}/cart/items`, { productId }),
+  get: (memberId: number) =>
+    apiClient
+      .get<CartResponse>("/cart/my", { params: { memberId } })
+      .then((res) => res.data),
+  addItem: (payload: { memberId: number; productId: number; quantity: number }) =>
+    apiClient.post<CartResponse>("/cart/add", payload).then((res) => res.data),
 };
 
 // SCR-401 (고객 체크인) / SCR-402 (직원 태블릿) 이 공유하는 실제 백엔드 "Store API" 도메인

@@ -120,7 +120,8 @@ export interface TimelineItem {
   iconType: string;
 }
 
-export type RecommendedProductCategory =
+// 실제 API 스키마 그대로 (GET /api/v1/style/{journeyId}/recommendations)
+export type ProductCategory =
   | "WATERPROOF"
   | "BACKPACK"
   | "TRAVEL_BAG"
@@ -128,18 +129,6 @@ export type RecommendedProductCategory =
   | "LEATHER_CARE"
   | "READY_TO_WEAR"
   | "LIMITED_EDITION";
-
-export interface RecommendedProduct {
-  id: number;
-  name: string;
-  brand: string;
-  category: RecommendedProductCategory;
-  price: number;
-  stock: number;
-  imageUrl: string;
-  description: string;
-  isVipExclusive: boolean;
-}
 
 export interface JourneyAnalysisResponse {
   journeyId: number;
@@ -149,14 +138,42 @@ export interface JourneyAnalysisResponse {
   climateSummary: string;
   recommendationReason: string;
   timeline: TimelineItem[];
-  recommendedProducts: RecommendedProduct[];
+  recommendedProducts: Product[];
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  thumbnailUrl: string;
-  priceKrw: number;
+  brand: string;
+  category: ProductCategory;
+  price: number;
+  stock: number;
+  imageUrl: string;
+  description: string;
+  isVipExclusive: boolean;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/cart/add, GET /api/v1/cart/my)
+export type CartStatus = "IN_CART" | "CHECKED_OUT" | "CANCELLED";
+
+export interface CartItemDetail {
+  cartItemId: number;
+  productId: number;
+  productName: string;
+  brand: string;
+  category: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+}
+
+export interface CartResponse {
+  cartId: number;
+  memberId: number;
+  choiceFit: boolean;
+  status: CartStatus;
+  items: CartItemDetail[];
+  totalPrice: number;
 }
 
 export interface HealthCheckResponse {

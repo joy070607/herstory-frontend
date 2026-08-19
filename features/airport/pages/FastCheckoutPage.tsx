@@ -11,12 +11,10 @@ export function FastCheckoutPage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const setPurchaseStatus = useJourneyStore((state) => state.setPurchaseStatus);
   const member = useAuthStore((state) => state.member);
-  const { data: items } = useCart(journeyId);
-  const spentKrw = Array.isArray(items)
-    ? items.reduce((sum: number, item: { priceKrw: number }) => sum + item.priceKrw, 0)
-    : 0;
+  const { data: cart } = useCart(member ? Number(member.id) : null);
+  const spentKrw = cart?.totalPrice ?? 0;
 
-  const checkout = useCheckout(journeyId ?? "");
+  const checkout = useCheckout();
 
   const handleCheckout = () => {
     if (!member || !journeyId) return;
