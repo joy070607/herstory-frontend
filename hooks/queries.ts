@@ -35,6 +35,7 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
+  popupSpots: (memberId: number) => ["style", "popup-spots", memberId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
@@ -128,6 +129,13 @@ export function useCityStampCheckIn() {
   return useMutation({
     mutationFn: (payload: StampCheckInRequest) => careApi.checkInCityStamp(payload),
     onSuccess: (data) => setNomadMiles(data.totalMiles),
+  });
+}
+
+export function usePopupSpots(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.popupSpots(memberId ?? 0),
+    queryFn: () => styleApi.getPopupSpots(memberId ?? undefined),
   });
 }
 

@@ -314,6 +314,13 @@ export interface CareGoogleMapsSpot {
   careServiceAvailable: string;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/style/popup-spots?memberId=)
+export interface PopupSpotsResponse {
+  destination: string;
+  pushNotificationMessage: string;
+  visetosSpots: CareGoogleMapsSpot[];
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
 export interface AppleWalletPassField {
   key: string;

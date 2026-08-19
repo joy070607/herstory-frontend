@@ -4,6 +4,7 @@ import type {
   AppleWalletPassResponse,
   CareGoogleMapsSpot,
   CheckInRequest,
+  PopupSpotsResponse,
   CheckInResponse,
   CheckoutRequest,
   FlightLookupResponse,
@@ -112,7 +113,10 @@ export const styleApi = {
     apiClient
       .get<Product[]>(`/style/${journeyId}/recommendations`)
       .then((res) => res.data),
-  getPopupSpots: () => apiClient.get("/style/popup-spots"),
+  getPopupSpots: (memberId?: number) =>
+    apiClient
+      .get<PopupSpotsResponse>("/style/popup-spots", { params: { memberId } })
+      .then((res) => res.data),
 };
 
 export const cartApi = {
