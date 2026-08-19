@@ -384,7 +384,7 @@ export function BoardingPassIcon(props: SVGProps<SVGSVGElement>) {
     >
       <path
         d="M14 0H21V5.83333H18.6667V2.33333H14V0ZM7 0V2.33333H2.33333V5.83333H0V0H7ZM14 21V18.6667H18.6667V15.1667H21V21H14ZM7 21H0V15.1667H2.33333V18.6667H7V21ZM0 9.33333H21V11.6667H0V9.33333Z"
-        fill="#0A0A0A"
+        fill="currentColor"
       />
     </svg>
   );
@@ -432,7 +432,7 @@ export function BagIcon(props: SVGProps<SVGSVGElement>) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M1.569 1.886C1.79162 1.32934 2.17592 0.852156 2.67233 0.51599C3.16874 0.179824 3.75448 9.96995e-05 4.354 0H15.646C16.2455 9.96995e-05 16.8313 0.179824 17.3277 0.51599C17.8241 0.852156 18.2084 1.32934 18.431 1.886L19.326 4.122C19.5815 4.76113 19.6094 5.46867 19.4051 6.12596C19.2009 6.78325 18.7768 7.3503 18.204 7.732L18 7.87V18H19C19.2652 18 19.5196 18.1054 19.7071 18.2929C19.8946 18.4804 20 18.7348 20 19C20 19.2652 19.8946 19.5196 19.7071 19.7071C19.5196 19.8946 19.2652 20 19 20H1C0.734784 20 0.48043 19.8946 0.292893 19.7071C0.105357 19.5196 0 19.2652 0 19C0 18.7348 0.105357 18.4804 0.292893 18.2929C0.48043 18.1054 0.734784 18 1 18H2V7.869L1.796 7.732C1.22323 7.3503 0.79914 6.78325 0.594853 6.12596C0.390566 5.46867 0.418511 4.76113 0.674 4.122L1.569 1.886ZM4 8.596V18H7V14C7 13.2044 7.31607 12.4413 7.87868 11.8787C8.44129 11.3161 9.20435 11 10 11C10.7956 11 11.5587 11.3161 12.1213 11.8787C12.6839 12.4413 13 13.2044 13 14V18H16V8.596C15.42 8.596 14.84 8.428 14.336 8.092L13 7.202L11.664 8.092C11.1712 8.42049 10.5922 8.59578 10 8.59578C9.40777 8.59578 8.82878 8.42049 8.336 8.092L7 7.202L5.664 8.092C5.17124 8.42057 4.59226 8.59593 4 8.596ZM11 18V14C11 13.7348 10.8946 13.4804 10.7071 13.2929C10.5196 13.1054 10.2652 13 10 13C9.73478 13 9.48043 13.1054 9.29289 13.2929C9.10536 13.4804 9 13.7348 9 14V18H11Z"
-        fill="#0A0A0A"
+        fill="currentColor"
       />
     </svg>
   );
@@ -625,6 +625,77 @@ export function CardIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function ChatIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M2 3.5C2 2.67 2.67 2 3.5 2H16.5C17.33 2 18 2.67 18 3.5V12.5C18 13.33 17.33 14 16.5 14H7L3 17.5V14H3.5C2.67 14 2 13.33 2 12.5V3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function DocumentIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect x="3" y="1.5" width="14" height="17" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M6.5 6H13.5M6.5 10H13.5M6.5 14H10.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function LogoutIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8 17.5H4.5C3.67 17.5 3 16.83 3 16V4C3 3.17 3.67 2.5 4.5 2.5H8"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13 14L17 10L13 6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M17 10H7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function HangerIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -637,14 +708,14 @@ export function HangerIcon(props: SVGProps<SVGSVGElement>) {
     >
       <path
         d="M13.6988 16.1752C14.4084 15.7139 15.2367 15.4684 16.0831 15.4684C16.9296 15.4684 17.7578 15.7139 18.4675 16.1752L29.806 23.5449C30.1478 23.7671 30.4086 24.0938 30.5496 24.4763C30.6906 24.8588 30.7041 25.2766 30.5883 25.6674C30.4724 26.0583 30.2334 26.4012 29.9067 26.6451C29.5801 26.889 29.1834 27.0208 28.7757 27.0209H3.39052C2.98287 27.0208 2.58616 26.889 2.25952 26.6451C1.93288 26.4012 1.69381 26.0583 1.57796 25.6674C1.46211 25.2766 1.47568 24.8588 1.61665 24.4763C1.75762 24.0938 2.01843 23.7671 2.36021 23.5449L13.6988 16.1752Z"
-        stroke="#E6F7FF"
+        stroke="currentColor"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M16.0831 14.625C16.0831 14.625 20.4581 8.29146 20.4581 5.875C20.4581 4.71468 19.9972 3.60188 19.1767 2.78141C18.3563 1.96094 17.2435 1.5 16.0831 1.5C14.9228 1.5 13.81 1.96094 12.9895 2.78141C12.1691 3.60188 11.7081 4.71468 11.7081 5.875"
-        stroke="#E6F7FF"
+        stroke="currentColor"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
