@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cartApi,
@@ -8,10 +9,10 @@ import {
   orderApi,
   postflightApi,
   storeApi,
-  styleApi,
 } from "@/api/endpoints";
 import { saveBlobResponse } from "@/utils/download";
 import { useAuthStore } from "@/store/authStore";
+import { useJourneyStore } from "@/store/journeyStore";
 import type {
   CheckInRequest,
   CheckoutRequest,
@@ -30,12 +31,23 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
-  styleRecommendations: (journeyId: string) =>
-    ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
   nomadMiles: (memberId: string) => ["postflight", "miles", memberId] as const,
   reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
 };
+
+// 백엔드 테스트 데이터가 리셋되면 로컬에 저장해둔 journeyId가 더 이상 존재하지 않는
+// 여정을 가리키게 되어, 관련 조회가 계속 실패합니다. 이 상태를 방치하면 화면이 빈
+// 로딩 스켈레톤에 멈춘 것처럼 보이므로, 조회가 실패하면 journeyId를 비워 "여정 스캔"
+// 안내 화면으로 자연스럽게 돌아가게 합니다.
+function useClearStaleJourney(journeyId: string | null, isError: boolean) {
+  const setJourneyId = useJourneyStore((state) => state.setJourneyId);
+  useEffect(() => {
+    if (isError && journeyId) {
+      setJourneyId(null);
+    }
+  }, [isError, journeyId, setJourneyId]);
+}
 
 export function useHealthCheck() {
   return useQuery({
@@ -46,28 +58,34 @@ export function useHealthCheck() {
 }
 
 export function useJourney(journeyId: string | null) {
-  return useQuery({
+  const query = useQuery({
     queryKey: queryKeys.journey(journeyId ?? ""),
     queryFn: () => journeyApi.get(journeyId as string).then((res) => res.data),
     enabled: Boolean(journeyId),
   });
+  useClearStaleJourney(journeyId, query.isError);
+  return query;
 }
 
 export function useJourneyAnalysis(journeyId: string | null) {
-  return useQuery({
+  const query = useQuery({
     queryKey: queryKeys.journeyAnalysis(journeyId ?? ""),
     queryFn: () => journeyApi.getAnalysis(journeyId as string),
     enabled: Boolean(journeyId),
   });
+  useClearStaleJourney(journeyId, query.isError);
+  return query;
 }
 
 export function useLiveCard(journeyId: string | null) {
-  return useQuery({
+  const query = useQuery({
     queryKey: queryKeys.liveCard(journeyId ?? ""),
     queryFn: () => journeyApi.getLiveCard(journeyId as string),
     enabled: Boolean(journeyId),
     refetchInterval: 30_000,
   });
+  useClearStaleJourney(journeyId, query.isError);
+  return query;
 }
 
 export function useFlightLookup(flightNumber: string | null | undefined) {
@@ -141,21 +159,14 @@ export function useSubmitChoiceFit(journeyId: string) {
   });
 }
 
-export function useStyleRecommendations(journeyId: string | null) {
-  return useQuery({
-    queryKey: queryKeys.styleRecommendations(journeyId ?? ""),
-    queryFn: () =>
-      styleApi.getRecommendations(journeyId as string).then((res) => res.data),
-    enabled: Boolean(journeyId),
-  });
-}
-
 export function useCart(journeyId: string | null) {
-  return useQuery({
+  const query = useQuery({
     queryKey: queryKeys.cart(journeyId ?? ""),
     queryFn: () => cartApi.get(journeyId as string).then((res) => res.data),
     enabled: Boolean(journeyId),
   });
+  useClearStaleJourney(journeyId, query.isError);
+  return query;
 }
 
 export function useAddToCart(journeyId: string) {

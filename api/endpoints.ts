@@ -17,7 +17,6 @@ import type {
   NomadMilesResponse,
   OrderResponse,
   PasswordResponse,
-  Product,
   ReEntryResponse,
   ResetPasswordRequest,
   SendPhoneCodeRequest,
@@ -100,8 +99,6 @@ export const flightApi = {
 };
 
 export const styleApi = {
-  getRecommendations: (journeyId: string) =>
-    apiClient.get<Product[]>(`/journeys/${journeyId}/style-engine`),
   getPopupSpots: () => apiClient.get("/style/popup-spots"),
 };
 
