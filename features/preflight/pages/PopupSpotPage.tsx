@@ -11,6 +11,13 @@ import type { CareGoogleMapsSpot } from "@/types/api.types";
 
 const AIRPORT_POPUP_BRAND = "HERSTORY";
 
+function mapEmbedUrl(spots: CareGoogleMapsSpot[]) {
+  const lat = spots.reduce((sum, spot) => sum + spot.latitude, 0) / spots.length;
+  const lng = spots.reduce((sum, spot) => sum + spot.longitude, 0) / spots.length;
+  // 공항 터미널 내부 지점끼리 붙어있어서 도시 지도(z=13)보다 훨씬 확대해서 보여줍니다.
+  return `https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
+}
+
 const LIMITED_ITEMS = [
   {
     id: "trench-coat",
@@ -47,8 +54,19 @@ export function PopupSpotPage() {
       <div className="flex flex-1 flex-col gap-5 px-6 py-6">
         <h1 className="text-2xl font-bold text-neutral-900">POP-UP STORE</h1>
 
-        <div className="flex aspect-[4/3] w-full items-center justify-center rounded-[20px] bg-neutral-200">
-          <MapPinIcon className="h-9 w-9 text-black" />
+        <div className="aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-neutral-200">
+          {spots && spots.length > 0 ? (
+            <iframe
+              title="공항 팝업 스팟 지도"
+              src={mapEmbedUrl(spots)}
+              className="h-full w-full border-0"
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <MapPinIcon className="h-9 w-9 text-black" />
+            </div>
+          )}
         </div>
 
         {isLoading && <WakingScreen />}
