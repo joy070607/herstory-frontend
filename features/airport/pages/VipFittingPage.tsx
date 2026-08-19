@@ -52,7 +52,7 @@ export function VipFittingPage() {
           <div className="rounded-[20px] bg-[#E7F6FD] px-6 py-6">
             <div className="mb-5 flex flex-col items-center gap-5">
               <div className="flex h-[68px] w-[68px] items-center justify-center rounded-[24px] bg-sky-500">
-                <HangerIcon className="h-[30px] w-[34px]" />
+                <HangerIcon className="h-[30px] w-[34px] text-[#E6F7FF]" />
               </div>
               <div className="flex flex-col items-center gap-2 text-center">
                 {startFitting.isSuccess && startFitting.data ? (

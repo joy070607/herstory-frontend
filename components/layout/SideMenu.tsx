@@ -2,20 +2,25 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/store/authStore";
+import { useJourneyStore } from "@/store/journeyStore";
 import {
   BagIcon,
   BoardingPassIcon,
   CardIcon,
   CareIcon,
   CartIcon,
+  ChatIcon,
   CheckCircleIcon,
   ClockIcon,
+  DocumentIcon,
   GateIcon,
   HangerIcon,
   HomeIcon,
   LockIcon,
+  LogoutIcon,
   RefreshIcon,
   ScanIcon,
   ShirtIcon,
@@ -23,6 +28,7 @@ import {
   StarIcon,
   UserIcon,
 } from "@/components/icons";
+import packageJson from "@/package.json";
 import type { SVGProps } from "react";
 
 interface MenuItem {
@@ -71,6 +77,13 @@ const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
       { label: "결제 수단", href: ROUTES.myPagePaymentMethods, Icon: CardIcon },
     ],
   },
+  {
+    title: "기타",
+    items: [
+      { label: "고객 지원", Icon: ChatIcon, disabled: true },
+      { label: "약관 및 정책", Icon: DocumentIcon, disabled: true },
+    ],
+  },
 ];
 
 function MenuRow({
@@ -84,12 +97,13 @@ function MenuRow({
 }) {
   const { label, href, Icon, disabled } = item;
 
+  const iconColor = disabled ? "text-neutral-300" : isActive ? "text-sky-500" : "text-neutral-400";
+  const labelColor = disabled ? "text-neutral-300" : "text-neutral-900";
+
   const inner = (
     <>
-      <Icon className={`h-5 w-5 shrink-0 ${disabled ? "text-neutral-300" : "text-sky-500"}`} />
-      <span className={`text-[15px] ${disabled ? "text-neutral-300" : "text-neutral-900"}`}>
-        {label}
-      </span>
+      <Icon className={`h-5 w-5 shrink-0 ${iconColor}`} />
+      <span className={`text-[15px] ${labelColor}`}>{label}</span>
       {disabled && (
         <span className="ml-auto shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] text-neutral-400">
           준비 중
@@ -114,7 +128,10 @@ function MenuRow({
 }
 
 export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const router = useRouter();
   const pathname = usePathname();
+  const resetAuth = useAuthStore((state) => state.reset);
+  const resetJourney = useJourneyStore((state) => state.reset);
 
   useEffect(() => {
     if (!open) return;
@@ -123,6 +140,13 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  const handleLogout = () => {
+    resetAuth();
+    resetJourney();
+    onClose();
+    router.push(ROUTES.login);
+  };
 
   return (
     <div
@@ -133,7 +157,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
     >
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
-        className={`absolute inset-y-0 right-0 flex w-[82%] max-w-[340px] flex-col overflow-y-auto bg-white shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex w-[82%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -149,7 +173,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
           </button>
         </div>
 
-        <div className="flex flex-col pb-8">
+        <div className="flex flex-1 flex-col overflow-y-auto pb-4">
           {MENU_SECTIONS.map((section) => (
             <div key={section.title}>
               <p className="px-6 pb-2 pt-4 text-xs font-medium text-neutral-400">{section.title}</p>
@@ -165,6 +189,18 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="shrink-0 border-t border-neutral-100 px-6 py-4">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-3 py-2 text-[#F87171]"
+          >
+            <LogoutIcon className="h-5 w-5 shrink-0" />
+            <span className="text-[15px] font-medium">로그아웃</span>
+          </button>
+          <p className="mt-3 text-xs text-neutral-300">HER-STORY v{packageJson.version}</p>
         </div>
       </div>
     </div>
