@@ -187,6 +187,14 @@ export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/postflight/miles/{memberId})
+export interface NomadMilesResponse {
+  memberId: number;
+  memberName: string;
+  vipTier: string;
+  nomadMiles: number;
+}
+
 // 실제 API 스키마 그대로 (POST /api/v1/care/stamp-checkin)
 export interface StampCheckInRequest {
   memberId: number;

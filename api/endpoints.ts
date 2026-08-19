@@ -14,6 +14,7 @@ import type {
   LiveCardResponse,
   LoginResponseDto,
   Member,
+  NomadMilesResponse,
   OrderResponse,
   PasswordResponse,
   Product,
@@ -139,7 +140,9 @@ export const postflightApi = {
     apiClient.get(`/postflight/leather-care?lang=${lang}`),
   getVisetosSpots: () => apiClient.get("/postflight/visetos-map"),
   getNomadMiles: (memberId: string) =>
-    apiClient.get(`/postflight/miles/${memberId}`),
+    apiClient
+      .get<NomadMilesResponse>(`/postflight/miles/${memberId}`)
+      .then((res) => res.data),
 };
 
 // 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크) + 가죽 케어 AI 가이드 (GPT-4o)
