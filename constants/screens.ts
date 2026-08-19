@@ -7,7 +7,6 @@ export const SCREENS = {
   "SCR-102": { name: "LiveCardPage", route: ROUTES.liveCard },
   "SCR-201": { name: "BoardingPassPage", route: ROUTES.boardingPass },
   "SCR-202": { name: "JourneyTimelinePage", route: ROUTES.journeyTimeline },
-  "SCR-203": { name: "ClimateGuidePage", route: ROUTES.climateGuide },
   "SCR-301": { name: "StyleEnginePage", route: ROUTES.styleEngine },
   "SCR-302": { name: "PopupSpotPage", route: ROUTES.popupSpot },
   "SCR-303": { name: "SmartCartPage", route: ROUTES.smartCart },
