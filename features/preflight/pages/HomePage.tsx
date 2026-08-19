@@ -53,7 +53,7 @@ export function HomePage() {
             <p className="mb-5 font-mono text-2xl font-bold text-[#E6F7FF]">{journey.pnr}</p>
             <div className="mb-5 flex items-center justify-between">
               <span className="text-lg text-[#E6F7FF]">{journey.origin}</span>
-              <PlaneIcon className="shrink-0 text-[#E6F7FF]" />
+              <PlaneIcon className="shrink-0 rotate-90 text-[#E6F7FF]" />
               <span className="text-lg text-[#E6F7FF]">{journey.destination}</span>
             </div>
             <div className="flex items-center rounded-[20px] bg-[#E6F7FF4D] px-4 py-3">
@@ -117,10 +117,7 @@ export function HomePage() {
         </div>
 
         <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">오늘의 날씨</h2>
-        <Link
-          href={ROUTES.climateGuide}
-          className="mx-6 mb-4 flex items-center gap-3 rounded-[20px] bg-sky-500 px-6 py-5"
-        >
+        <div className="mx-6 mb-4 flex items-center gap-3 rounded-[20px] bg-sky-500 px-6 py-5">
           <div className="flex items-center gap-3">
             <WeatherIcon className="h-7 w-8 shrink-0 text-sky-50" />
             <div>
@@ -132,7 +129,7 @@ export function HomePage() {
             <p className="mb-2 text-xs text-sky-50">비소식이 예상됩니다.</p>
             <p className="text-base text-sky-50">방수 트렌치 코트 추천</p>
           </div>
-        </Link>
+        </div>
 
         <div className="flex items-center gap-4 px-6">
           <button

@@ -93,24 +93,46 @@ export interface PasswordResponse {
 
 // 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
 export interface LiveCardResponse {
+// 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
+export interface TimelineItem {
+  stepType: string;
+  title: string;
+  time: string;
+  description: string;
+  tipMessage: string;
+  iconType: string;
+}
+
+export type RecommendedProductCategory =
+  | "WATERPROOF"
+  | "BACKPACK"
+  | "TRAVEL_BAG"
+  | "ACCESSORY"
+  | "LEATHER_CARE"
+  | "READY_TO_WEAR"
+  | "LIMITED_EDITION";
+
+export interface RecommendedProduct {
+  id: number;
+  name: string;
+  brand: string;
+  category: RecommendedProductCategory;
+  price: number;
+  stock: number;
+  imageUrl: string;
+  description: string;
+  isVipExclusive: boolean;
+}
+
+export interface JourneyAnalysisResponse {
   journeyId: number;
-  pnr: string;
-  flightNumber: string;
-  origin: string;
   destination: string;
-  departureDateTime: string;
-  remainingMinutesToDeparture: number;
-  gate: string;
-  flightStatus: FlightStatus;
-  currentStep: string;
-  currentStepLabel: string;
-  estimatedSecurityMinutes: number;
-  loungeLocation: string;
-  loungeGateLocation: string;
-  loungeWalkingMinutes: number;
-  loungeWaitMinutes: number;
-  loungeWaitTime: string;
-  liveGuideMessage: string;
+  weatherInfo: string;
+  rainProbability: string;
+  climateSummary: string;
+  recommendationReason: string;
+  timeline: TimelineItem[];
+  recommendedProducts: RecommendedProduct[];
 }
 
 export interface Product {

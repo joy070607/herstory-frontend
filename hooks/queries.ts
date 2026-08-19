@@ -13,6 +13,7 @@ import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/type
 export const queryKeys = {
   health: ["health"] as const,
   journey: (journeyId: string) => ["journey", journeyId] as const,
+  journeyAnalysis: (journeyId: string) => ["journey", "analysis", journeyId] as const,
   liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
@@ -37,6 +38,11 @@ export function useJourney(journeyId: string | null) {
   });
 }
 
+export function useJourneyAnalysis(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.journeyAnalysis(journeyId ?? ""),
+    queryFn: () => journeyApi.getAnalysis(journeyId as string),
+    enabled: Boolean(journeyId),
 export function useLiveCard(journeyId: string | null) {
   return useQuery({
     queryKey: queryKeys.liveCard(journeyId ?? ""),

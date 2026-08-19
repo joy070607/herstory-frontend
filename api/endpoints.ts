@@ -5,6 +5,7 @@ import type {
   CheckoutRequest,
   HealthCheckResponse,
   Journey,
+  JourneyAnalysisResponse,
   JourneyScanRequest,
   JourneyScanResponse,
   LiveCardResponse,
@@ -59,14 +60,14 @@ export const authApi = {
 export const preflightApi = {
   getHub: () => apiClient.get("/preflight/hub"),
   getLiveCard: () => apiClient.get("/preflight/live-card"),
-  getClimateGuide: (journeyId: string) =>
-    apiClient.get(`/preflight/${journeyId}/climate`),
 };
 
 export const journeyApi = {
   get: (journeyId: string) => apiClient.get<Journey>(`/journeys/${journeyId}`),
   scan: (payload: JourneyScanRequest) =>
     apiClient.post<JourneyScanResponse>("/journey/scan", payload),
+  getAnalysis: (journeyId: string) =>
+    apiClient.get<JourneyAnalysisResponse>(`/journey/analysis/${journeyId}`).then((res) => res.data),
   getLiveCard: (journeyId: string) =>
     apiClient.get<LiveCardResponse>(`/journey/live-card/${journeyId}`).then((res) => res.data),
   createBoardingPass: (journeyId: string) =>
