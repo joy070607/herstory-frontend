@@ -8,6 +8,7 @@ import { authApi } from "@/api/endpoints";
 import { useAuthStore } from "@/store/authStore";
 import { ROUTES } from "@/constants/routes";
 import { AppHeader } from "@/components/layout/AppHeader";
+import { BackButton } from "@/components/layout/BackButton";
 import {
   EyeIcon,
   EyeOffIcon,
@@ -154,6 +155,10 @@ export function RegisterPage() {
   return (
     <div className="flex flex-1 flex-col">
       <AppHeader showMenuButton={false} />
+
+      <div className="px-6 pt-4">
+        <BackButton />
+      </div>
 
       <form
         className="flex flex-col px-6 pb-8 pt-6"

@@ -6,6 +6,7 @@ import { useFlightLookup, useLiveCard } from "@/hooks/queries";
 import { useCountdown } from "@/hooks/useCountdown";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
 import { FLIGHT_STATUS_STYLE } from "@/constants/flightStatus";
 import { formatFlightTime, formatMinutesKorean } from "@/utils/format";
@@ -50,6 +51,8 @@ export function LiveCardPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-2 px-6 py-5">
+        <BackButton className="mb-1" />
+
         {journeyId && (isLoading || !liveCard) && (
           <div className="h-[320px] animate-pulse rounded-[20px] bg-neutral-100" />
         )}

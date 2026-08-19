@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { useAuthStore } from "@/store/authStore";
@@ -98,6 +99,10 @@ export function VisetosMapPage() {
   return (
     <div className="flex flex-1 flex-col">
       <AppHeader />
+
+      <div className="px-6 pt-4">
+        <BackButton />
+      </div>
 
       {isLoading && <WakingScreen />}
       {isError && <ErrorState onRetry={() => refetch()} />}

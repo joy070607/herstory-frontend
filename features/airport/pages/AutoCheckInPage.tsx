@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useCheckIn } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
 import {
   BluetoothIcon,
@@ -48,6 +49,8 @@ export function AutoCheckInPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-6 px-6 py-8">
+        <BackButton />
+
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="relative flex h-24 w-24 items-center justify-center">
             <span className="absolute inset-0 animate-ping rounded-full bg-sky-200 opacity-75 [animation-duration:2.8s]" />

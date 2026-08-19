@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useCart, useCheckout } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
 import { formatKRW, formatMiles } from "@/utils/format";
 import { getDutyFreeStatus } from "@/utils/dutyFree";
@@ -71,7 +72,10 @@ export function FastCheckoutPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-6 px-6 py-6">
-        <h1 className="text-[28px] font-bold text-neutral-900">빠른 결제</h1>
+        <div className="flex items-center gap-2">
+          <BackButton />
+          <h1 className="text-[28px] font-bold text-neutral-900">빠른 결제</h1>
+        </div>
 
         {(!journeyId || !memberId) && (
           <Link
