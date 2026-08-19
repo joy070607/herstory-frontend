@@ -21,6 +21,8 @@ import type {
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
+  StampCheckInRequest,
+  StampCheckInResponse,
   VerifyPhoneCodeRequest,
   VerifyPhoneCodeResponse,
 } from "@/types/api.types";
@@ -145,5 +147,9 @@ export const careApi = {
   getGoogleMapsSpots: (params: { destination?: string; brand?: string }) =>
     apiClient
       .get<CareGoogleMapsSpot[]>("/care/google-maps", { params })
+      .then((res) => res.data),
+  checkInCityStamp: (payload: StampCheckInRequest) =>
+    apiClient
+      .post<StampCheckInResponse>("/care/stamp-checkin", payload)
       .then((res) => res.data),
 };
