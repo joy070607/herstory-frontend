@@ -140,16 +140,22 @@ export function SmartCartPage() {
               ))}
             </div>
 
-            <div className="mb-4 flex flex-col gap-3.5">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  disabled={!memberId || pendingProductId === product.id}
-                  onAdd={() => handleAdd(product.id)}
-                />
-              ))}
-            </div>
+            {filteredProducts.length === 0 ? (
+              <p className="py-8 text-center text-sm text-neutral-400">
+                이 카테고리에는 추천 상품이 아직 없어요
+              </p>
+            ) : (
+              <div className="mb-4 flex flex-col gap-3.5">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    disabled={!memberId || pendingProductId === product.id}
+                    onAdd={() => handleAdd(product.id)}
+                  />
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>

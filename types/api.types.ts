@@ -319,6 +319,7 @@ export interface PopupSpotsResponse {
   destination: string;
   pushNotificationMessage: string;
   visetosSpots: CareGoogleMapsSpot[];
+  recommendedItems: Product[];
 }
 
 // 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
