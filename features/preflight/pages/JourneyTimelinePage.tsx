@@ -224,18 +224,22 @@ export function JourneyTimelinePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-8 flex w-full items-center gap-4 overflow-hidden rounded-[20px] bg-[#E7F6FD] px-5 py-4 text-left"
+              className="relative mb-8 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
             >
               {showRain && <RainOverlay />}
-              <WeatherIcon className="relative z-10 h-9 w-8 shrink-0 text-sky-500" />
-              <div className="relative z-10 flex-1">
-                <p className="text-xs font-medium uppercase tracking-wide text-sky-500">
-                  {analysis.destination} 강수확률
+              <div className="relative z-10 flex items-center gap-3">
+                <WeatherIcon className="h-9 w-8 shrink-0" />
+                <div>
+                  <p className="text-2xl font-bold leading-none text-white">
+                    {analysis.rainProbability}
+                  </p>
+                  <p className="mt-1 text-sm text-white/90">{analysis.destination} 강수확률</p>
+                </div>
+              </div>
+              <div className="relative z-10 rounded-[14px] bg-black/15 px-4 py-4">
+                <p className="text-sm font-medium leading-relaxed text-white">
+                  {analysis.weatherInfo}
                 </p>
-                <p className="mb-1 text-2xl font-bold leading-none text-sky-700">
-                  {analysis.rainProbability}
-                </p>
-                <p className="text-xs leading-relaxed text-sky-700/80">{analysis.climateSummary}</p>
               </div>
             </button>
 

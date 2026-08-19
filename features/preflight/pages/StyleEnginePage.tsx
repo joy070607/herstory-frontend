@@ -67,7 +67,7 @@ export function StyleEnginePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-500 px-6 pb-6 pt-7 text-left"
+              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
             >
               {showRain && <RainOverlay />}
               <div className="relative z-10 flex items-center gap-3">
@@ -77,15 +77,15 @@ export function StyleEnginePage() {
                     {weather?.temp != null ? `${weather.temp}°` : "-"}
                   </p>
                   <p className="mt-1 text-sm text-sky-50/90">
-                    {weather?.condition ?? analysis.climateSummary}
+                    {weather?.condition ?? analysis.weatherInfo}
                   </p>
                 </div>
               </div>
-              <div className="relative z-10 border-t border-sky-400/50 pt-4">
-                <p className="text-base text-sky-50/90">
+              <div className="relative z-10 rounded-[14px] bg-black/15 px-4 py-4">
+                <p className="text-sm font-semibold text-white">
                   비소식 {analysis.rainProbability} 예상됩니다.
                 </p>
-                <p className="mt-1 text-xl font-bold leading-snug text-sky-50">{recommendLabel}</p>
+                <p className="mt-1.5 text-xl font-bold leading-snug text-white">{recommendLabel}</p>
               </div>
             </button>
 

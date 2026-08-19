@@ -145,7 +145,7 @@ export function HomePage() {
                       {weather?.temp != null ? `${weather.temp}°` : "-"}
                     </p>
                     <p className="mt-1.5 text-base font-medium text-white">
-                      {weather?.condition ?? analysis.climateSummary}
+                      {weather?.condition ?? analysis.weatherInfo}
                     </p>
                   </div>
                 </div>
