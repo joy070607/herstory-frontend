@@ -10,6 +10,30 @@ export interface Member {
 
 export type VipTier = "SILVER" | "GOLD" | "PLATINUM" | "VIP";
 
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send-code)
+export interface SendPhoneCodeRequest {
+  phone: string;
+}
+
+export interface SendPhoneCodeResponse {
+  phone: string;
+  verificationCode: string;
+  message: string;
+  expiresInSeconds: number;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify-code)
+export interface VerifyPhoneCodeRequest {
+  phone: string;
+  verificationCode: string;
+}
+
+export interface VerifyPhoneCodeResponse {
+  phone: string;
+  verified: boolean;
+  message: string;
+}
+
 // 실제 API 응답 그대로 (POST /api/v1/auth/login)
 export interface LoginResponseDto {
   memberId: number;
@@ -34,7 +58,7 @@ export interface Journey {
   recommendationReason: string;
 }
 
-export type FlightStatus = "SCHEDULED" | "BOARDING" | "COMPLETED" | "CANCELLED";
+export type FlightStatus = "SCHEDULED" | "BOARDING" | "DELAYED" | "COMPLETED" | "CANCELLED";
 
 export type PurchaseStatus = "PURCHASED" | "PENDING_REENTRY" | "ABANDONED";
 
@@ -56,30 +80,6 @@ export interface JourneyScanResponse {
   departureDateTime: string;
 }
 
-// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/send)
-export interface SendVerificationCodeRequest {
-  phone: string;
-}
-
-export interface SendVerificationCodeResponse {
-  phone: string;
-  verificationCode: string;
-  message: string;
-  expiresInSeconds: number;
-}
-
-// 실제 API 스키마 그대로 (POST /api/v1/auth/phone/verify)
-export interface VerifyCodeRequest {
-  phone: string;
-  verificationCode: string;
-}
-
-export interface VerifyCodeResponse {
-  phone: string;
-  verified: boolean;
-  message: string;
-}
-
 // 실제 API 스키마 그대로 (POST /api/v1/auth/password/reset)
 export interface ResetPasswordRequest {
   email: string;
@@ -89,6 +89,28 @@ export interface ResetPasswordRequest {
 export interface PasswordResponse {
   success: boolean;
   message: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
+export interface LiveCardResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  remainingMinutesToDeparture: number;
+  gate: string;
+  flightStatus: FlightStatus;
+  currentStep: string;
+  currentStepLabel: string;
+  estimatedSecurityMinutes: number;
+  loungeLocation: string;
+  loungeGateLocation: string;
+  loungeWalkingMinutes: number;
+  loungeWaitMinutes: number;
+  loungeWaitTime: string;
+  liveGuideMessage: string;
 }
 
 export interface Product {

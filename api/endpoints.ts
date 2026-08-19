@@ -7,6 +7,7 @@ import type {
   Journey,
   JourneyScanRequest,
   JourneyScanResponse,
+  LiveCardResponse,
   LoginResponseDto,
   Member,
   OrderResponse,
@@ -14,9 +15,10 @@ import type {
   Product,
   ReEntryResponse,
   ResetPasswordRequest,
-  SendVerificationCodeResponse,
-  VerifyCodeRequest,
-  VerifyCodeResponse,
+  SendPhoneCodeRequest,
+  SendPhoneCodeResponse,
+  VerifyPhoneCodeRequest,
+  VerifyPhoneCodeResponse,
 } from "@/types/api.types";
 
 export const healthApi = {
@@ -44,10 +46,12 @@ export const authApi = {
       .then((res) => toMember(res.data)),
   sendPhoneCode: (phone: string) =>
     apiClient
-      .post<SendVerificationCodeResponse>("/auth/phone/send", { phone })
+      .post<SendPhoneCodeResponse>("/auth/phone/send-code", { phone } satisfies SendPhoneCodeRequest)
       .then((res) => res.data),
-  verifyPhoneCode: (payload: VerifyCodeRequest) =>
-    apiClient.post<VerifyCodeResponse>("/auth/phone/verify", payload).then((res) => res.data),
+  verifyPhoneCode: (payload: VerifyPhoneCodeRequest) =>
+    apiClient
+      .post<VerifyPhoneCodeResponse>("/auth/phone/verify-code", payload)
+      .then((res) => res.data),
   resetPassword: (payload: ResetPasswordRequest) =>
     apiClient.post<PasswordResponse>("/auth/password/reset", payload).then((res) => res.data),
 };
@@ -63,6 +67,8 @@ export const journeyApi = {
   get: (journeyId: string) => apiClient.get<Journey>(`/journeys/${journeyId}`),
   scan: (payload: JourneyScanRequest) =>
     apiClient.post<JourneyScanResponse>("/journey/scan", payload),
+  getLiveCard: (journeyId: string) =>
+    apiClient.get<LiveCardResponse>(`/journey/live-card/${journeyId}`).then((res) => res.data),
   createBoardingPass: (journeyId: string) =>
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>

@@ -13,6 +13,7 @@ import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/type
 export const queryKeys = {
   health: ["health"] as const,
   journey: (journeyId: string) => ["journey", journeyId] as const,
+  liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -33,6 +34,15 @@ export function useJourney(journeyId: string | null) {
     queryKey: queryKeys.journey(journeyId ?? ""),
     queryFn: () => journeyApi.get(journeyId as string).then((res) => res.data),
     enabled: Boolean(journeyId),
+  });
+}
+
+export function useLiveCard(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.liveCard(journeyId ?? ""),
+    queryFn: () => journeyApi.getLiveCard(journeyId as string),
+    enabled: Boolean(journeyId),
+    refetchInterval: 30_000,
   });
 }
 
