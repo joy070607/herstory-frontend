@@ -93,6 +93,23 @@ export interface PasswordResponse {
 
 // 실제 API 스키마 그대로 (GET /api/v1/journey/live-card/{journeyId})
 export interface LiveCardResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber?: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  flightStatus: FlightStatus;
+  gate?: string;
+  currentStep: string;
+  currentStepLabel: string;
+  loungeLocation?: string;
+  loungeGateLocation?: string;
+  loungeWalkingMinutes: number;
+  loungeWaitTime?: string;
+  loungeWaitMinutes: number;
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
 export interface TimelineItem {
   stepType: string;

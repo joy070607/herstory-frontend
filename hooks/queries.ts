@@ -43,6 +43,9 @@ export function useJourneyAnalysis(journeyId: string | null) {
     queryKey: queryKeys.journeyAnalysis(journeyId ?? ""),
     queryFn: () => journeyApi.getAnalysis(journeyId as string),
     enabled: Boolean(journeyId),
+  });
+}
+
 export function useLiveCard(journeyId: string | null) {
   return useQuery({
     queryKey: queryKeys.liveCard(journeyId ?? ""),

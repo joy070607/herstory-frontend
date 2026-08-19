@@ -60,7 +60,7 @@ export function HomePage() {
             </div>
             <div className="flex items-center rounded-[20px] bg-[#E6F7FF4D] px-4 py-3">
               <div className="flex flex-1 items-center justify-center gap-2.5">
-                <GateIcon className="h-4 w-4 shrink-0" />
+                <GateIcon className="h-4 w-4 shrink-0 text-white" />
                 <div className="text-center">
                   <p className="text-[11px] text-white">게이트</p>
                   <p className="text-base font-bold text-white">G-12</p>
@@ -68,7 +68,7 @@ export function HomePage() {
               </div>
               <div className="h-7 w-px bg-white/30" />
               <div className="flex flex-1 items-center justify-center gap-2.5">
-                <ClockIcon className="h-4 w-4 shrink-0" />
+                <ClockIcon className="h-4 w-4 shrink-0 text-white" />
                 <div className="text-center">
                   <p className="text-[11px] text-white">탑승 시간</p>
                   <p className="text-base font-bold text-white">
