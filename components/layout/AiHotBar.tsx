@@ -10,21 +10,21 @@ export function AiHotBar() {
       <span className="text-[28px] font-bold text-[#0369A1]">AI</span>
       <div className="flex-1" />
       <Link href={ROUTES.smartCart} className="mr-[38px]" aria-label="스마트 장바구니">
-        <Image src="/icons/quickbar-cart.png" alt="" width={38} height={33} />
+        <Image src="/icons/quickbar-cart.png" alt="" width={38} height={33} className="h-[33px] w-[38px]" />
       </Link>
       <Link
         href={ROUTES.home}
         className="mr-[38px] rounded-[10px] bg-[#0EA5E9] px-[9px] py-2"
         aria-label="홈"
       >
-        <Image src="/icons/quickbar-home.png" alt="" width={31} height={34} />
+        <Image src="/icons/quickbar-home.png" alt="" width={31} height={34} className="h-[34px] w-[31px]" />
       </Link>
       <Link href={ROUTES.journeyTimeline} aria-label="여정 타임라인">
-        <Image src="/icons/quickbar-journey.png" alt="" width={33} height={27} />
+        <Image src="/icons/quickbar-journey.png" alt="" width={33} height={27} className="h-[27px] w-[33px]" />
       </Link>
       <div className="flex-1" />
       <Link href={ROUTES.leatherCare} aria-label="가죽 케어">
-        <Image src="/icons/quickbar-care.png" alt="" width={31} height={31} />
+        <Image src="/icons/quickbar-care.png" alt="" width={31} height={31} className="h-[31px] w-[31px]" />
       </Link>
     </div>
   );
