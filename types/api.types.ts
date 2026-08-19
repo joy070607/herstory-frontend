@@ -110,6 +110,30 @@ export interface LiveCardResponse {
   loungeWaitMinutes: number;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/flight/lookup?flightNumber=)
+// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
+export interface FlightLookupResponse {
+  flightNumber: string;
+  airlineName: string;
+  originCode: string;
+  originName: string;
+  originTerminal: string;
+  destinationCode: string;
+  destinationName: string;
+  gate: string;
+  flightStatus: FlightStatus;
+  scheduledDepartureTime: string;
+  estimatedDepartureTime: string;
+  scheduledArrivalTime: string;
+  scheduledDepartureFormatted: string;
+  scheduledArrivalFormatted: string;
+  flightDuration: string;
+  checkinCounter: string;
+  remark: string;
+  delayMinutes: number;
+  dataSource: string;
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
 export interface TimelineItem {
   stepType: string;
