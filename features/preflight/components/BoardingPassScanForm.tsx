@@ -127,8 +127,6 @@ export function BoardingPassScanForm() {
           </button>
         </div>
       )}
-
-      <div className="h-[60px] bg-[#E7F6FC]" aria-hidden />
     </div>
   );
 }
