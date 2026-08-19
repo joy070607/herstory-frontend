@@ -144,7 +144,8 @@ export interface TimelineItem {
   iconType: string;
 }
 
-export type RecommendedProductCategory =
+// 실제 API 스키마 그대로 (GET /api/v1/style/{journeyId}/recommendations)
+export type ProductCategory =
   | "WATERPROOF"
   | "BACKPACK"
   | "TRAVEL_BAG"
@@ -152,18 +153,6 @@ export type RecommendedProductCategory =
   | "LEATHER_CARE"
   | "READY_TO_WEAR"
   | "LIMITED_EDITION";
-
-export interface RecommendedProduct {
-  id: number;
-  name: string;
-  brand: string;
-  category: RecommendedProductCategory;
-  price: number;
-  stock: number;
-  imageUrl: string;
-  description: string;
-  isVipExclusive: boolean;
-}
 
 export interface JourneyAnalysisResponse {
   journeyId: number;
@@ -173,18 +162,129 @@ export interface JourneyAnalysisResponse {
   climateSummary: string;
   recommendationReason: string;
   timeline: TimelineItem[];
-  recommendedProducts: RecommendedProduct[];
+  recommendedProducts: Product[];
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  thumbnailUrl: string;
-  priceKrw: number;
+  brand: string;
+  category: ProductCategory;
+  price: number;
+  stock: number;
+  imageUrl: string;
+  description: string;
+  isVipExclusive: boolean;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/cart/add, GET /api/v1/cart/my)
+export type CartStatus = "IN_CART" | "CHECKED_OUT" | "CANCELLED";
+
+export interface CartItemDetail {
+  cartItemId: number;
+  productId: number;
+  productName: string;
+  brand: string;
+  category: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+}
+
+export interface CartResponse {
+  cartId: number;
+  memberId: number;
+  choiceFit: boolean;
+  status: CartStatus;
+  items: CartItemDetail[];
+  totalPrice: number;
 }
 
 export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/miles/{memberId})
+export interface MilesBalanceResponse {
+  memberId: number;
+  memberName: string;
+  vipTier: string;
+  totalMiles: number;
+  expiringMiles: number;
+  expiringDate: string;
+}
+
+export type MilesHistoryType =
+  | "EARNED_PURCHASE"
+  | "EARNED_FLIGHT"
+  | "USED_BENEFIT"
+  | "TRANSFERRED_OUT"
+  | "TRANSFERRED_IN";
+
+export interface MilesHistoryItem {
+  historyId: number;
+  title: string;
+  amount: number;
+  type: MilesHistoryType;
+  balanceAfter: number;
+  formattedDate: string;
+  createdAt: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/miles/history/{memberId})
+export interface MilesHistoryResponse extends MilesBalanceResponse {
+  items: MilesHistoryItem[];
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/use)
+export interface UseMilesRequest {
+  memberId: number;
+  amount: number;
+  title: string;
+  description?: string;
+}
+
+export interface UseMilesResponse {
+  memberId: number;
+  usedMiles: number;
+  remainingMiles: number;
+  title: string;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/transfer)
+export interface TransferMilesRequest {
+  fromMemberId: number;
+  toEmail: string;
+  amount: number;
+}
+
+export interface TransferMilesResponse {
+  fromMemberId: number;
+  fromMemberName: string;
+  toMemberId: number;
+  toMemberName: string;
+  transferredMiles: number;
+  remainingMiles: number;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/redeem)
+export type BenefitCode = "LOUNGE_PASS" | "VIP_FITTING" | "LEATHER_CARE_KIT" | "AIRPORT_PICKUP";
+
+export interface RedeemBenefitRequest {
+  memberId: number;
+  benefitCode: BenefitCode;
+}
+
+export interface RedeemBenefitResponse {
+  memberId: number;
+  benefitCode: BenefitCode;
+  benefitName: string;
+  couponCode: string;
+  usedMiles: number;
+  remainingMiles: number;
+  message: string;
 }
 
 // 실제 API 스키마 그대로 (POST /api/v1/care/stamp-checkin)
