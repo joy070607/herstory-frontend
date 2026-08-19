@@ -61,14 +61,8 @@ export function BoardingPassScanForm() {
           disabled={!member || scanJourney.isPending}
           className="mx-6 mb-3 flex flex-col items-center justify-center rounded-[20px] border-[3px] border-[#0EA5E9] bg-[#E7F6FD]/30 py-36 disabled:opacity-60"
         >
-          <span className="w-28 text-center text-2xl leading-tight text-[#0A0A0A]">
-            {scanJourney.isPending ? (
-              "스캔 중..."
-            ) : (
-              <>
-                QR <br /> 카메라 스캔
-              </>
-            )}
+          <span className="whitespace-nowrap text-center text-2xl leading-tight text-[#0A0A0A]">
+            {scanJourney.isPending ? "스캔 중..." : "QR 카메라 스캔"}
           </span>
         </button>
       )}
