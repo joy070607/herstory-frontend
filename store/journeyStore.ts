@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { PurchaseStatus } from "@/types/api.types";
 
 interface JourneyState {
@@ -13,15 +14,20 @@ interface JourneyState {
   reset: () => void;
 }
 
-export const useJourneyStore = create<JourneyState>((set) => ({
-  journeyId: null,
-  choiceFit: false,
-  purchaseStatus: null,
-  lang: "ko",
-  setJourneyId: (journeyId) => set({ journeyId }),
-  setChoiceFit: (choiceFit) => set({ choiceFit }),
-  setPurchaseStatus: (purchaseStatus) => set({ purchaseStatus }),
-  setLang: (lang) => set({ lang }),
-  reset: () =>
-    set({ journeyId: null, choiceFit: false, purchaseStatus: null, lang: "ko" }),
-}));
+export const useJourneyStore = create<JourneyState>()(
+  persist(
+    (set) => ({
+      journeyId: null,
+      choiceFit: false,
+      purchaseStatus: null,
+      lang: "ko",
+      setJourneyId: (journeyId) => set({ journeyId }),
+      setChoiceFit: (choiceFit) => set({ choiceFit }),
+      setPurchaseStatus: (purchaseStatus) => set({ purchaseStatus }),
+      setLang: (lang) => set({ lang }),
+      reset: () =>
+        set({ journeyId: null, choiceFit: false, purchaseStatus: null, lang: "ko" }),
+    }),
+    { name: "herstory-journey", skipHydration: true }
+  )
+);

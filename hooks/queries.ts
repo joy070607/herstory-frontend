@@ -11,7 +11,13 @@ import {
   styleApi,
 } from "@/api/endpoints";
 import { saveBlobResponse } from "@/utils/download";
-import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
+import { useAuthStore } from "@/store/authStore";
+import type {
+  CheckInRequest,
+  CheckoutRequest,
+  JourneyScanRequest,
+  StampCheckInRequest,
+} from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
@@ -90,6 +96,14 @@ export function useAiCareTip(params: { productName?: string; weather?: string; l
   return useQuery({
     queryKey: queryKeys.aiCareTip(productName, weather, lang),
     queryFn: () => careApi.getAiCareTip({ productName, weather, lang }),
+  });
+}
+
+export function useCityStampCheckIn() {
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: StampCheckInRequest) => careApi.checkInCityStamp(payload),
+    onSuccess: (data) => setNomadMiles(data.totalMiles),
   });
 }
 

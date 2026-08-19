@@ -187,6 +187,21 @@ export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
 }
 
+// 실제 API 스키마 그대로 (POST /api/v1/care/stamp-checkin)
+export interface StampCheckInRequest {
+  memberId: number;
+  spotName: string;
+}
+
+export interface StampCheckInResponse {
+  memberId: number;
+  spotName: string;
+  cityName: string;
+  earnedMiles: number;
+  totalMiles: number;
+  message: string;
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/care/google-maps?destination=&brand=)
 export interface CareGoogleMapsSpot {
   spotName: string;

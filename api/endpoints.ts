@@ -21,6 +21,8 @@ import type {
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
+  StampCheckInRequest,
+  StampCheckInResponse,
   VerifyPhoneCodeRequest,
   VerifyPhoneCodeResponse,
 } from "@/types/api.types";
@@ -148,4 +150,8 @@ export const careApi = {
       .then((res) => res.data),
   getAiCareTip: (params: { productName?: string; weather?: string; lang?: string }) =>
     apiClient.get<string>("/care/ai-care-tip", { params }).then((res) => res.data),
+  checkInCityStamp: (payload: StampCheckInRequest) =>
+    apiClient
+      .post<StampCheckInResponse>("/care/stamp-checkin", payload)
+      .then((res) => res.data),
 };

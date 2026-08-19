@@ -3,10 +3,12 @@
 import { MrzBand } from "@/components/signature/MrzBand";
 import { Perforation } from "@/components/signature/Perforation";
 import { useDownloadAppleWalletPass } from "@/hooks/queries";
+import { useJourneyStore } from "@/store/journeyStore";
 import type { Journey } from "@/types/api.types";
 
 export function BoardingPassCard({ journey }: { journey: Journey }) {
   const downloadPass = useDownloadAppleWalletPass();
+  const setJourneyId = useJourneyStore((state) => state.setJourneyId);
 
   return (
     <div className="overflow-hidden rounded-lg border border-neutral-200">
@@ -35,6 +37,17 @@ export function BoardingPassCard({ journey }: { journey: Journey }) {
         {downloadPass.isError && (
           <p className="mt-2 text-xs text-red-600">패스 다운로드에 실패했습니다.</p>
         )}
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm("여정 등록을 취소하시겠습니까?")) {
+              setJourneyId(null);
+            }
+          }}
+          className="mt-2 w-full rounded-[20px] border border-neutral-300 py-3 text-center text-sm font-medium text-neutral-600"
+        >
+          여정 등록 취소
+        </button>
       </div>
     </div>
   );
