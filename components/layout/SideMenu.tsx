@@ -71,10 +71,10 @@ const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
   {
     title: "계정",
     items: [
-      { label: "마이페이지", Icon: UserIcon, disabled: true },
-      { label: "회원정보 수정", Icon: UserIcon, disabled: true },
-      { label: "비밀번호 재설정", Icon: LockIcon, disabled: true },
-      { label: "결제 수단", Icon: CardIcon, disabled: true },
+      { label: "마이페이지", href: ROUTES.myPage, Icon: UserIcon },
+      { label: "회원정보 수정", href: ROUTES.myPageEditProfile, Icon: UserIcon },
+      { label: "비밀번호 재설정", href: ROUTES.myPagePasswordReset, Icon: LockIcon },
+      { label: "결제 수단", href: ROUTES.myPagePaymentMethods, Icon: CardIcon },
     ],
   },
   {

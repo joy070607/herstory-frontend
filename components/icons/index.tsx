@@ -1008,3 +1008,89 @@ export function MileageIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function ChevronRightIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="8"
+      height="13"
+      viewBox="0 0 8 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M0 1.06L1.06 0L6.84 5.777C6.933 5.87 7.007 5.98 7.058 6.101C7.108 6.222 7.134 6.352 7.134 6.483C7.134 6.615 7.108 6.745 7.058 6.866C7.007 6.987 6.933 7.097 6.84 7.19L1.06 12.97L0 11.91L5.425 6.485L0 1.06Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function CouponIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="16"
+      height="21"
+      viewBox="0 0 16 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9.784 0.334C9.942 0.164 10.155 0.05 10.387 0.013C10.619 -0.024 10.858 0.018 11.063 0.13C11.268 0.243 11.428 0.421 11.516 0.635C11.604 0.848 11.616 1.085 11.549 1.306L9.738 7.278H14.267C15.796 7.278 16.572 9.077 15.509 10.151L5.07 20.692C4.905 20.857 4.689 20.963 4.455 20.992C4.221 21.021 3.984 20.971 3.783 20.85C3.582 20.73 3.429 20.546 3.349 20.329C3.269 20.112 3.266 19.875 3.342 19.657L5.56 13.257H1.732C0.233 13.255 -0.556 11.514 0.451 10.424L9.784 0.334Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function BellIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9 1C6.79 1 5 2.79 5 5V8.5C5 9.5 4.6 10.46 3.9 11.17L2.7 12.38C2.15 12.93 2 13.76 2.3 14.47C2.6 15.18 3.3 15.64 4.07 15.64H13.93C14.7 15.64 15.4 15.18 15.7 14.47C16 13.76 15.85 12.93 15.3 12.38L14.1 11.17C13.4 10.46 13 9.5 13 8.5V5C13 2.79 11.21 1 9 1Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.5 18C11.19 18.6 10.35 19 9.5 19C8.65 19 7.81 18.6 7.5 18"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function PencilIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="14"
+      height="13"
+      viewBox="0 0 14 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9.763 0.704L0.324 8.744M12.909 4.549L3.47 12.59M0.5 8.363V11.859M0.098 11.369L3.594 12.069M9.809 0.336L13.305 4.182"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
