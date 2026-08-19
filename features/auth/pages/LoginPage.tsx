@@ -106,7 +106,9 @@ export function LoginPage() {
             </span>
             로그인 유지
           </label>
-          <span className="text-sm text-neutral-900">비밀번호 찾기</span>
+          <Link href={ROUTES.forgotPassword} className="text-sm text-neutral-900">
+            비밀번호 찾기
+          </Link>
         </div>
 
         {loginMutation.isError && (

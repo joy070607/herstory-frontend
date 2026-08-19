@@ -156,7 +156,7 @@ export function PlaneIcon(props: SVGProps<SVGSVGElement>) {
     <svg
       width="20"
       height="20"
-      viewBox="0 0 20 20"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
@@ -169,7 +169,25 @@ export function PlaneIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function GateIcon(props: SVGProps<SVGSVGElement>) {
+export function PlaneDepartureIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="21"
+      height="19"
+      viewBox="0 0 21 19"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M2 18.15V16.15H20V18.15H2ZM3.75 13.15L0 6.9L2.4 6.25L5.2 8.6L8.7 7.675L3.525 0.775L6.425 0L13.9 6.275L18.15 5.125C18.6833 4.975 19.1875 5.0375 19.6625 5.3125C20.1375 5.5875 20.45 5.99167 20.6 6.525C20.75 7.05833 20.6875 7.5625 20.4125 8.0375C20.1375 8.5125 19.7333 8.825 19.2 8.975L3.75 13.15Z"
+        fill="#3F4851"
+      />
+    </svg>
+  );
+}
+
+export function PlaneInFlightIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       width="18"

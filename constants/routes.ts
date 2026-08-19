@@ -1,12 +1,12 @@
 export const ROUTES = {
   login: "/login",
   signup: "/signup",
+  forgotPassword: "/forgot-password",
 
   home: "/home",
   liveCard: "/live-card",
   boardingPass: "/boarding-pass",
   journeyTimeline: "/journey",
-  climateGuide: "/climate",
   styleEngine: "/style",
   popupSpot: "/popup",
   smartCart: "/cart",
