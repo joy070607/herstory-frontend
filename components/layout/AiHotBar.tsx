@@ -23,7 +23,7 @@ export function AiHotBar() {
         <Image src="/icons/quickbar-journey.png" alt="" width={33} height={27} className="h-[27px] w-[33px]" />
       </Link>
       <div className="flex-1" />
-      <Link href={ROUTES.leatherCare} aria-label="가죽 케어">
+      <Link href={ROUTES.nomadMiles} aria-label="마일리지">
         <Image src="/icons/quickbar-care.png" alt="" width={31} height={31} className="h-[31px] w-[31px]" />
       </Link>
     </div>
