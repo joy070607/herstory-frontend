@@ -187,6 +187,30 @@ export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
+export interface AppleWalletPassField {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface AppleWalletPassResponse {
+  passTypeIdentifier: string;
+  serialNumber: string;
+  teamIdentifier: string;
+  organizationName: string;
+  description: string;
+  logoText: string;
+  boardingPassDetails: {
+    transitType: string;
+    headerFields: AppleWalletPassField;
+    primaryFields: AppleWalletPassField;
+    secondaryFields: AppleWalletPassField;
+    auxiliaryFields: AppleWalletPassField;
+  };
+  pkpassDownloadUrl: string;
+}
+
 // 실제 API 스키마 그대로 (POST /api/v1/store/check-in, SSE VIP_CHECKIN_EVENT 페이로드와 동일)
 export type CheckInType = "BLE" | "NFC" | "QR" | "MANUAL";
 
