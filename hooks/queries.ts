@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cartApi,
+  flightApi,
   healthApi,
   journeyApi,
   orderApi,
@@ -15,6 +16,7 @@ export const queryKeys = {
   journey: (journeyId: string) => ["journey", journeyId] as const,
   journeyAnalysis: (journeyId: string) => ["journey", "analysis", journeyId] as const,
   liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
+  flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -52,6 +54,15 @@ export function useLiveCard(journeyId: string | null) {
     queryFn: () => journeyApi.getLiveCard(journeyId as string),
     enabled: Boolean(journeyId),
     refetchInterval: 30_000,
+  });
+}
+
+export function useFlightLookup(flightNumber: string | null | undefined) {
+  return useQuery({
+    queryKey: queryKeys.flightLookup(flightNumber ?? ""),
+    queryFn: () => flightApi.lookup(flightNumber as string),
+    enabled: Boolean(flightNumber),
+    refetchInterval: 60_000,
   });
 }
 
