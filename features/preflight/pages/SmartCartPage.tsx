@@ -7,7 +7,7 @@ import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
 import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
 import { ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
@@ -30,9 +30,6 @@ const CATEGORY_FILTERS: { label: string; categories: ProductCategory[] | null }[
   },
   { label: "레디투웨어", categories: ["READY_TO_WEAR", "LIMITED_EDITION"] },
 ];
-import { useCart } from "@/hooks/queries";
-import { ProductRow } from "@/components/ui/ProductRow";
-import { AiHotBar } from "@/components/layout/AiHotBar";
 
 export function SmartCartPage() {
   const journeyId = useJourneyStore((state) => state.journeyId);

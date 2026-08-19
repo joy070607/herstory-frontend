@@ -5,13 +5,9 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 import { useCart } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { ROUTES } from "@/constants/routes";
 import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
-import { useState } from "react";
-import { FittingSteps } from "@/features/airport/components/FittingSteps";
-import { Button } from "@/components/ui/Button";
-import { AiHotBar } from "@/components/layout/AiHotBar";
 
 export function VipFittingPage() {
   const member = useAuthStore((state) => state.member);
@@ -127,7 +123,7 @@ export function VipFittingPage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );

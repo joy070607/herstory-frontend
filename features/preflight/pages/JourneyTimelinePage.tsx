@@ -121,7 +121,7 @@ function RecommendedSection({ analysis }: { analysis: JourneyAnalysisResponse })
         {analysis.recommendedProducts.map((product, index) => (
           <div
             key={product.id}
-            className={`flex items-center gap-3.5 rounded-[20px] bg-[#E7F6FD] p-3 transition-all duration-700 ease-out ${
+            className={`flex items-center gap-3.5 rounded-[20px] bg-[#F0F0F0] p-3 transition-all duration-700 ease-out ${
               inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
             }`}
             style={{ transitionDelay: inView ? `${150 + index * 120}ms` : "0ms" }}
