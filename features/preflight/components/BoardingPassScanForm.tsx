@@ -5,24 +5,24 @@ import { useAuthStore } from "@/store/authStore";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useScanJourney } from "@/hooks/queries";
 import { Field } from "@/components/ui/Field";
-
-// 카메라/OCR 파이프라인이 실제로 붙기 전까지, 촬영 버튼은 명세 예시와 동일한 모의 OCR 텍스트로 스캔을 시뮬레이션합니다.
-const MOCK_OCR_TEXT = "BOARDING PASS PNR MCM999 ICN BKK";
+import { QrCameraScanner } from "@/components/scan/QrCameraScanner";
 
 export function BoardingPassScanForm() {
   const member = useAuthStore((state) => state.member);
   const setJourneyId = useJourneyStore((state) => state.setJourneyId);
   const scanJourney = useScanJourney();
 
+  const [cameraOpen, setCameraOpen] = useState(false);
   const [manualMode, setManualMode] = useState(false);
   const [pnr, setPnr] = useState("");
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
 
-  const handleCameraScan = () => {
+  const handleDecoded = (rawOcrText: string) => {
+    setCameraOpen(false);
     if (!member) return;
     scanJourney.mutate(
-      { memberId: Number(member.id), rawOcrText: MOCK_OCR_TEXT },
+      { memberId: Number(member.id), rawOcrText },
       { onSuccess: (res) => setJourneyId(String(res.journeyId)) }
     );
   };
@@ -50,22 +50,34 @@ export function BoardingPassScanForm() {
         <p className="text-[15px] text-[#0A0A0A]">OCR로 인쇄 탑승권도 인식됩니다.</p>
       </div>
 
-      <button
-        type="button"
-        onClick={handleCameraScan}
-        disabled={!member || scanJourney.isPending}
-        className="mx-6 mb-3 flex flex-col items-center justify-center rounded-[20px] border-[3px] border-[#0EA5E9] bg-[#E7F6FD]/30 py-36 disabled:opacity-60"
-      >
-        <span className="w-28 text-center text-2xl leading-tight text-[#0A0A0A]">
-          {scanJourney.isPending ? (
-            "스캔 중..."
-          ) : (
-            <>
-              QR <br /> 카메라 스캔
-            </>
-          )}
-        </span>
-      </button>
+      {cameraOpen ? (
+        <div className="mx-6 mb-3 rounded-[20px] border-[3px] border-[#0EA5E9] bg-black p-1">
+          <QrCameraScanner onDecode={handleDecoded} onCancel={() => setCameraOpen(false)} />
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => member && setCameraOpen(true)}
+          disabled={!member || scanJourney.isPending}
+          className="mx-6 mb-3 flex flex-col items-center justify-center rounded-[20px] border-[3px] border-[#0EA5E9] bg-[#E7F6FD]/30 py-36 disabled:opacity-60"
+        >
+          <span className="w-28 text-center text-2xl leading-tight text-[#0A0A0A]">
+            {scanJourney.isPending ? (
+              "스캔 중..."
+            ) : (
+              <>
+                QR <br /> 카메라 스캔
+              </>
+            )}
+          </span>
+        </button>
+      )}
+
+      {scanJourney.isError && !manualMode && (
+        <p className="mx-6 mb-3 text-xs text-red-600">
+          탑승권 인식에 실패했습니다. 다시 스캔하거나 PNR을 직접 입력해주세요.
+        </p>
+      )}
 
       <button
         type="button"

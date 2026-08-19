@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cartApi,
+  careApi,
   flightApi,
   healthApi,
   journeyApi,
@@ -10,7 +11,13 @@ import {
   styleApi,
 } from "@/api/endpoints";
 import { saveBlobResponse } from "@/utils/download";
-import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
+import { useAuthStore } from "@/store/authStore";
+import type {
+  CheckInRequest,
+  CheckoutRequest,
+  JourneyScanRequest,
+  StampCheckInRequest,
+} from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
@@ -19,6 +26,8 @@ export const queryKeys = {
   liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
   appleWalletPass: (journeyId: string) => ["journey", "apple-wallet-pass", journeyId] as const,
   flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
+  careGoogleMaps: (destination: string, brand: string) =>
+    ["care", "google-maps", destination, brand] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -65,6 +74,24 @@ export function useFlightLookup(flightNumber: string | null | undefined) {
     queryFn: () => flightApi.lookup(flightNumber as string),
     enabled: Boolean(flightNumber),
     refetchInterval: 60_000,
+  });
+}
+
+export function useCareGoogleMapsSpots(destination?: string, brand?: string) {
+  const resolvedDestination = destination ?? "Bangkok";
+  const resolvedBrand = brand ?? "ALL";
+  return useQuery({
+    queryKey: queryKeys.careGoogleMaps(resolvedDestination, resolvedBrand),
+    queryFn: () =>
+      careApi.getGoogleMapsSpots({ destination: resolvedDestination, brand: resolvedBrand }),
+  });
+}
+
+export function useCityStampCheckIn() {
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: StampCheckInRequest) => careApi.checkInCityStamp(payload),
+    onSuccess: (data) => setNomadMiles(data.totalMiles),
   });
 }
 
