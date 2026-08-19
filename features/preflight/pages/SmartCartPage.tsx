@@ -30,6 +30,9 @@ const CATEGORY_FILTERS: { label: string; categories: ProductCategory[] | null }[
   },
   { label: "레디투웨어", categories: ["READY_TO_WEAR", "LIMITED_EDITION"] },
 ];
+import { useCart } from "@/hooks/queries";
+import { ProductRow } from "@/components/ui/ProductRow";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 
 export function SmartCartPage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
@@ -155,7 +158,7 @@ export function SmartCartPage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );

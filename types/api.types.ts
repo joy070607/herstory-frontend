@@ -110,6 +110,30 @@ export interface LiveCardResponse {
   loungeWaitMinutes: number;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/flight/lookup?flightNumber=)
+// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
+export interface FlightLookupResponse {
+  flightNumber: string;
+  airlineName: string;
+  originCode: string;
+  originName: string;
+  originTerminal: string;
+  destinationCode: string;
+  destinationName: string;
+  gate: string;
+  flightStatus: FlightStatus;
+  scheduledDepartureTime: string;
+  estimatedDepartureTime: string;
+  scheduledArrivalTime: string;
+  scheduledDepartureFormatted: string;
+  scheduledArrivalFormatted: string;
+  flightDuration: string;
+  checkinCounter: string;
+  remark: string;
+  delayMinutes: number;
+  dataSource: string;
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/analysis/{journeyId})
 export interface TimelineItem {
   stepType: string;
@@ -178,6 +202,65 @@ export interface CartResponse {
 
 export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/postflight/miles/{memberId})
+export interface NomadMilesResponse {
+  memberId: number;
+  memberName: string;
+  vipTier: string;
+  nomadMiles: number;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/care/stamp-checkin)
+export interface StampCheckInRequest {
+  memberId: number;
+  spotName: string;
+}
+
+export interface StampCheckInResponse {
+  memberId: number;
+  spotName: string;
+  cityName: string;
+  earnedMiles: number;
+  totalMiles: number;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/care/google-maps?destination=&brand=)
+export interface CareGoogleMapsSpot {
+  spotName: string;
+  brand: string;
+  address: string;
+  locationType: string;
+  latitude: number;
+  longitude: number;
+  walkingMinutes: number | null;
+  careServiceAvailable: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
+export interface AppleWalletPassField {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface AppleWalletPassResponse {
+  passTypeIdentifier: string;
+  serialNumber: string;
+  teamIdentifier: string;
+  organizationName: string;
+  description: string;
+  logoText: string;
+  boardingPassDetails: {
+    transitType: string;
+    headerFields: AppleWalletPassField;
+    primaryFields: AppleWalletPassField;
+    secondaryFields: AppleWalletPassField;
+    auxiliaryFields: AppleWalletPassField;
+  };
+  pkpassDownloadUrl: string;
 }
 
 // 실제 API 스키마 그대로 (POST /api/v1/store/check-in, SSE VIP_CHECKIN_EVENT 페이로드와 동일)

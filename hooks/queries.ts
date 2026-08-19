@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   cartApi,
+  careApi,
+  flightApi,
   healthApi,
   journeyApi,
   orderApi,
@@ -8,13 +10,26 @@ import {
   storeApi,
   styleApi,
 } from "@/api/endpoints";
-import type { CheckInRequest, CheckoutRequest, JourneyScanRequest } from "@/types/api.types";
+import { saveBlobResponse } from "@/utils/download";
+import { useAuthStore } from "@/store/authStore";
+import type {
+  CheckInRequest,
+  CheckoutRequest,
+  JourneyScanRequest,
+  StampCheckInRequest,
+} from "@/types/api.types";
 
 export const queryKeys = {
   health: ["health"] as const,
   journey: (journeyId: string) => ["journey", journeyId] as const,
   journeyAnalysis: (journeyId: string) => ["journey", "analysis", journeyId] as const,
   liveCard: (journeyId: string) => ["journey", "live-card", journeyId] as const,
+  appleWalletPass: (journeyId: string) => ["journey", "apple-wallet-pass", journeyId] as const,
+  flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
+  careGoogleMaps: (destination: string, brand: string) =>
+    ["care", "google-maps", destination, brand] as const,
+  aiCareTip: (productName: string, weather: string, lang: string) =>
+    ["care", "ai-care-tip", productName, weather, lang] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
@@ -55,10 +70,64 @@ export function useLiveCard(journeyId: string | null) {
   });
 }
 
+export function useFlightLookup(flightNumber: string | null | undefined) {
+  return useQuery({
+    queryKey: queryKeys.flightLookup(flightNumber ?? ""),
+    queryFn: () => flightApi.lookup(flightNumber as string),
+    enabled: Boolean(flightNumber),
+    refetchInterval: 60_000,
+  });
+}
+
+export function useCareGoogleMapsSpots(destination?: string, brand?: string) {
+  const resolvedDestination = destination ?? "Bangkok";
+  const resolvedBrand = brand ?? "ALL";
+  return useQuery({
+    queryKey: queryKeys.careGoogleMaps(resolvedDestination, resolvedBrand),
+    queryFn: () =>
+      careApi.getGoogleMapsSpots({ destination: resolvedDestination, brand: resolvedBrand }),
+  });
+}
+
+export function useAiCareTip(params: { productName?: string; weather?: string; lang?: string }) {
+  const productName = params.productName ?? "럭셔리 레더 백팩";
+  const weather = params.weather ?? "습도 88% 열대성 스콜";
+  const lang = params.lang ?? "ko";
+  return useQuery({
+    queryKey: queryKeys.aiCareTip(productName, weather, lang),
+    queryFn: () => careApi.getAiCareTip({ productName, weather, lang }),
+  });
+}
+
+export function useCityStampCheckIn() {
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: StampCheckInRequest) => careApi.checkInCityStamp(payload),
+    onSuccess: (data) => setNomadMiles(data.totalMiles),
+  });
+}
+
 export function useScanJourney() {
   return useMutation({
     mutationFn: (payload: JourneyScanRequest) =>
       journeyApi.scan(payload).then((res) => res.data),
+  });
+}
+
+export function useAppleWalletPass(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.appleWalletPass(journeyId ?? ""),
+    queryFn: () => journeyApi.getAppleWalletPass(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useDownloadAppleWalletPass() {
+  return useMutation({
+    mutationFn: async (journeyId: string) => {
+      const res = await journeyApi.downloadAppleWalletPassFile(journeyId);
+      saveBlobResponse(res, `herstory-pass-${journeyId}.pkpass`);
+    },
   });
 }
 
@@ -128,8 +197,7 @@ export function useCheckout() {
 export function useNomadMiles(memberId: string | null) {
   return useQuery({
     queryKey: queryKeys.nomadMiles(memberId ?? ""),
-    queryFn: () =>
-      postflightApi.getNomadMiles(memberId as string).then((res) => res.data),
+    queryFn: () => postflightApi.getNomadMiles(memberId as string),
     enabled: Boolean(memberId),
   });
 }

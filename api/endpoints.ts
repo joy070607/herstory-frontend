@@ -1,9 +1,12 @@
 import { apiClient } from "./client";
 import type {
   CartResponse,
+  AppleWalletPassResponse,
+  CareGoogleMapsSpot,
   CheckInRequest,
   CheckInResponse,
   CheckoutRequest,
+  FlightLookupResponse,
   HealthCheckResponse,
   Journey,
   JourneyAnalysisResponse,
@@ -12,6 +15,7 @@ import type {
   LiveCardResponse,
   LoginResponseDto,
   Member,
+  NomadMilesResponse,
   OrderResponse,
   PasswordResponse,
   Product,
@@ -19,6 +23,8 @@ import type {
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
+  StampCheckInRequest,
+  StampCheckInResponse,
   VerifyPhoneCodeRequest,
   VerifyPhoneCodeResponse,
 } from "@/types/api.types";
@@ -75,6 +81,23 @@ export const journeyApi = {
     apiClient.post(`/journeys/${journeyId}/boarding-pass`),
   submitChoiceFit: (journeyId: string, choiceFit: boolean) =>
     apiClient.patch(`/journeys/${journeyId}/choice-fit`, { choiceFit }),
+  getAppleWalletPass: (journeyId: string) =>
+    apiClient
+      .get<AppleWalletPassResponse>(`/journey/apple-wallet-pass/${journeyId}`)
+      .then((res) => res.data),
+  // Safari 보안 차단 없이 파일 앱으로 바로 받을 수 있는 .pkpass 바이너리 다운로드
+  downloadAppleWalletPassFile: (journeyId: string) =>
+    apiClient.get(`/journey/apple-wallet-pass/download-file/${journeyId}`, {
+      responseType: "blob",
+    }),
+};
+
+// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
+export const flightApi = {
+  lookup: (flightNumber: string) =>
+    apiClient
+      .get<FlightLookupResponse>("/flight/lookup", { params: { flightNumber } })
+      .then((res) => res.data),
 };
 
 export const styleApi = {
@@ -121,5 +144,21 @@ export const postflightApi = {
     apiClient.get(`/postflight/leather-care?lang=${lang}`),
   getVisetosSpots: () => apiClient.get("/postflight/visetos-map"),
   getNomadMiles: (memberId: string) =>
-    apiClient.get(`/postflight/miles/${memberId}`),
+    apiClient
+      .get<NomadMilesResponse>(`/postflight/miles/${memberId}`)
+      .then((res) => res.data),
+};
+
+// 현지 럭셔리 부티크 & Care Desk 위치 (Google Maps 실시간 좌표/길안내 링크) + 가죽 케어 AI 가이드 (GPT-4o)
+export const careApi = {
+  getGoogleMapsSpots: (params: { destination?: string; brand?: string }) =>
+    apiClient
+      .get<CareGoogleMapsSpot[]>("/care/google-maps", { params })
+      .then((res) => res.data),
+  getAiCareTip: (params: { productName?: string; weather?: string; lang?: string }) =>
+    apiClient.get<string>("/care/ai-care-tip", { params }).then((res) => res.data),
+  checkInCityStamp: (payload: StampCheckInRequest) =>
+    apiClient
+      .post<StampCheckInResponse>("/care/stamp-checkin", payload)
+      .then((res) => res.data),
 };

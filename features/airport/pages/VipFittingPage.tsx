@@ -8,6 +8,10 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { ROUTES } from "@/constants/routes";
 import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
+import { useState } from "react";
+import { FittingSteps } from "@/features/airport/components/FittingSteps";
+import { Button } from "@/components/ui/Button";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 
 export function VipFittingPage() {
   const member = useAuthStore((state) => state.member);

@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
-import { useLiveCard } from "@/hooks/queries";
+import { useFlightLookup, useLiveCard } from "@/hooks/queries";
 import { useCountdown } from "@/hooks/useCountdown";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { BottomNav } from "@/components/layout/BottomNav";
+import { AiHotBar } from "@/components/layout/AiHotBar";
 import { ROUTES } from "@/constants/routes";
 import { FLIGHT_STATUS_STYLE } from "@/constants/flightStatus";
 import { formatFlightTime, formatMinutesKorean } from "@/utils/format";
@@ -42,6 +42,8 @@ export function LiveCardPage() {
   const { data: liveCard, isLoading } = useLiveCard(journeyId);
   // 30초마다 오는 서버 값 대신, 남은 시간은 초 단위로 직접 카운트다운합니다.
   const countdown = useCountdown(liveCard?.departureDateTime ?? null);
+  // 인천공항 실제 전광판과 1분 단위로 동기화되는 AODB 실시간 조회
+  const { data: flightLookup } = useFlightLookup(liveCard?.flightNumber);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -151,6 +153,53 @@ export function LiveCardPage() {
               </div>
             </div>
 
+            {flightLookup && (
+              <div className="rounded-[20px] border border-neutral-200 bg-white px-4 pb-5 pt-4">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">
+                      {flightLookup.airlineName} {flightLookup.flightNumber}
+                    </p>
+                    <p className="text-[11px] text-neutral-400">{flightLookup.dataSource}</p>
+                  </div>
+                  {flightLookup.delayMinutes > 0 && (
+                    <span className="shrink-0 rounded-full bg-[#FB923C33] px-3 py-1 text-xs font-medium text-[#C2410C]">
+                      {flightLookup.remark} {flightLookup.delayMinutes}분 지연
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-3 gap-y-3.5">
+                  <div>
+                    <p className="text-[11px] text-neutral-400">터미널</p>
+                    <p className="text-sm font-medium text-neutral-900">
+                      {flightLookup.originTerminal}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-neutral-400">탑승 게이트</p>
+                    <p className="text-sm font-medium text-neutral-900">{flightLookup.gate}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-neutral-400">체크인 카운터</p>
+                    <p className="text-sm font-medium text-neutral-900">
+                      {flightLookup.checkinCounter}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-neutral-400">출발 → 도착</p>
+                    <p className="text-sm font-medium text-neutral-900">
+                      {flightLookup.scheduledDepartureFormatted} → {flightLookup.scheduledArrivalFormatted}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="mt-3.5 text-xs text-neutral-500">
+                  {flightLookup.destinationName} · 비행시간 {flightLookup.flightDuration}
+                </p>
+              </div>
+            )}
+
             {liveCard.loungeLocation && (
               <div className="rounded-[20px] bg-[#E7F6FD] px-4 pb-5 pt-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -188,7 +237,7 @@ export function LiveCardPage() {
       </div>
 
       <div className="mt-auto">
-        <BottomNav />
+        <AiHotBar />
       </div>
     </div>
   );
