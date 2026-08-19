@@ -7,6 +7,7 @@ import type {
   PopupSpotsResponse,
   CheckInResponse,
   CheckoutRequest,
+  FittingResponse,
   FlightLookupResponse,
   HealthCheckResponse,
   Journey,
@@ -138,10 +139,9 @@ export const storeApi = {
   notificationStreamUrl: () => `${apiClient.defaults.baseURL}/store/notifications/stream`,
 };
 
-// VIP 피팅은 아직 실제 엔드포인트로 맞추지 않은 자리표시자입니다.
 export const airportApi = {
   startFitting: (journeyId: string) =>
-    apiClient.post(`/airport/${journeyId}/fitting`),
+    apiClient.post<FittingResponse>(`/airport/${journeyId}/fitting`).then((res) => res.data),
 };
 
 // 면세 한도 할인 계산 & Fast Checkout 수령 처리 (현장 즉시 착장 수령 및 결제 처리 시 호출)

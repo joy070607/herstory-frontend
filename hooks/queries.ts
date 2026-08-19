@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  airportApi,
   cartApi,
   careApi,
   flightApi,
@@ -200,6 +201,12 @@ export function useAddToCart(memberId: number | null) {
       }),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.cart(memberId ?? 0) }),
+  });
+}
+
+export function useStartFitting() {
+  return useMutation({
+    mutationFn: (journeyId: string) => airportApi.startFitting(journeyId),
   });
 }
 

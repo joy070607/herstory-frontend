@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
-import { useJourney } from "@/hooks/queries";
+import { useJourney, useJourneyAnalysis, useLiveCard } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { formatFlightTime } from "@/utils/format";
+import { parseWeatherInfo } from "@/utils/weather";
 import { FLIGHT_STATUS_STYLE } from "@/constants/flightStatus";
 import {
   BagIcon,
@@ -24,6 +27,10 @@ import {
 export function HomePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: journey, isLoading } = useJourney(journeyId);
+  const { data: liveCard } = useLiveCard(journeyId);
+  const { data: analysis } = useJourneyAnalysis(journeyId);
+  const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
+  const [showRain, setShowRain] = useState(true);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -52,18 +59,18 @@ export function HomePage() {
                 {FLIGHT_STATUS_STYLE[journey.flightStatus].label}
               </span>
             </div>
-            <p className="mb-5 font-mono text-2xl font-bold text-[#E6F7FF]">{journey.pnr}</p>
+            <p className="mb-5 font-mono text-3xl font-bold text-[#E6F7FF]">{journey.pnr}</p>
             <div className="mb-5 flex items-center justify-between">
-              <span className="text-lg text-[#E6F7FF]">{journey.origin}</span>
-              <PlaneIcon className="shrink-0" />
-              <span className="text-lg text-[#E6F7FF]">{journey.destination}</span>
+              <span className="text-2xl text-[#E6F7FF]">{journey.origin}</span>
+              <PlaneIcon className="h-6 w-6 shrink-0" />
+              <span className="text-2xl text-[#E6F7FF]">{journey.destination}</span>
             </div>
             <div className="flex items-center rounded-[20px] bg-[#E6F7FF4D] px-4 py-3">
               <div className="flex flex-1 items-center justify-center gap-2.5">
                 <GateIcon className="h-4 w-4 shrink-0 text-white" />
                 <div className="text-center">
                   <p className="text-[11px] text-white">게이트</p>
-                  <p className="text-base font-bold text-white">G-12</p>
+                  <p className="text-base font-bold text-white">{liveCard?.gate || "-"}</p>
                 </div>
               </div>
               <div className="h-7 w-px bg-white/30" />
@@ -118,20 +125,35 @@ export function HomePage() {
           </Link>
         </div>
 
-        <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">오늘의 날씨</h2>
-        <div className="mx-6 mb-4 flex items-center gap-3 rounded-[20px] bg-sky-500 px-6 py-5">
-          <div className="flex items-center gap-3">
-            <WeatherIcon className="h-7 w-8 shrink-0" />
-            <div>
-              <p className="mb-1 text-lg text-sky-50">18°</p>
-              <p className="text-xs text-sky-50">흐림</p>
-            </div>
-          </div>
-          <div className="flex-1">
-            <p className="mb-2 text-xs text-sky-50">비소식이 예상됩니다.</p>
-            <p className="text-base text-sky-50">방수 트렌치 코트 추천</p>
-          </div>
-        </div>
+        {journeyId && analysis && (
+          <>
+            <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">오늘의 날씨</h2>
+            <button
+              type="button"
+              onClick={() => setShowRain((prev) => !prev)}
+              className="relative mx-6 mb-4 overflow-hidden rounded-[20px] bg-sky-500 px-6 py-5 text-left"
+            >
+              {showRain && <RainOverlay />}
+              <div className="relative z-10 flex items-center gap-3">
+                <WeatherIcon className="h-8 w-9 shrink-0" />
+                <div>
+                  <p className="text-2xl font-bold leading-none text-sky-50">
+                    {weather?.temp != null ? `${weather.temp}°` : "-"}
+                  </p>
+                  <p className="mt-1 text-sm text-sky-50/90">
+                    {weather?.condition ?? analysis.climateSummary}
+                  </p>
+                </div>
+              </div>
+              <div className="relative z-10 mt-4 border-t border-sky-400/50 pt-4">
+                <p className="text-xs text-sky-50/80">비소식 {analysis.rainProbability} 예상됩니다.</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-sky-50">
+                  {analysis.recommendationReason}
+                </p>
+              </div>
+            </button>
+          </>
+        )}
 
         <div className="flex items-center gap-4 px-6">
           <button
@@ -141,13 +163,13 @@ export function HomePage() {
             <PassportIcon className="h-4 w-4" />
             <span className="text-sm">내 패스포트</span>
           </button>
-          <button
-            type="button"
+          <Link
+            href={ROUTES.liveCard}
             className="flex flex-1 items-center justify-center gap-2 rounded-[20px] border border-neutral-400 py-4 text-neutral-900"
           >
             <LoungeIcon className="h-4 w-4" />
             <span className="text-sm">라운지 정보</span>
-          </button>
+          </Link>
         </div>
       </div>
 

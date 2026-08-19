@@ -11,6 +11,7 @@ import { AiHotBar } from "@/components/layout/AiHotBar";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { WeatherIcon, TicketIcon } from "@/components/icons";
+import { parseWeatherInfo } from "@/utils/weather";
 import type { Product, ProductCategory } from "@/types/api.types";
 
 const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
@@ -23,24 +24,13 @@ const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
   LIMITED_EDITION: "한정판 아이템을 추천해요",
 };
 
-// weatherInfo는 자유 문장이라("Bangkok 현지 기후: 기온 27.3°C, ... (우천/스콜 예상)")
-// 온도/날씨 요약만 정규식으로 뽑아 씁니다.
-function parseWeather(weatherInfo: string) {
-  const tempMatch = weatherInfo.match(/기온\s*([\d.]+)\s*°C/);
-  const conditionMatch = weatherInfo.match(/\(([^)]+)\)/);
-  return {
-    temp: tempMatch ? Math.round(Number(tempMatch[1])) : null,
-    condition: conditionMatch ? conditionMatch[1] : null,
-  };
-}
-
 export function StyleEnginePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: analysis, isLoading } = useJourneyAnalysis(journeyId);
   const [showRain, setShowRain] = useState(true);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const weather = analysis ? parseWeather(analysis.weatherInfo) : null;
+  const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
   const selectedProduct =
     analysis?.recommendedProducts.find((product) => product.id === selectedId) ??
     analysis?.recommendedProducts[0];
