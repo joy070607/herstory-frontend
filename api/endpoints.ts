@@ -48,8 +48,8 @@ export const authApi = {
       .then((res) => res.data),
   verifyPhoneCode: (payload: VerifyCodeRequest) =>
     apiClient.post<VerifyCodeResponse>("/auth/phone/verify", payload).then((res) => res.data),
-  findPassword: (payload: ResetPasswordRequest) =>
-    apiClient.post<PasswordResponse>("/auth/password/find", payload).then((res) => res.data),
+  resetPassword: (payload: ResetPasswordRequest) =>
+    apiClient.post<PasswordResponse>("/auth/password/reset", payload).then((res) => res.data),
 };
 
 export const preflightApi = {

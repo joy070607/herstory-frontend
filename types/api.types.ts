@@ -80,10 +80,9 @@ export interface VerifyCodeResponse {
   message: string;
 }
 
-// 실제 API 스키마 그대로 (POST /api/v1/auth/password/find)
+// 실제 API 스키마 그대로 (POST /api/v1/auth/password/reset)
 export interface ResetPasswordRequest {
   email: string;
-  phone: string;
   newPassword: string;
 }
 
