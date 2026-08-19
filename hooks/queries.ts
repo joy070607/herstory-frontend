@@ -5,8 +5,8 @@ import {
   flightApi,
   healthApi,
   journeyApi,
+  milesApi,
   orderApi,
-  postflightApi,
   storeApi,
   styleApi,
 } from "@/api/endpoints";
@@ -16,7 +16,10 @@ import type {
   CheckInRequest,
   CheckoutRequest,
   JourneyScanRequest,
+  RedeemBenefitRequest,
   StampCheckInRequest,
+  TransferMilesRequest,
+  UseMilesRequest,
 } from "@/types/api.types";
 
 export const queryKeys = {
@@ -33,8 +36,8 @@ export const queryKeys = {
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
-  nomadMiles: (memberId: string) => ["postflight", "miles", memberId] as const,
   reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
+  milesHistory: (memberId: number) => ["miles", "history", memberId] as const,
 };
 
 export function useHealthCheck() {
@@ -194,10 +197,52 @@ export function useCheckout() {
   });
 }
 
-export function useNomadMiles(memberId: string | null) {
+export function useMilesHistory(memberId: number | null) {
   return useQuery({
-    queryKey: queryKeys.nomadMiles(memberId ?? ""),
-    queryFn: () => postflightApi.getNomadMiles(memberId as string),
-    enabled: Boolean(memberId),
+    queryKey: queryKeys.milesHistory(memberId ?? 0),
+    queryFn: () => milesApi.getHistory(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useUseMiles(memberId: number | null) {
+  const queryClient = useQueryClient();
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: UseMilesRequest) => milesApi.use(payload),
+    onSuccess: (data) => {
+      setNomadMiles(data.remainingMiles);
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milesHistory(memberId) });
+      }
+    },
+  });
+}
+
+export function useTransferMiles(memberId: number | null) {
+  const queryClient = useQueryClient();
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: TransferMilesRequest) => milesApi.transfer(payload),
+    onSuccess: (data) => {
+      setNomadMiles(data.remainingMiles);
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milesHistory(memberId) });
+      }
+    },
+  });
+}
+
+export function useRedeemBenefit(memberId: number | null) {
+  const queryClient = useQueryClient();
+  const setNomadMiles = useAuthStore((state) => state.setNomadMiles);
+  return useMutation({
+    mutationFn: (payload: RedeemBenefitRequest) => milesApi.redeem(payload),
+    onSuccess: (data) => {
+      setNomadMiles(data.remainingMiles);
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.milesHistory(memberId) });
+      }
+    },
   });
 }

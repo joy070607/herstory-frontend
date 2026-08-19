@@ -204,12 +204,87 @@ export interface HealthCheckResponse {
   status: "ok" | "waking" | "down";
 }
 
-// 실제 API 스키마 그대로 (GET /api/v1/postflight/miles/{memberId})
-export interface NomadMilesResponse {
+// 실제 API 스키마 그대로 (GET /api/v1/miles/{memberId})
+export interface MilesBalanceResponse {
   memberId: number;
   memberName: string;
   vipTier: string;
-  nomadMiles: number;
+  totalMiles: number;
+  expiringMiles: number;
+  expiringDate: string;
+}
+
+export type MilesHistoryType =
+  | "EARNED_PURCHASE"
+  | "EARNED_FLIGHT"
+  | "USED_BENEFIT"
+  | "TRANSFERRED_OUT"
+  | "TRANSFERRED_IN";
+
+export interface MilesHistoryItem {
+  historyId: number;
+  title: string;
+  amount: number;
+  type: MilesHistoryType;
+  balanceAfter: number;
+  formattedDate: string;
+  createdAt: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/miles/history/{memberId})
+export interface MilesHistoryResponse extends MilesBalanceResponse {
+  items: MilesHistoryItem[];
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/use)
+export interface UseMilesRequest {
+  memberId: number;
+  amount: number;
+  title: string;
+  description?: string;
+}
+
+export interface UseMilesResponse {
+  memberId: number;
+  usedMiles: number;
+  remainingMiles: number;
+  title: string;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/transfer)
+export interface TransferMilesRequest {
+  fromMemberId: number;
+  toEmail: string;
+  amount: number;
+}
+
+export interface TransferMilesResponse {
+  fromMemberId: number;
+  fromMemberName: string;
+  toMemberId: number;
+  toMemberName: string;
+  transferredMiles: number;
+  remainingMiles: number;
+  message: string;
+}
+
+// 실제 API 스키마 그대로 (POST /api/v1/miles/redeem)
+export type BenefitCode = "LOUNGE_PASS" | "VIP_FITTING" | "LEATHER_CARE_KIT" | "AIRPORT_PICKUP";
+
+export interface RedeemBenefitRequest {
+  memberId: number;
+  benefitCode: BenefitCode;
+}
+
+export interface RedeemBenefitResponse {
+  memberId: number;
+  benefitCode: BenefitCode;
+  benefitName: string;
+  couponCode: string;
+  usedMiles: number;
+  remainingMiles: number;
+  message: string;
 }
 
 // 실제 API 스키마 그대로 (POST /api/v1/care/stamp-checkin)
