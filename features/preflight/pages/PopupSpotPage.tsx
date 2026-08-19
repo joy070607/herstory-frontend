@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { useAuthStore } from "@/store/authStore";
@@ -32,7 +33,10 @@ export function PopupSpotPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-5 px-6 py-6">
-        <h1 className="text-2xl font-bold text-neutral-900">POP-UP STORE</h1>
+        <div className="flex items-center gap-2">
+          <BackButton />
+          <h1 className="text-2xl font-bold text-neutral-900">POP-UP STORE</h1>
+        </div>
 
         {isLoading && <WakingScreen />}
         {isError && <ErrorState onRetry={() => refetch()} />}

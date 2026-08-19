@@ -8,6 +8,7 @@ import { useJourneyStore } from "@/store/journeyStore";
 import { useCart, useStartFitting } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
 import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
 
@@ -34,6 +35,8 @@ export function VipFittingPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-6 px-5 py-6">
+        <BackButton />
+
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
