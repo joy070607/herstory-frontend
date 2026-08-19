@@ -5,10 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/endpoints";
+import type { ApiError } from "@/api/client";
 import { useAuthStore } from "@/store/authStore";
 import { ROUTES } from "@/constants/routes";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
 import { Logo } from "@/components/Logo";
+import type { Member } from "@/types/api.types";
+
+// Render 무료 티어 백엔드는 오래 쉬면 콜드스타트로 최대 90초까지 걸릴 수 있는데,
+// 이 경우 axios 타임아웃/네트워크 에러(응답 status 없음)로 잡혀서 실제 비밀번호
+// 오류와 똑같은 문구가 뜨면 혼란스러우니 구분해서 안내합니다.
+function resolveLoginErrorMessage(error: ApiError | null): string {
+  if (!error) return "";
+  if (error.status == null) {
+    return "서버 응답이 지연되고 있어요 (콜드스타트일 수 있어요). 잠시 후 다시 시도해주세요.";
+  }
+  return error.message || "로그인에 실패했습니다.";
+}
 
 export function LoginPage() {
   const router = useRouter();
@@ -18,7 +31,7 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [keepSignedIn, setKeepSignedIn] = useState(false);
 
-  const loginMutation = useMutation({
+  const loginMutation = useMutation<Member, ApiError>({
     mutationFn: () => authApi.login({ email, password }),
     onSuccess: (member) => {
       setMember(member);
@@ -111,8 +124,14 @@ export function LoginPage() {
           </Link>
         </div>
 
+        {loginMutation.isPending && (
+          <p className="text-xs text-neutral-400">
+            서버를 깨우는 중일 수 있어요. 최대 1분 정도 걸릴 수 있습니다.
+          </p>
+        )}
+
         {loginMutation.isError && (
-          <p className="text-xs text-red-600">로그인에 실패했습니다.</p>
+          <p className="text-xs text-red-600">{resolveLoginErrorMessage(loginMutation.error)}</p>
         )}
 
         <div className="flex flex-col items-center gap-2.5">
@@ -121,7 +140,7 @@ export function LoginPage() {
             disabled={loginMutation.isPending}
             className="w-full rounded-[20px] bg-sky-500 py-[17px] text-lg font-bold text-sky-50 transition-colors hover:bg-sky-600 disabled:opacity-40"
           >
-            로그인
+            {loginMutation.isPending ? "로그인 중..." : "로그인"}
           </button>
           <p className="text-sm">
             <span className="text-neutral-400">계정이 없으신가요? </span>
