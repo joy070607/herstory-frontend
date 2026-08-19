@@ -28,6 +28,8 @@ export const queryKeys = {
   flightLookup: (flightNumber: string) => ["flight", "lookup", flightNumber] as const,
   careGoogleMaps: (destination: string, brand: string) =>
     ["care", "google-maps", destination, brand] as const,
+  aiCareTip: (productName: string, weather: string, lang: string) =>
+    ["care", "ai-care-tip", productName, weather, lang] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (journeyId: string) => ["cart", journeyId] as const,
@@ -84,6 +86,16 @@ export function useCareGoogleMapsSpots(destination?: string, brand?: string) {
     queryKey: queryKeys.careGoogleMaps(resolvedDestination, resolvedBrand),
     queryFn: () =>
       careApi.getGoogleMapsSpots({ destination: resolvedDestination, brand: resolvedBrand }),
+  });
+}
+
+export function useAiCareTip(params: { productName?: string; weather?: string; lang?: string }) {
+  const productName = params.productName ?? "럭셔리 레더 백팩";
+  const weather = params.weather ?? "습도 88% 열대성 스콜";
+  const lang = params.lang ?? "ko";
+  return useQuery({
+    queryKey: queryKeys.aiCareTip(productName, weather, lang),
+    queryFn: () => careApi.getAiCareTip({ productName, weather, lang }),
   });
 }
 
