@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { TermsPage } from "@/features/preflight/pages/TermsPage";
 
 export default function Page() {
-  return <PlaceholderPage title="약관 및 정책" />;
+  return <TermsPage />;
 }

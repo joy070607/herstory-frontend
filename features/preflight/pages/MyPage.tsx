@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { Toggle } from "@/components/ui/Toggle";
+import { useAuthStore } from "@/store/authStore";
+import { useMemberSummary, useUpdateSettings } from "@/hooks/queries";
 import { ROUTES } from "@/constants/routes";
 import {
   BellIcon,
@@ -18,20 +19,6 @@ import {
   StarIcon,
   UserIcon,
 } from "@/components/icons";
-
-// api연동 전 하드코딩 목업 데이터입니다.
-const PROFILE = {
-  initial: "김",
-  name: "김노마드",
-  tier: "GOLD",
-  email: "vip@mcmworldwide.com",
-  miles: 124500,
-  coupons: 3,
-  journeys: 14,
-  nextTier: "PLATINUM",
-  milesToNextTier: 25500,
-  tierProgressPercent: 54,
-};
 
 function StatButton({ label, value, href }: { label: string; value: string; href: string }) {
   return (
@@ -111,9 +98,16 @@ function MenuRow({
 }
 
 export function MyPage() {
-  const [milesAlert, setMilesAlert] = useState(true);
-  const [journeyAlert, setJourneyAlert] = useState(true);
-  const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const member = useAuthStore((state) => state.member);
+  const memberId = member ? Number(member.id) : null;
+  const { data: summary } = useMemberSummary(memberId);
+  const updateSettings = useUpdateSettings(memberId);
+
+  const settings = summary?.settings;
+  const toggleSetting = (key: keyof NonNullable<typeof settings>, value: boolean) => {
+    if (!settings) return;
+    updateSettings.mutate({ ...settings, [key]: value });
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -123,16 +117,22 @@ export function MyPage() {
         <div className="rounded-[20px] bg-black px-5 py-5">
           <div className="mb-5 flex items-start gap-3.5">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-sky-500">
-              <span className="text-xl font-bold text-[#E6F7FF]">{PROFILE.initial}</span>
+              <span className="text-xl font-bold text-[#E6F7FF]">{summary?.initial ?? "-"}</span>
             </div>
             <div className="flex-1 pt-1">
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-[#E6F7FF]">{PROFILE.name}</span>
-                <span className="rounded-full border border-[#E6F7FF]/30 bg-[#4B9ACC] px-3 py-0.5 text-xs text-[#E6F7FF]">
-                  {PROFILE.tier}
+                <span className="text-xl font-bold text-[#E6F7FF]">
+                  {summary?.name ?? member?.name ?? "게스트"}
                 </span>
+                {summary && (
+                  <span className="rounded-full border border-[#E6F7FF]/30 bg-[#4B9ACC] px-3 py-0.5 text-xs text-[#E6F7FF]">
+                    {summary.vipTier}
+                  </span>
+                )}
               </div>
-              <p className="mt-1 text-sm text-[#E6F7FF]/50">{PROFILE.email}</p>
+              <p className="mt-1 text-sm text-[#E6F7FF]/50">
+                {summary?.email ?? member?.email ?? "로그인이 필요해요"}
+              </p>
             </div>
             <Link
               href={ROUTES.myPageEditProfile}
@@ -144,19 +144,35 @@ export function MyPage() {
           </div>
 
           <div className="mb-5 flex items-center gap-2.5">
-            <StatButton label="마일리지" value={PROFILE.miles.toLocaleString()} href={ROUTES.nomadMiles} />
-            <StatButton label="쿠폰" value={String(PROFILE.coupons)} href={ROUTES.myPageCoupons} />
-            <StatButton label="여정" value={String(PROFILE.journeys)} href={ROUTES.myPageJourneyHistory} />
+            <StatButton
+              label="마일리지"
+              value={(summary?.miles ?? member?.nomadMiles ?? 0).toLocaleString()}
+              href={ROUTES.nomadMiles}
+            />
+            <StatButton
+              label="쿠폰"
+              value={String(summary?.couponCount ?? 0)}
+              href={ROUTES.myPageCoupons}
+            />
+            <StatButton
+              label="여정"
+              value={String(summary?.journeyCount ?? 0)}
+              href={ROUTES.myPageJourneyHistory}
+            />
           </div>
 
           <div className="h-2 w-full overflow-hidden rounded-full bg-[#E9E9E9]/[0.37]">
             <div
               className="h-full rounded-full bg-[#8FD3FA]"
-              style={{ width: `${PROFILE.tierProgressPercent}%` }}
+              style={{ width: `${summary?.tierProgressPercent ?? 0}%` }}
             />
           </div>
           <p className="mt-2 text-xs text-[#B7D8EE]">
-            {PROFILE.nextTier}까지 {PROFILE.milesToNextTier.toLocaleString()} 마일
+            {summary && summary.milesToNextTier > 0
+              ? `${summary.nextTier}까지 ${summary.milesToNextTier.toLocaleString()} 마일`
+              : summary
+                ? `${summary.nextTier} 등급을 유지하고 있어요`
+                : "-"}
           </p>
         </div>
 
@@ -171,9 +187,9 @@ export function MyPage() {
           <MenuRow
             icon={<CouponIcon className="h-4 w-5" />}
             title="쿠폰 · 혜택"
-            subtitle="사용 가능 3장"
-            badge="1장 만료 임박"
-            badgeTone="warning"
+            subtitle={
+              summary ? `사용 가능 ${summary.couponCount}장` : "쿠폰 · 혜택 보관함"
+            }
             href={ROUTES.myPageCoupons}
           />
         </SectionCard>
@@ -201,8 +217,7 @@ export function MyPage() {
           <MenuRow
             icon={<CardIcon className="h-5 w-4" />}
             title="결제 수단"
-            subtitle="카드 2장 등록"
-            badge="···· 4412"
+            subtitle="등록된 카드 관리"
             href={ROUTES.myPagePaymentMethods}
           />
         </SectionCard>
@@ -212,19 +227,28 @@ export function MyPage() {
             icon={<BellIcon className="h-4 w-4" />}
             title="마일리지 알림"
             subtitle="적립 · 소멸 예정 안내"
-            toggle={{ checked: milesAlert, onChange: setMilesAlert }}
+            toggle={{
+              checked: settings?.milesAlert ?? false,
+              onChange: (value) => toggleSetting("milesAlert", value),
+            }}
           />
           <MenuRow
             icon={<BellIcon className="h-4 w-4" />}
             title="여정 알림"
             subtitle="탑승 · 게이트 변경 안내"
-            toggle={{ checked: journeyAlert, onChange: setJourneyAlert }}
+            toggle={{
+              checked: settings?.journeyAlert ?? false,
+              onChange: (value) => toggleSetting("journeyAlert", value),
+            }}
           />
           <MenuRow
             icon={<BellIcon className="h-4 w-4" />}
             title="마케팅 · 혜택 수신"
             subtitle="팝업 · 프로모션 소식"
-            toggle={{ checked: marketingOptIn, onChange: setMarketingOptIn }}
+            toggle={{
+              checked: settings?.marketingOptIn ?? false,
+              onChange: (value) => toggleSetting("marketingOptIn", value),
+            }}
           />
         </SectionCard>
 

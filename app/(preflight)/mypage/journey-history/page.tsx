@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { JourneyHistoryPage } from "@/features/preflight/pages/JourneyHistoryPage";
 
 export default function Page() {
-  return <PlaceholderPage title="여정" />;
+  return <JourneyHistoryPage />;
 }

@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { FaqPage } from "@/features/preflight/pages/FaqPage";
 
 export default function Page() {
-  return <PlaceholderPage title="자주 묻는 질문" />;
+  return <FaqPage />;
 }
