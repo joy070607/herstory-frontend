@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
 import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries";
+import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { WakingScreen } from "@/components/system/WakingScreen";
@@ -90,10 +91,13 @@ export function SmartCartPage() {
         {journeyId && products && (
           <>
             <div className="mb-5 flex items-center gap-2">
-              <span className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50">
+              <Link
+                href={ROUTES.vipFitting}
+                className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+              >
                 <ShirtIcon className="h-4 w-4 shrink-0" />
                 피팅 {cart?.items.length ?? 0}개 준비 완료
-              </span>
+              </Link>
               <Link
                 href={ROUTES.terminalMap}
                 className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
@@ -156,12 +160,13 @@ export function SmartCartPage() {
               </p>
             ) : (
               <div className="mb-4 flex flex-col gap-3.5">
-                {filteredProducts.map((product) => {
+                {filteredProducts.map((product, index) => {
                   const inCart = cart?.items.some((item) => item.productId === product.id) ?? false;
                   return (
                     <ProductCard
                       key={product.id}
                       product={product}
+                      index={index}
                       disabled={!memberId || inCart || pendingProductId === product.id}
                       onAdd={() => handleAdd(product.id)}
                       inCart={inCart}
@@ -183,17 +188,27 @@ export function SmartCartPage() {
 
 function ProductCard({
   product,
+  index,
   disabled,
   onAdd,
   inCart,
 }: {
   product: Product;
+  index: number;
   disabled: boolean;
   onAdd: () => void;
   inCart: boolean;
 }) {
+  const { ref, inView } = useInView<HTMLDivElement>();
+
   return (
-    <div className="flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5">
+    <div
+      ref={ref}
+      className={`flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5 transition-all duration-700 ease-out ${
+        inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+      }`}
+      style={{ transitionDelay: inView ? `${index * 100}ms` : "0ms" }}
+    >
       <div className="relative h-[75px] w-[75px] shrink-0 overflow-hidden rounded-2xl bg-neutral-200">
         <Image src={product.imageUrl} alt={product.name} fill sizes="75px" className="object-cover" />
       </div>

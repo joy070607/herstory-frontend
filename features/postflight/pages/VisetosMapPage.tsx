@@ -95,63 +95,63 @@ export function VisetosMapPage() {
     <div className="flex flex-1 flex-col">
       <AppHeader />
 
-      <div className="px-6 pt-4">
-        <BackButton />
-      </div>
+      <div className="relative flex flex-1 flex-col">
+        <BackButton className="absolute left-4 top-4 z-10 h-10 w-10 rounded-full bg-white shadow-md" />
 
-      {isLoading && <WakingScreen />}
-      {isError && <ErrorState onRetry={() => refetch()} />}
+        {isLoading && <WakingScreen />}
+        {isError && <ErrorState onRetry={() => refetch()} />}
 
-      {spots && (
-        <div className="flex flex-1 flex-col">
-          <iframe
-            title="비세토스 스팟 지도"
-            src={mapEmbedUrl(spots)}
-            className="h-[300px] w-full border-0"
-            loading="lazy"
-          />
+        {spots && (
+          <div className="flex flex-1 flex-col">
+            <iframe
+              title="비세토스 스팟 지도"
+              src={mapEmbedUrl(spots)}
+              className="h-[300px] w-full border-0"
+              loading="lazy"
+            />
 
-          <div className="-mt-6 flex flex-1 flex-col gap-4 rounded-t-[28px] bg-[#0A0A0A] px-6 pb-[76px] pt-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-bold text-white">비세토스 스팟</h1>
-              <span className="rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white">
-                {destination}
-              </span>
-            </div>
-            <p className="text-sm text-neutral-300">
-              MCM의 특별한 장소를 발견하고 디지털 패스포트 스탬프를 모아 리워드를 잠금 해제하세요.
-            </p>
-
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-base font-semibold text-white">시티 패스포트</span>
-              <span className="text-sm font-medium text-sky-400">
-                {stampedSpots.size}/{spots.length} 수집됨
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              {spots.map((spot) => (
-                <SpotStampTile
-                  key={`${spot.spotName}-${spot.latitude}-${spot.longitude}`}
-                  spot={spot}
-                  isStamped={stampedSpots.has(spot.spotName)}
-                  isCheckingIn={pendingSpotName === spot.spotName}
-                  onCheckIn={() => handleCheckIn(spot.spotName)}
-                />
-              ))}
-            </div>
-
-            {lastStamp && (
-              <p className="text-xs text-sky-400">
-                {lastStamp.message} (누적 {lastStamp.totalMiles.toLocaleString()} Miles)
+            <div className="-mt-6 flex flex-1 flex-col gap-4 rounded-t-[28px] bg-[#0A0A0A] px-6 pb-[76px] pt-6">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-bold text-white">비세토스 스팟</h1>
+                <span className="rounded-full bg-sky-500 px-3 py-1 text-xs font-semibold text-white">
+                  {destination}
+                </span>
+              </div>
+              <p className="text-sm text-neutral-300">
+                MCM의 특별한 장소를 발견하고 디지털 패스포트 스탬프를 모아 리워드를 잠금 해제하세요.
               </p>
-            )}
-            {stampCheckIn.isError && (
-              <p className="text-xs text-red-400">스탬프 적립에 실패했습니다. 다시 시도해주세요.</p>
-            )}
+
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-base font-semibold text-white">시티 패스포트</span>
+                <span className="text-sm font-medium text-sky-400">
+                  {stampedSpots.size}/{spots.length} 수집됨
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                {spots.map((spot) => (
+                  <SpotStampTile
+                    key={`${spot.spotName}-${spot.latitude}-${spot.longitude}`}
+                    spot={spot}
+                    isStamped={stampedSpots.has(spot.spotName)}
+                    isCheckingIn={pendingSpotName === spot.spotName}
+                    onCheckIn={() => handleCheckIn(spot.spotName)}
+                  />
+                ))}
+              </div>
+
+              {lastStamp && (
+                <p className="text-xs text-sky-400">
+                  {lastStamp.message} (누적 {lastStamp.totalMiles.toLocaleString()} Miles)
+                </p>
+              )}
+              {stampCheckIn.isError && (
+                <p className="text-xs text-red-400">스탬프 적립에 실패했습니다. 다시 시도해주세요.</p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="mt-auto">
         <AiHotBar />

@@ -80,7 +80,7 @@ function TimelineStepRow({
               <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">{item.description}</p>
             )}
           </div>
-          <span className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-medium text-neutral-600">
+          <span className="shrink-0 rounded-full bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white">
             {item.time}
           </span>
         </div>
