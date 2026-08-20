@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAiCareTip, useJourney } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
@@ -9,7 +10,8 @@ import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
-import { WeatherIcon } from "@/components/icons";
+import { ROUTES } from "@/constants/routes";
+import { ChevronRightIcon, SpotIcon, WeatherIcon } from "@/components/icons";
 
 // 알림 카드에 표시할 대상 제품 — 실제 개인 컬렉션 API가 아직 없어 데모에 쓰인 제품명을 그대로 질의합니다.
 const FEATURED_PRODUCT = "비세토스 스타크 백팩";
@@ -116,6 +118,22 @@ export function LeatherCarePage() {
             <p className="ml-0.5 text-sm leading-relaxed text-neutral-800">{careTip}</p>
           )}
         </div>
+
+        <Link
+          href={ROUTES.visetosMap}
+          className="mx-6 mb-7 flex items-center gap-3 rounded-[20px] bg-neutral-900 px-5 py-4"
+        >
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400">
+            <SpotIcon className="h-5 w-5" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white">MCM 스페셜 스팟 발견하기</p>
+            <p className="mt-1 text-xs leading-relaxed text-neutral-400">
+              근처 부티크를 방문하고 시티 패스포트 스탬프를 모아 리워드를 잠금 해제하세요
+            </p>
+          </div>
+          <ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-400" />
+        </Link>
 
         <div className="mb-4 flex items-center justify-between px-6">
           <span className="text-xl font-bold text-neutral-900">나의 컬렉션 상태</span>

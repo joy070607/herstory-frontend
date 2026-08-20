@@ -123,7 +123,7 @@ export function VipFittingPage() {
 
           {memberId && cart && items.length === 0 && (
             <Link
-              href={ROUTES.boardingPass}
+              href={ROUTES.smartCart}
               className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center"
             >
               <TicketIcon className="mb-1 text-neutral-400" />
@@ -159,6 +159,15 @@ export function VipFittingPage() {
             </div>
           )}
         </div>
+
+        {journeyId && (
+          <Link
+            href={ROUTES.fastCheckout}
+            className="rounded-[20px] bg-sky-500 py-3.5 text-center text-base font-bold text-white"
+          >
+            구매하기
+          </Link>
+        )}
       </div>
 
       <div className="mt-auto">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
 import { useCart, useCheckout, usePaymentMethods } from "@/hooks/queries";
@@ -15,26 +16,18 @@ import { getDutyFreeStatus } from "@/utils/dutyFree";
 import {
   CheckCircleIcon,
   CreditCardWalletIcon,
-  DigitalWalletIcon,
   LockFilledIcon,
   TicketIcon,
 } from "@/components/icons";
 
-type PaymentMethod = "card" | "wallet";
-
-// 디지털 지갑/픽업 일정은 실제 대응 API가 없어서 정적 옵션이에요 (하드코딩이 아니라
+// 픽업 일정은 실제 대응 API가 없어서 정적 옵션이에요 (하드코딩이 아니라
 // "선택할 수 있는 목록"을 화면에서만 관리하는 거고, 서버로 전송되진 않아요).
-const WALLET_OPTIONS = [
-  { id: "apple-pay", label: "Apple Pay" },
-  { id: "google-pay", label: "Google Pay" },
-  { id: "samsung-pay", label: "Samsung Pay" },
-];
-
 const PICKUP_MONTHS = ["11월", "12월", "1월"];
 const PICKUP_DAYS = ["19일", "20일", "21일"];
 const PICKUP_TIMES = ["11:00 AM", "1:00 PM", "3:00 PM"];
 
 export function FastCheckoutPage() {
+  const router = useRouter();
   const journeyId = useJourneyStore((state) => state.journeyId);
   const setPurchaseStatus = useJourneyStore((state) => state.setPurchaseStatus);
   const member = useAuthStore((state) => state.member);
@@ -43,9 +36,7 @@ export function FastCheckoutPage() {
   const { data: cart, isLoading } = useCart(memberId);
   const { data: cards } = usePaymentMethods(memberId);
   const checkout = useCheckout();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
-  const [selectedWalletId, setSelectedWalletId] = useState(WALLET_OPTIONS[0].id);
   const [pickupMonth, setPickupMonth] = useState(PICKUP_MONTHS[1]);
   const [pickupDay, setPickupDay] = useState(PICKUP_DAYS[1]);
   const [pickupTime, setPickupTime] = useState(PICKUP_TIMES[1]);
@@ -60,7 +51,12 @@ export function FastCheckoutPage() {
     if (!member || !journeyId) return;
     checkout.mutate(
       { memberId: Number(member.id), journeyId: Number(journeyId) },
-      { onSuccess: () => setPurchaseStatus("PURCHASED") }
+      {
+        onSuccess: () => {
+          setPurchaseStatus("PURCHASED");
+          router.push(ROUTES.leatherCare);
+        },
+      }
     );
   };
 
@@ -180,96 +176,41 @@ export function FastCheckoutPage() {
 
                 <div>
                   <h2 className="mb-3.5 text-base font-bold text-neutral-900">결제 수단</h2>
-                  <div className="mb-3 flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("card")}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-[20px] py-3 text-sm font-medium transition-all active:scale-[0.98] ${
-                        paymentMethod === "card"
-                          ? "bg-sky-500 text-sky-50"
-                          : "bg-neutral-100 text-neutral-700"
-                      }`}
-                    >
-                      <CreditCardWalletIcon className="h-4 w-5" />
-                      신용카드
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("wallet")}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-[20px] py-3 text-sm font-medium transition-all active:scale-[0.98] ${
-                        paymentMethod === "wallet"
-                          ? "bg-sky-500 text-sky-50"
-                          : "bg-neutral-100 text-neutral-700"
-                      }`}
-                    >
-                      <DigitalWalletIcon className="h-4 w-5" />
-                      디지털 지갑
-                    </button>
-                  </div>
-
-                  {paymentMethod === "card" && (
-                    <div className="flex flex-col gap-2.5">
-                      {cards && cards.length > 0 ? (
-                        cards.map((card) => {
-                          const selected = card.cardId === activeCardId;
-                          return (
-                            <button
-                              key={card.cardId}
-                              type="button"
-                              onClick={() => setSelectedCardId(card.cardId)}
-                              className={`flex items-center gap-3 rounded-[20px] border-2 px-4 py-3.5 text-left transition-all active:scale-[0.99] ${
-                                selected
-                                  ? "border-sky-500 bg-sky-50"
-                                  : "border-transparent bg-neutral-100"
-                              }`}
-                            >
-                              <CreditCardWalletIcon
-                                className={`h-4 w-5 shrink-0 ${selected ? "text-sky-600" : "text-neutral-400"}`}
-                              />
-                              <span className="flex-1 text-sm text-neutral-900">{card.cardName}</span>
-                              <span className="text-xs text-neutral-400">
-                                {card.subtitle || card.cardNumberMasked}
-                              </span>
-                              {selected && <CheckCircleIcon className="h-4 w-4 shrink-0 text-sky-500" />}
-                            </button>
-                          );
-                        })
-                      ) : (
-                        <Link
-                          href={ROUTES.myPagePaymentMethods}
-                          className="rounded-[20px] border-2 border-dashed border-neutral-200 px-4 py-3.5 text-center text-sm font-medium text-sky-600"
-                        >
-                          등록된 카드가 없어요 · 카드 등록하기
-                        </Link>
-                      )}
-                    </div>
-                  )}
-
-                  {paymentMethod === "wallet" && (
-                    <div className="flex flex-col gap-2.5">
-                      {WALLET_OPTIONS.map((wallet) => {
-                        const selected = wallet.id === selectedWalletId;
+                  <div className="flex flex-col gap-2.5">
+                    {cards && cards.length > 0 ? (
+                      cards.map((card) => {
+                        const selected = card.cardId === activeCardId;
                         return (
                           <button
-                            key={wallet.id}
+                            key={card.cardId}
                             type="button"
-                            onClick={() => setSelectedWalletId(wallet.id)}
+                            onClick={() => setSelectedCardId(card.cardId)}
                             className={`flex items-center gap-3 rounded-[20px] border-2 px-4 py-3.5 text-left transition-all active:scale-[0.99] ${
                               selected
                                 ? "border-sky-500 bg-sky-50"
                                 : "border-transparent bg-neutral-100"
                             }`}
                           >
-                            <DigitalWalletIcon
+                            <CreditCardWalletIcon
                               className={`h-4 w-5 shrink-0 ${selected ? "text-sky-600" : "text-neutral-400"}`}
                             />
-                            <span className="flex-1 text-sm text-neutral-900">{wallet.label}</span>
+                            <span className="flex-1 text-sm text-neutral-900">{card.cardName}</span>
+                            <span className="text-xs text-neutral-400">
+                              {card.subtitle || card.cardNumberMasked}
+                            </span>
                             {selected && <CheckCircleIcon className="h-4 w-4 shrink-0 text-sky-500" />}
                           </button>
                         );
-                      })}
-                    </div>
-                  )}
+                      })
+                    ) : (
+                      <Link
+                        href={ROUTES.myPagePaymentMethods}
+                        className="rounded-[20px] border-2 border-dashed border-neutral-200 px-4 py-3.5 text-center text-sm font-medium text-sky-600"
+                      >
+                        등록된 카드가 없어요 · 카드 등록하기
+                      </Link>
+                    )}
+                  </div>
                 </div>
 
                 <div>
