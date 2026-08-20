@@ -14,7 +14,7 @@ import {
 } from "@/hooks/queries";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
-import { CardIcon } from "@/components/icons";
+import { PaymentMethodsIcon } from "@/components/icons";
 import type { PaymentMethodItem } from "@/types/api.types";
 
 function CardRow({
@@ -62,7 +62,7 @@ function CardRow({
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-500">
-        <CardIcon className="h-5 w-4" />
+        <PaymentMethodsIcon className="h-5 w-5" />
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-1.5">
