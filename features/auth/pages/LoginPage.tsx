@@ -7,9 +7,11 @@ import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/endpoints";
 import type { ApiError } from "@/api/client";
 import { useAuthStore } from "@/store/authStore";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { ROUTES } from "@/constants/routes";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
 import { Logo } from "@/components/Logo";
+import { InstallPromptBanner } from "@/components/system/InstallPromptBanner";
 import type { Member } from "@/types/api.types";
 
 // 네트워크 타임아웃 등으로 응답 status가 없는 경우 실제 비밀번호 오류와
@@ -29,6 +31,7 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [keepSignedIn, setKeepSignedIn] = useState(false);
+  const installPrompt = useInstallPrompt();
 
   const loginMutation = useMutation<Member, ApiError>({
     mutationFn: () => authApi.login({ email, password }),
@@ -37,6 +40,16 @@ export function LoginPage() {
       router.push(ROUTES.home);
     },
   });
+
+  if (installPrompt.status !== "unavailable") {
+    return (
+      <div className="flex flex-1 flex-col bg-white">
+        {installPrompt.status === "available" && (
+          <InstallPromptBanner onInstall={installPrompt.install} onDismiss={installPrompt.dismiss} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col">
