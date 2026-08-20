@@ -3,16 +3,9 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { CartResponse } from "@/types/cart.types";
+import { formatKRW } from "@/utils/format";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-function formatKRW(amount: number) {
-  return new Intl.NumberFormat("ko-KR", {
-    style: "currency",
-    currency: "KRW",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 function ChoiceFitPresetView() {
   const searchParams = useSearchParams();

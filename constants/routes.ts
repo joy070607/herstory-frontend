@@ -15,7 +15,6 @@ export const ROUTES = {
   autoCheckIn: "/check-in",
   vipFitting: "/fitting",
   fastCheckout: "/checkout",
-  reEntry: "/re-entry",
   airportMap: "/airport-map",
 
   leatherCare: "/care",
