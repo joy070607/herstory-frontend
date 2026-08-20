@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { WakingScreen } from "@/components/system/WakingScreen";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
 import { ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
@@ -80,7 +81,7 @@ export function SmartCartPage() {
         )}
 
         {journeyId && isLoading && (
-          <div className="h-[420px] animate-pulse rounded-[20px] bg-neutral-100" />
+          <WakingScreen message="맞춤 스타일 추천을 불러오는 중입니다." />
         )}
 
         {journeyId && products && (
@@ -98,13 +99,13 @@ export function SmartCartPage() {
 
             {hero && (
               <div className="mb-5 rounded-[20px] bg-neutral-100 p-3.5">
-                <div className="relative mb-3 h-[180px] overflow-hidden rounded-[16px] bg-neutral-200">
+                <div className="relative mb-3 h-[250px] overflow-hidden rounded-[16px] bg-neutral-200">
                   <Image
                     src={hero.imageUrl}
                     alt={hero.name}
                     fill
                     sizes="360px"
-                    className="object-contain"
+                    className="object-cover"
                   />
                 </div>
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-sky-700">

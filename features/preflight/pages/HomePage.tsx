@@ -30,7 +30,7 @@ export function HomePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: journey, isLoading } = useJourney(journeyId);
   const { data: liveCard } = useLiveCard(journeyId);
-  const { data: analysis } = useJourneyAnalysis(journeyId);
+  const { data: analysis, isLoading: isAnalysisLoading } = useJourneyAnalysis(journeyId);
   const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
   const topProduct = analysis?.recommendedProducts[0];
   const [showRain, setShowRain] = useState(true);
@@ -127,6 +127,16 @@ export function HomePage() {
             <span className="text-sm text-neutral-900">공항팝업</span>
           </Link>
         </div>
+
+        {journeyId && !analysis && isAnalysisLoading && (
+          <>
+            <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">오늘의 날씨</h2>
+            <div className="mx-6 mb-4 flex items-center gap-3 rounded-[20px] bg-sky-600 px-6 py-8">
+              <div className="h-6 w-6 shrink-0 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+              <p className="text-sm font-medium text-white">날씨를 불러오는 중입니다.</p>
+            </div>
+          </>
+        )}
 
         {journeyId && analysis && (
           <>
