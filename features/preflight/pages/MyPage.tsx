@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { Toggle } from "@/components/ui/Toggle";
+import { useSettingsStore } from "@/store/settingsStore";
 import { ROUTES } from "@/constants/routes";
 import {
   BellIcon,
@@ -111,9 +111,12 @@ function MenuRow({
 }
 
 export function MyPage() {
-  const [milesAlert, setMilesAlert] = useState(true);
-  const [journeyAlert, setJourneyAlert] = useState(true);
-  const [marketingOptIn, setMarketingOptIn] = useState(false);
+  const milesAlert = useSettingsStore((state) => state.milesAlert);
+  const setMilesAlert = useSettingsStore((state) => state.setMilesAlert);
+  const journeyAlert = useSettingsStore((state) => state.journeyAlert);
+  const setJourneyAlert = useSettingsStore((state) => state.setJourneyAlert);
+  const marketingOptIn = useSettingsStore((state) => state.marketingOptIn);
+  const setMarketingOptIn = useSettingsStore((state) => state.setMarketingOptIn);
 
   return (
     <div className="flex flex-1 flex-col">
