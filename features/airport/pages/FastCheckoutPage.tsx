@@ -17,6 +17,8 @@ import {
   CheckCircleIcon,
   CreditCardWalletIcon,
   LockFilledIcon,
+  SparklesIcon,
+  SpotIcon,
   TicketIcon,
 } from "@/components/icons";
 
@@ -239,8 +241,20 @@ export function FastCheckoutPage() {
                         onChange={setPickupTime}
                       />
                     </div>
-                    <p className="mt-3 text-xs text-neutral-400">{pickupSchedule.pickupDeskLocation}</p>
-                    <p className="mt-1.5 text-xs text-sky-600">{pickupSchedule.recommendedNotice}</p>
+                    <div className="mt-3 flex flex-col gap-2.5">
+                      <div className="flex items-start gap-2.5 rounded-2xl bg-neutral-100 px-4 py-3.5">
+                        <SpotIcon className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
+                        <p className="text-sm leading-relaxed text-neutral-700">
+                          {pickupSchedule.pickupDeskLocation}
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2.5 rounded-2xl bg-sky-50 px-4 py-3.5">
+                        <SparklesIcon className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" />
+                        <p className="text-sm leading-relaxed text-sky-800">
+                          {pickupSchedule.recommendedNotice}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
