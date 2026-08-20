@@ -32,7 +32,6 @@ import type {
   ProfileResponse,
   RedeemBenefitRequest,
   RedeemBenefitResponse,
-  ReEntryResponse,
   ResetPasswordRequest,
   SendPhoneCodeRequest,
   SendPhoneCodeResponse,
@@ -143,16 +142,9 @@ export const cartApi = {
     apiClient.post<CartResponse>("/cart/add", payload).then((res) => res.data),
 };
 
-// SCR-401 (고객 체크인) / SCR-402 (직원 태블릿) 이 공유하는 실제 백엔드 "Store API" 도메인
 export const storeApi = {
   checkIn: (payload: CheckInRequest) =>
     apiClient.post<CheckInResponse>("/store/check-in", payload).then((res) => res.data),
-  getReEntryOptions: (memberId: number) =>
-    apiClient
-      .get<ReEntryResponse>(`/store/re-entry-options/${memberId}`)
-      .then((res) => res.data),
-  // EventSource는 axios가 아니라 URL이 필요합니다 (features/staff/hooks/useNotificationStream.ts에서 구독).
-  notificationStreamUrl: () => `${apiClient.defaults.baseURL}/store/notifications/stream`,
 };
 
 export const airportApi = {
@@ -170,7 +162,7 @@ export const orderApi = {
     apiClient.post<OrderResponse>("/order/checkout", payload).then((res) => res.data),
 };
 
-// 마일리지 잔액/거래내역/사용/양도/혜택교환 (SCR-501 마일리지 화면)
+// 마일리지 잔액/거래내역/사용/양도/혜택교환
 export const milesApi = {
   getBalance: (memberId: number) =>
     apiClient.get<MilesBalanceResponse>(`/miles/${memberId}`).then((res) => res.data),
@@ -204,7 +196,7 @@ export const careApi = {
       .then((res) => res.data),
 };
 
-// 마이페이지 대시보드 요약, 회원 프로필/여권/결제수단/알림설정 (6. MyPage API)
+// 마이페이지 대시보드 요약, 회원 프로필/여권/결제수단/알림설정
 export const membersApi = {
   getSummary: (memberId: number) =>
     apiClient.get<SummaryResponse>(`/members/summary/${memberId}`).then((res) => res.data),

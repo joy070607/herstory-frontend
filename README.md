@@ -53,10 +53,9 @@ app/                  라우트 정의 (App Router). 각 page.tsx는 features/�
   (airport)/           공항 내: 셀프 체크인, VIP 피팅, 패스트 체크아웃, 공항 지도
   (postflight)/        귀국 후: 가죽 케어, 매장 지도, 마일리지
   (auth)/               로그인, 회원가입, 비밀번호 찾기
-  staff/                직원용 태블릿 화면 (승객이 아닌 별도 진입점)
 
 features/              도메인별 화면(pages)과 도메인 전용 컴포넌트
-  preflight/  airport/  postflight/  auth/  staff/
+  preflight/  airport/  postflight/  auth/
 
 components/            여러 도메인에서 공용으로 쓰는 컴포넌트 (layout, icons, ui, scan, signature)
 hooks/                  공용 React Query 훅

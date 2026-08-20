@@ -35,9 +35,6 @@ export const ROUTES = {
   myPageInquiry: "/mypage/inquiry",
   myPageTerms: "/mypage/terms",
   myPageFaq: "/mypage/faq",
-
-  staffTablet: "/staff",
-  choiceFitPreview: "/staff/choice-fit",
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

@@ -377,17 +377,6 @@ export interface FittingResponse {
   message: string;
 }
 
-// GET /api/v1/store/re-entry-options/{memberId}
-export interface ReEntryResponse {
-  memberId: number;
-  memberName: string;
-  purchaseStatus: PurchaseStatus;
-  hasPendingCart: boolean;
-  pendingCartItemCount: number;
-  recommendedAction: string;
-  availableOptions: string[];
-}
-
 // 실제 API 스키마 그대로 (POST /api/v1/order/checkout)
 export interface CheckoutRequest {
   memberId: number;
@@ -438,7 +427,7 @@ export interface OrderResponse {
   createdAt: string;
 }
 
-// 실제 API 스키마 그대로 (6. MyPage API - 마이페이지 & 계정/설정)
+// 마이페이지 & 계정/설정 관련 타입
 export interface NotificationSettings {
   milesAlert: boolean;
   journeyAlert: boolean;

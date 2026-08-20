@@ -47,7 +47,6 @@ export const queryKeys = {
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
-  reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
   milesHistory: (memberId: number) => ["miles", "history", memberId] as const,
   memberSummary: (memberId: number) => ["members", "summary", memberId] as const,
   memberProfile: (memberId: number) => ["members", "profile", memberId] as const,
@@ -238,14 +237,6 @@ export function useCheckIn() {
   });
 }
 
-export function useReEntryOptions(memberId: number | null) {
-  return useQuery({
-    queryKey: queryKeys.reEntryOptions(memberId ?? 0),
-    queryFn: () => storeApi.getReEntryOptions(memberId as number),
-    enabled: memberId != null,
-  });
-}
-
 export function useCheckout() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -305,7 +296,6 @@ export function useRedeemBenefit(memberId: number | null) {
   });
 }
 
-// 마이페이지 대시보드 요약 (프로필/등급/마일리지/쿠폰수/여정수/알림설정)
 export function useMemberSummary(memberId: number | null) {
   return useQuery({
     queryKey: queryKeys.memberSummary(memberId ?? 0),
