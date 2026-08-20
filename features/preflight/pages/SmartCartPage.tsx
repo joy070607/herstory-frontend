@@ -94,10 +94,13 @@ export function SmartCartPage() {
                 <ShirtIcon className="h-4 w-4 shrink-0" />
                 피팅 {cart?.items.length ?? 0}개 준비 완료
               </span>
-              <span className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900">
+              <Link
+                href={ROUTES.airportMap}
+                className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
+              >
                 <SpotIcon className="h-3.5 w-3.5 shrink-0 text-neutral-500" />
                 터미널 1
-              </span>
+              </Link>
             </div>
 
             {hero && (

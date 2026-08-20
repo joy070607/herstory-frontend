@@ -4,14 +4,20 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
-import { useAiCareTip, useJourney } from "@/hooks/queries";
+import { useAiCareTip, useJourney, useJourneyAnalysis } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
+import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { ROUTES } from "@/constants/routes";
 import { ChevronRightIcon, SpotIcon, WeatherIcon } from "@/components/icons";
+import { parseWeatherInfo } from "@/utils/weather";
+
+// 강수 확률이 이 값 이상이면 파란색, 아니면서 기온이 HOT_TEMP_C 이상이면 빨간색 카드로 표시합니다.
+const RAINY_PROBABILITY_PERCENT = 50;
+const HOT_TEMP_C = 28;
 
 // 알림 카드에 표시할 대상 제품 — 실제 개인 컬렉션 API가 아직 없어 데모에 쓰인 제품명을 그대로 질의합니다.
 const FEATURED_PRODUCT = "비세토스 스타크 백팩";
@@ -32,24 +38,13 @@ const MORE_COLLECTION_ITEMS = [
   },
 ];
 
-// destinationWeather는 자유 문장이라 형식이 두 가지로 섞여 있어요:
-// "열대성 스콜 (기온 32°C, 습도 85%)" 또는 "...기온 26.5°C... (우천/스콜 예상)".
-// 둘 다에서 온도와, 괄호 앞/뒤 중 실제 날씨 요약에 해당하는 쪽을 뽑아냅니다.
-function parseDestinationWeather(text: string) {
-  const tempMatch = text.match(/기온\s*([\d.]+)\s*°C/);
-  const temp = tempMatch ? Math.round(Number(tempMatch[1])) : null;
-  const beforeParen = text.split("(")[0].trim();
-  const parenMatch = text.match(/\(([^)]+)\)/);
-  const condition =
-    beforeParen && !beforeParen.includes("기온") ? beforeParen : (parenMatch?.[1] ?? text);
-  return { temp, condition };
-}
-
 export function LeatherCarePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const lang = useJourneyStore((state) => state.lang);
   const { data: journey } = useJourney(journeyId);
+  const { data: analysis } = useJourneyAnalysis(journeyId);
   const [showAllCollection, setShowAllCollection] = useState(false);
+  const [showRain, setShowRain] = useState(true);
 
   const {
     data: careTip,
@@ -62,9 +57,11 @@ export function LeatherCarePage() {
     lang,
   });
 
-  const weather = journey?.destinationWeather
-    ? parseDestinationWeather(journey.destinationWeather)
-    : null;
+  const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
+  const rainProbabilityPercent = analysis ? Number(analysis.rainProbability.replace("%", "")) : 0;
+  const isRainy = rainProbabilityPercent >= RAINY_PROBABILITY_PERCENT;
+  const isHot = weather?.temp != null && weather.temp >= HOT_TEMP_C;
+  const cardColorClass = !isRainy && isHot ? "bg-red-500" : "bg-sky-600";
 
   return (
     <div className="flex flex-1 flex-col">
@@ -76,28 +73,35 @@ export function LeatherCarePage() {
         </div>
 
         <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">현재 환경</h2>
-        <div className="mx-6 mb-5 overflow-hidden rounded-[20px] bg-sky-600 px-6 py-5">
-          <div className="flex items-center gap-3">
-            <WeatherIcon className="h-9 w-10 shrink-0" />
-            <div>
-              <p className="text-3xl font-bold leading-none text-white">
-                {weather?.temp != null ? `${weather.temp}°` : "-"}
-              </p>
-              <p className="mt-1.5 text-base font-medium text-white">
-                {weather?.condition ?? "날씨 정보 없음"}
-              </p>
+        <div className="mx-6 mb-5 overflow-hidden rounded-[20px]">
+          <button
+            type="button"
+            onClick={() => setShowRain((prev) => !prev)}
+            className={`relative w-full px-6 py-5 text-left transition-colors ${cardColorClass}`}
+          >
+            {showRain && <RainOverlay />}
+            <div className="relative z-10 flex items-center gap-3">
+              <WeatherIcon className="h-9 w-10 shrink-0" />
+              <div>
+                <p className="text-3xl font-bold leading-none text-white">
+                  {weather?.temp != null ? `${weather.temp}°` : "-"}
+                </p>
+                <p className="mt-1.5 text-base font-medium text-white">
+                  {weather?.condition ?? "날씨 정보 없음"}
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="mt-4 rounded-[14px] bg-black/15 px-4 py-3.5">
-            <p className="text-sm font-semibold text-white">
-              {journey?.destination ?? "여정 정보 없음"}
-            </p>
-            {journey?.destinationWeather && (
-              <p className="mt-1.5 text-sm font-medium leading-relaxed text-white">
-                {journey.destinationWeather}
+            <div className="relative z-10 mt-4 rounded-[14px] bg-black/15 px-4 py-3.5">
+              <p className="text-sm font-semibold text-white">
+                {journey?.destination ?? "여정 정보 없음"}
               </p>
-            )}
-          </div>
+              {journey?.destinationWeather && (
+                <p className="mt-1.5 text-sm font-medium leading-relaxed text-white">
+                  {journey.destinationWeather}
+                </p>
+              )}
+            </div>
+          </button>
         </div>
 
         <div className="mx-6 mb-7 rounded-[20px] bg-sky-50 py-4 pl-[15px] pr-[18px]">

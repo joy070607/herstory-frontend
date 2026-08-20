@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
-import { useCart, useCheckout, usePaymentMethods } from "@/hooks/queries";
+import { useCart, useCheckout, usePaymentMethods, usePickupSchedule } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
@@ -20,12 +20,6 @@ import {
   TicketIcon,
 } from "@/components/icons";
 
-// 픽업 일정은 실제 대응 API가 없어서 정적 옵션이에요 (하드코딩이 아니라
-// "선택할 수 있는 목록"을 화면에서만 관리하는 거고, 서버로 전송되진 않아요).
-const PICKUP_MONTHS = ["11월", "12월", "1월"];
-const PICKUP_DAYS = ["19일", "20일", "21일"];
-const PICKUP_TIMES = ["11:00 AM", "1:00 PM", "3:00 PM"];
-
 export function FastCheckoutPage() {
   const router = useRouter();
   const journeyId = useJourneyStore((state) => state.journeyId);
@@ -35,13 +29,17 @@ export function FastCheckoutPage() {
 
   const { data: cart, isLoading } = useCart(memberId);
   const { data: cards } = usePaymentMethods(memberId);
+  const { data: pickupSchedule } = usePickupSchedule(journeyId);
   const checkout = useCheckout();
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
-  const [pickupMonth, setPickupMonth] = useState(PICKUP_MONTHS[1]);
-  const [pickupDay, setPickupDay] = useState(PICKUP_DAYS[1]);
-  const [pickupTime, setPickupTime] = useState(PICKUP_TIMES[1]);
+  const [pickupMonth, setPickupMonth] = useState<string | null>(null);
+  const [pickupDay, setPickupDay] = useState<string | null>(null);
+  const [pickupTime, setPickupTime] = useState<string | null>(null);
 
   const activeCardId = selectedCardId ?? cards?.[0]?.cardId ?? null;
+  const activePickupMonth = pickupMonth ?? pickupSchedule?.defaultMonth ?? null;
+  const activePickupDay = pickupDay ?? pickupSchedule?.defaultDay ?? null;
+  const activePickupTime = pickupTime ?? pickupSchedule?.defaultTime ?? null;
 
   const spentKrw = cart?.totalPrice ?? 0;
   const { limitKrw, isOverLimit } = getDutyFreeStatus(spentKrw);
@@ -50,7 +48,14 @@ export function FastCheckoutPage() {
   const handleCheckout = () => {
     if (!member || !journeyId) return;
     checkout.mutate(
-      { memberId: Number(member.id), journeyId: Number(journeyId) },
+      {
+        memberId: Number(member.id),
+        journeyId: Number(journeyId),
+        pickupMonth: activePickupMonth ?? undefined,
+        pickupDay: activePickupDay ?? undefined,
+        pickupTime: activePickupTime ?? undefined,
+        pickupLocation: pickupSchedule?.pickupDeskLocation,
+      },
       {
         onSuccess: () => {
           setPurchaseStatus("PURCHASED");
@@ -213,14 +218,30 @@ export function FastCheckoutPage() {
                   </div>
                 </div>
 
-                <div>
-                  <h2 className="mb-3.5 text-base font-bold text-neutral-900">픽업 일정</h2>
-                  <div className="flex flex-col gap-2">
-                    <PickupSlotRow options={PICKUP_MONTHS} value={pickupMonth} onChange={setPickupMonth} />
-                    <PickupSlotRow options={PICKUP_DAYS} value={pickupDay} onChange={setPickupDay} />
-                    <PickupSlotRow options={PICKUP_TIMES} value={pickupTime} onChange={setPickupTime} />
+                {pickupSchedule && (
+                  <div>
+                    <h2 className="mb-3.5 text-base font-bold text-neutral-900">픽업 일정</h2>
+                    <div className="flex flex-col gap-2">
+                      <PickupSlotRow
+                        options={pickupSchedule.months}
+                        value={activePickupMonth}
+                        onChange={setPickupMonth}
+                      />
+                      <PickupSlotRow
+                        options={pickupSchedule.days}
+                        value={activePickupDay}
+                        onChange={setPickupDay}
+                      />
+                      <PickupSlotRow
+                        options={pickupSchedule.times}
+                        value={activePickupTime}
+                        onChange={setPickupTime}
+                      />
+                    </div>
+                    <p className="mt-3 text-xs text-neutral-400">{pickupSchedule.pickupDeskLocation}</p>
+                    <p className="mt-1.5 text-xs text-sky-600">{pickupSchedule.recommendedNotice}</p>
                   </div>
-                </div>
+                )}
 
                 <button
                   type="button"
@@ -255,7 +276,7 @@ function PickupSlotRow({
   onChange,
 }: {
   options: string[];
-  value: string;
+  value: string | null;
   onChange: (value: string) => void;
 }) {
   return (

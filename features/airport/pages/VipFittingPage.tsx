@@ -74,12 +74,12 @@ export function VipFittingPage() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                type="button"
+              <Link
+                href={ROUTES.airportMap}
                 className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white"
               >
                 피팅룸 위치 보기
-              </button>
+              </Link>
               <Link
                 href={ROUTES.smartCart}
                 className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500"
