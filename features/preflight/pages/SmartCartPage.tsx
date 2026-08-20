@@ -11,7 +11,7 @@ import { AiHotBar } from "@/components/layout/AiHotBar";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
-import { ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
+import { CheckCircleIcon, ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
 
 const CATEGORY_LABELS: Record<ProductCategory, string> = {
   WATERPROOF: "방수",
@@ -53,7 +53,10 @@ export function SmartCartPage() {
   };
 
   const hero = products?.[0];
-  const restProducts = products?.slice(1) ?? [];
+  const heroInCart = hero ? (cart?.items.some((item) => item.productId === hero.id) ?? false) : false;
+  // 추천 상품이 1개뿐일 때도(hero만 있고 slice(1)이 비어) 큐레이션 목록이 통째로
+  // 비어 보이지 않도록, hero를 제외하지 않고 전체 목록을 그대로 필터링합니다.
+  const restProducts = products ?? [];
   const activeCategories = CATEGORY_FILTERS[activeFilter].categories;
   const filteredProducts = activeCategories
     ? restProducts.filter((product) => activeCategories.includes(product.category))
@@ -116,10 +119,13 @@ export function SmartCartPage() {
                 <button
                   type="button"
                   onClick={() => handleAdd(hero.id)}
-                  disabled={!memberId || pendingProductId === hero.id}
-                  className="w-full rounded-[20px] bg-sky-500 py-3 text-sm font-semibold text-sky-50 disabled:opacity-40"
+                  disabled={!memberId || heroInCart || pendingProductId === hero.id}
+                  className={`flex w-full items-center justify-center gap-1.5 rounded-[20px] py-3 text-sm font-semibold disabled:opacity-40 ${
+                    heroInCart ? "bg-neutral-200 text-neutral-500" : "bg-sky-500 text-sky-50"
+                  }`}
                 >
-                  스마트 피팅 담기
+                  {heroInCart && <CheckCircleIcon className="h-4 w-4 shrink-0" />}
+                  {heroInCart ? "담기 완료" : "스마트 피팅 담기"}
                 </button>
               </div>
             )}
@@ -147,14 +153,18 @@ export function SmartCartPage() {
               </p>
             ) : (
               <div className="mb-4 flex flex-col gap-3.5">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    disabled={!memberId || pendingProductId === product.id}
-                    onAdd={() => handleAdd(product.id)}
-                  />
-                ))}
+                {filteredProducts.map((product) => {
+                  const inCart = cart?.items.some((item) => item.productId === product.id) ?? false;
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      disabled={!memberId || inCart || pendingProductId === product.id}
+                      onAdd={() => handleAdd(product.id)}
+                      inCart={inCart}
+                    />
+                  );
+                })}
               </div>
             )}
           </>
@@ -172,10 +182,12 @@ function ProductCard({
   product,
   disabled,
   onAdd,
+  inCart,
 }: {
   product: Product;
   disabled: boolean;
   onAdd: () => void;
+  inCart: boolean;
 }) {
   return (
     <div className="flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5">
@@ -194,9 +206,14 @@ function ProductCard({
           type="button"
           onClick={onAdd}
           disabled={disabled}
-          className="mt-2 self-end rounded-[20px] border border-sky-500 bg-sky-50 px-3.5 py-1 text-sm font-medium text-sky-500 disabled:opacity-40"
+          className={`mt-2 flex items-center gap-1 self-end rounded-[20px] border px-3.5 py-1 text-sm font-medium disabled:opacity-40 ${
+            inCart
+              ? "border-neutral-300 bg-neutral-100 text-neutral-500"
+              : "border-sky-500 bg-sky-50 text-sky-500"
+          }`}
         >
-          + 담기
+          {inCart && <CheckCircleIcon className="h-3.5 w-3.5 shrink-0" />}
+          {inCart ? "담김" : "+ 담기"}
         </button>
       </div>
     </div>
