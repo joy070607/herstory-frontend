@@ -21,7 +21,7 @@ export function AppHeader({ showMenuButton = true }: AppHeaderProps) {
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label="메뉴"
-            className="p-2"
+            className="p-2 transition-transform active:scale-90"
           >
             <Image src="/icons/menu.svg" alt="" width={22} height={15} />
           </button>

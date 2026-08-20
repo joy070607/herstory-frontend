@@ -49,7 +49,7 @@ export function HomePage() {
         {journeyId && journey && (
           <Link
             href={ROUTES.liveCard}
-            className="mx-6 mb-4 block rounded-[20px] bg-[#121111] px-4 py-5"
+            className="mx-6 mb-4 block rounded-[20px] bg-[#121111] px-4 py-5 transition-transform active:scale-[0.98]"
           >
             <div className="mb-6 flex items-center gap-2.5">
               <span className="rounded-full bg-[#F8FDFF4D] px-3.5 py-1 text-xs text-[#E6F7FF]">
@@ -93,7 +93,7 @@ export function HomePage() {
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
-            className="mx-6 mb-4 flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="mx-6 mb-4 flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -107,21 +107,21 @@ export function HomePage() {
         <div className="mb-8 flex items-center gap-2 px-6">
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#D9D9D94D] py-5"
+            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#D9D9D94D] py-5 transition-transform active:scale-[0.97]"
           >
             <BoardingPassIcon />
             <span className="text-sm text-neutral-900">보딩패스</span>
           </Link>
           <Link
             href={ROUTES.smartCart}
-            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#0099E51A] py-5"
+            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#0099E51A] py-5 transition-transform active:scale-[0.97]"
           >
             <ShirtIcon className="text-sky-500" />
             <span className="text-sm text-sky-500">스타일</span>
           </Link>
           <Link
             href={ROUTES.popupSpot}
-            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#D9D9D94D] py-5"
+            className="flex flex-1 flex-col items-center gap-3 rounded-[20px] bg-[#D9D9D94D] py-5 transition-transform active:scale-[0.97]"
           >
             <BagIcon />
             <span className="text-sm text-neutral-900">공항팝업</span>
@@ -145,7 +145,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => setShowRain((prev) => !prev)}
-                className="relative w-full bg-sky-600 px-6 py-5 text-left"
+                className="relative w-full bg-sky-600 px-6 py-5 text-left transition-transform active:scale-[0.98]"
               >
                 {showRain && <RainOverlay />}
                 <div className="relative z-10 flex items-center gap-3">
@@ -173,7 +173,7 @@ export function HomePage() {
                 <PeekRevealCard>
                   <Link
                     href={ROUTES.styleEngine}
-                    className="flex items-center gap-3 px-4 pb-3.5 pt-1"
+                    className="flex items-center gap-3 px-4 pb-3.5 pt-1 transition-transform active:scale-[0.98]"
                   >
                     <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-white">
                       <Image
@@ -199,14 +199,14 @@ export function HomePage() {
         <div className="flex items-center gap-4 px-6">
           <Link
             href={ROUTES.myPagePassportInfo}
-            className="flex flex-1 items-center justify-center gap-3.5 rounded-[20px] border border-sky-500 py-4 text-sky-500"
+            className="flex flex-1 items-center justify-center gap-3.5 rounded-[20px] border border-sky-500 py-4 text-sky-500 transition-transform active:scale-[0.97]"
           >
             <PassportIcon className="h-4 w-4" />
             <span className="text-sm">내 패스포트</span>
           </Link>
           <Link
             href={ROUTES.liveCard}
-            className="flex flex-1 items-center justify-center gap-2 rounded-[20px] border border-neutral-400 py-4 text-neutral-900"
+            className="flex flex-1 items-center justify-center gap-2 rounded-[20px] border border-neutral-400 py-4 text-neutral-900 transition-transform active:scale-[0.97]"
           >
             <LoungeIcon className="h-4 w-4" />
             <span className="text-sm">라운지 정보</span>

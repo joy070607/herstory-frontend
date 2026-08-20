@@ -54,7 +54,7 @@ function SpotStampTile({
       type="button"
       onClick={handleClick}
       disabled={isCheckingIn}
-      className={`flex flex-col items-center gap-2 rounded-2xl px-2 py-5 text-center transition-colors disabled:opacity-60 ${
+      className={`flex flex-col items-center gap-2 rounded-2xl px-2 py-5 text-center transition-all active:scale-[0.95] disabled:opacity-60 disabled:active:scale-100 ${
         isStamped ? "bg-sky-500" : "bg-white/10"
       }`}
     >
@@ -152,14 +152,14 @@ export function VisetosMapPage() {
                     <button
                       type="button"
                       onClick={() => setConfirmingSpotName(null)}
-                      className="rounded-full border border-white/30 px-3 py-1.5 text-xs font-medium text-white/70"
+                      className="rounded-full border border-white/30 px-3 py-1.5 text-xs font-medium text-white/70 transition-transform active:scale-95"
                     >
                       취소
                     </button>
                     <button
                       type="button"
                       onClick={() => handleCheckIn(confirmingSpot.spotName)}
-                      className="rounded-full bg-sky-500 px-3 py-1.5 text-xs font-medium text-white"
+                      className="rounded-full bg-sky-500 px-3 py-1.5 text-xs font-medium text-white transition-transform active:scale-95"
                     >
                       확인
                     </button>

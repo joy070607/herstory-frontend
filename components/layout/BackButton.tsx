@@ -11,7 +11,7 @@ export function BackButton({ className = "" }: { className?: string }) {
       type="button"
       onClick={() => router.back()}
       aria-label="뒤로가기"
-      className={`flex h-8 w-8 shrink-0 items-center justify-center text-neutral-900 ${className}`}
+      className={`flex h-8 w-8 shrink-0 items-center justify-center text-neutral-900 transition-transform active:scale-90 ${className}`}
     >
       <ChevronLeftIcon />
     </button>

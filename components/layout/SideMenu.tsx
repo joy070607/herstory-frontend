@@ -119,7 +119,7 @@ function MenuRow({
     <Link
       href={href}
       onClick={onNavigate}
-      className={`flex items-center gap-3 px-6 py-3 ${isActive ? "bg-sky-50" : ""}`}
+      className={`flex items-center gap-3 px-6 py-3 transition-transform active:scale-[0.98] ${isActive ? "bg-sky-50" : ""}`}
     >
       {inner}
     </Link>
@@ -166,7 +166,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
             type="button"
             onClick={onClose}
             aria-label="메뉴 닫기"
-            className="text-2xl leading-none text-neutral-400"
+            className="text-2xl leading-none text-neutral-400 transition-transform active:scale-90"
           >
             ✕
           </button>
@@ -194,7 +194,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center gap-3 py-2 text-[#F87171]"
+            className="flex items-center gap-3 py-2 text-[#F87171] transition-transform active:scale-[0.97]"
           >
             <LogoutIcon className="h-5 w-5 shrink-0" />
             <span className="text-[15px] font-medium">로그아웃</span>

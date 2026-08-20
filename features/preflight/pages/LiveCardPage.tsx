@@ -59,7 +59,7 @@ export function LiveCardPage() {
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>

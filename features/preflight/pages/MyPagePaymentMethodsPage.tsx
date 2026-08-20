@@ -43,7 +43,7 @@ function CardRow({
           type="button"
           onClick={onCancelDelete}
           disabled={deleting}
-          className="shrink-0 rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-40"
+          className="shrink-0 rounded-full border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
         >
           취소
         </button>
@@ -51,7 +51,7 @@ function CardRow({
           type="button"
           onClick={onConfirmDelete}
           disabled={deleting}
-          className="shrink-0 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-40"
+          className="shrink-0 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
         >
           {deleting ? "삭제 중..." : "삭제"}
         </button>
@@ -78,7 +78,7 @@ function CardRow({
       <button
         type="button"
         onClick={onRequestDelete}
-        className="shrink-0 text-xs font-medium text-red-500 underline"
+        className="shrink-0 text-xs font-medium text-red-500 underline transition-transform active:scale-95"
       >
         삭제
       </button>
@@ -168,7 +168,7 @@ export function MyPagePaymentMethodsPage() {
           <button
             type="button"
             onClick={() => setShowForm(true)}
-            className="rounded-full border-2 border-dashed border-neutral-200 py-3.5 text-center text-sm font-medium text-sky-600"
+            className="rounded-full border-2 border-dashed border-neutral-200 py-3.5 text-center text-sm font-medium text-sky-600 transition-transform active:scale-[0.98]"
           >
             + 새 카드 등록
           </button>
@@ -205,14 +205,14 @@ export function MyPagePaymentMethodsPage() {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="flex-1 rounded-full border border-neutral-300 py-3 text-sm font-medium text-neutral-500"
+                className="flex-1 rounded-full border border-neutral-300 py-3 text-sm font-medium text-neutral-500 transition-transform active:scale-[0.97]"
               >
                 취소
               </button>
               <button
                 type="submit"
                 disabled={!cardName.trim() || !cardNumber.trim() || addCardMutation.isPending}
-                className="flex-1 rounded-full bg-sky-500 py-3 text-sm font-bold text-white disabled:opacity-40"
+                className="flex-1 rounded-full bg-sky-500 py-3 text-sm font-bold text-white transition-transform active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100"
               >
                 {addCardMutation.isPending ? "등록 중..." : "등록"}
               </button>

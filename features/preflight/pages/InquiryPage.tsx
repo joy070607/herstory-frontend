@@ -58,7 +58,11 @@ function InquiryCard({
 }) {
   return (
     <div className="rounded-2xl bg-white px-4 py-3.5 shadow-sm">
-      <button type="button" onClick={onToggle} className="flex w-full items-center gap-3 text-left">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center gap-3 text-left transition-transform active:scale-[0.99]"
+      >
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <span
@@ -154,7 +158,7 @@ export function InquiryPage() {
           <button
             type="button"
             onClick={() => setTab("history")}
-            className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
+            className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all active:scale-[0.97] ${
               tab === "history" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"
             }`}
           >
@@ -163,7 +167,7 @@ export function InquiryPage() {
           <button
             type="button"
             onClick={() => setTab("new")}
-            className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-colors ${
+            className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all active:scale-[0.97] ${
               tab === "new" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"
             }`}
           >
@@ -197,7 +201,7 @@ export function InquiryPage() {
                     key={option}
                     type="button"
                     onClick={() => setType(option)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all active:scale-[0.95] ${
                       type === option
                         ? "bg-sky-500 text-white"
                         : "border border-neutral-200 bg-white text-neutral-600"
@@ -244,7 +248,7 @@ export function InquiryPage() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={attachments.length >= 3}
-                className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-neutral-200 px-4 py-3.5 text-left disabled:opacity-50"
+                className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-neutral-200 px-4 py-3.5 text-left transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-500/10 text-sky-500">
                   <PlusIcon className="h-3.5 w-3.5" />
@@ -268,7 +272,7 @@ export function InquiryPage() {
                           setAttachments((prev) => prev.filter((_, i) => i !== index))
                         }
                         aria-label={`${name} 첨부 제거`}
-                        className="text-neutral-400"
+                        className="text-neutral-400 transition-transform active:scale-90"
                       >
                         ✕
                       </button>
@@ -281,7 +285,7 @@ export function InquiryPage() {
             <button
               type="submit"
               disabled={!title.trim() || !content.trim()}
-              className="rounded-full bg-sky-500 py-3.5 text-center text-sm font-bold text-white disabled:opacity-40"
+              className="rounded-full bg-sky-500 py-3.5 text-center text-sm font-bold text-white transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
             >
               문의 접수
             </button>

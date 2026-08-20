@@ -168,7 +168,7 @@ export function JourneyTimelinePage() {
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -223,7 +223,7 @@ export function JourneyTimelinePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-8 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
+              className="relative mb-8 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left transition-transform active:scale-[0.98]"
             >
               {showRain && <RainOverlay />}
               <div className="relative z-10 flex items-center gap-3">

@@ -148,7 +148,7 @@ export function MyPageEditProfilePage() {
                   <button
                     type="button"
                     onClick={() => setEditingPhone(true)}
-                    className="text-xs font-medium text-sky-600 underline"
+                    className="text-xs font-medium text-sky-600 underline transition-transform active:scale-95"
                   >
                     번호 변경
                   </button>
@@ -172,7 +172,7 @@ export function MyPageEditProfilePage() {
                     type="button"
                     onClick={() => sendCodeMutation.mutate()}
                     disabled={!newPhone.trim() || sendCodeMutation.isPending}
-                    className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+                    className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
                   >
                     {phoneSent ? "재전송" : "인증번호 전송"}
                   </button>
@@ -194,7 +194,7 @@ export function MyPageEditProfilePage() {
                       type="button"
                       onClick={() => verifyCodeMutation.mutate()}
                       disabled={!verificationCode.trim() || verifyCodeMutation.isPending}
-                      className="shrink-0 rounded-full bg-neutral-900 px-3.5 py-1.5 text-sm text-white disabled:opacity-40"
+                      className="shrink-0 rounded-full bg-neutral-900 px-3.5 py-1.5 text-sm text-white transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
                     >
                       확인
                     </button>
@@ -210,7 +210,7 @@ export function MyPageEditProfilePage() {
                 <button
                   type="button"
                   onClick={cancelPhoneEdit}
-                  className="self-start text-xs text-neutral-400 underline"
+                  className="self-start text-xs text-neutral-400 underline transition-transform active:scale-95"
                 >
                   취소
                 </button>
@@ -236,7 +236,7 @@ export function MyPageEditProfilePage() {
           <button
             type="submit"
             disabled={updateProfileMutation.isPending}
-            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] disabled:opacity-40"
+            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
           >
             {updateProfileMutation.isPending ? "저장 중..." : "변경사항 저장"}
           </button>

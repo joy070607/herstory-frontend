@@ -65,7 +65,7 @@ export function MyPagePassportCompanionPage() {
                   key={option}
                   type="button"
                   onClick={() => setRelation(option)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-all active:scale-95 ${
                     relation === option
                       ? "bg-sky-500 text-white"
                       : "border border-neutral-200 bg-white text-neutral-600"
@@ -113,7 +113,7 @@ export function MyPagePassportCompanionPage() {
           <button
             type="submit"
             disabled={!canSubmit}
-            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] disabled:opacity-40"
+            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
           >
             탑승객 추가
           </button>

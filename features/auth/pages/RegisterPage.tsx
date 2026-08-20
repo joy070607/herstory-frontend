@@ -227,7 +227,7 @@ export function RegisterPage() {
               type="button"
               onClick={() => sendCodeMutation.mutate()}
               disabled={!phone || sendCodeMutation.isPending}
-              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
             >
               {sendCodeMutation.isPending ? "전송 중..." : "인증번호 전송"}
             </button>
@@ -263,7 +263,7 @@ export function RegisterPage() {
                 type="button"
                 onClick={() => verifyCodeMutation.mutate()}
                 disabled={!verificationCode || phoneVerified || verifyCodeMutation.isPending}
-                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
               >
                 {verifyCodeMutation.isPending ? "확인 중..." : "확인"}
               </button>
@@ -271,7 +271,7 @@ export function RegisterPage() {
                 type="button"
                 onClick={() => sendCodeMutation.mutate()}
                 disabled={!phone || sendCodeMutation.isPending || phoneVerified}
-                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+                className="shrink-0 rounded-full bg-sky-500 px-3.5 py-1.5 text-sm text-sky-50 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
               >
                 재전송
               </button>
@@ -308,7 +308,7 @@ export function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="shrink-0 text-neutral-300"
+              className="shrink-0 text-neutral-300 transition-transform active:scale-90"
               aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -333,7 +333,7 @@ export function RegisterPage() {
             <button
               type="button"
               onClick={() => setShowPasswordConfirm((prev) => !prev)}
-              className="shrink-0 text-neutral-300"
+              className="shrink-0 text-neutral-300 transition-transform active:scale-90"
               aria-label={showPasswordConfirm ? "비밀번호 숨기기" : "비밀번호 표시"}
             >
               {showPasswordConfirm ? <EyeOffIcon /> : <EyeIcon />}
@@ -372,7 +372,7 @@ export function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setActiveTerm("service")}
-                className="text-sm text-neutral-900 underline"
+                className="text-sm text-neutral-900 underline transition-opacity active:opacity-60"
               >
                 내용보기
               </button>
@@ -388,7 +388,7 @@ export function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setActiveTerm("privacy")}
-                className="text-sm text-neutral-900 underline"
+                className="text-sm text-neutral-900 underline transition-opacity active:opacity-60"
               >
                 내용보기
               </button>
@@ -404,7 +404,7 @@ export function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setActiveTerm("marketing")}
-                className="text-sm text-neutral-900 underline"
+                className="text-sm text-neutral-900 underline transition-opacity active:opacity-60"
               >
                 내용보기
               </button>
@@ -419,12 +419,15 @@ export function RegisterPage() {
         <button
           type="submit"
           disabled={!phoneVerified || !requiredTermsChecked || registerMutation.isPending}
-          className="mb-5 w-full rounded-[20px] bg-sky-500 py-4 text-lg font-bold text-sky-50 transition-colors hover:bg-sky-600 disabled:opacity-40"
+          className="mb-5 w-full rounded-[20px] bg-sky-500 py-4 text-lg font-bold text-sky-50 transition-all hover:bg-sky-600 active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
         >
           회원가입
         </button>
 
-        <Link href={ROUTES.login} className="text-lg text-neutral-900 underline">
+        <Link
+          href={ROUTES.login}
+          className="text-lg text-neutral-900 underline transition-opacity active:opacity-60"
+        >
           뒤로가기
         </Link>
       </form>
@@ -446,7 +449,7 @@ export function RegisterPage() {
                 type="button"
                 onClick={() => setActiveTerm(null)}
                 aria-label="닫기"
-                className="text-neutral-400"
+                className="text-neutral-400 transition-transform active:scale-90"
               >
                 ✕
               </button>

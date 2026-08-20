@@ -30,7 +30,7 @@ export function BoardingPassCard({ journey }: { journey: Journey }) {
           type="button"
           onClick={() => downloadPass.mutate(String(journey.journeyId))}
           disabled={downloadPass.isPending}
-          className="w-full rounded-[20px] bg-[#0A0A0A] py-3 text-center text-sm font-medium text-white disabled:opacity-40"
+          className="w-full rounded-[20px] bg-[#0A0A0A] py-3 text-center text-sm font-medium text-white transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
         >
           {downloadPass.isPending ? "다운로드 중..." : "Apple Wallet에 추가"}
         </button>
@@ -44,7 +44,7 @@ export function BoardingPassCard({ journey }: { journey: Journey }) {
               setJourneyId(null);
             }
           }}
-          className="mt-2 w-full rounded-[20px] border border-neutral-300 py-3 text-center text-sm font-medium text-neutral-600"
+          className="mt-2 w-full rounded-[20px] border border-neutral-300 py-3 text-center text-sm font-medium text-neutral-600 transition-transform active:scale-[0.98]"
         >
           여정 등록 취소
         </button>

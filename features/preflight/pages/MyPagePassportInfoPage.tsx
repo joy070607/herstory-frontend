@@ -41,7 +41,10 @@ function InfoRow({
 
   if (href) {
     return (
-      <Link href={href} className="flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5">
+      <Link
+        href={href}
+        className="flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5 transition-transform active:scale-[0.98]"
+      >
         {content}
       </Link>
     );

@@ -80,7 +80,7 @@ export function FastCheckoutPage() {
         {(!journeyId || !memberId) && (
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -212,7 +212,7 @@ export function FastCheckoutPage() {
                     ) : (
                       <Link
                         href={ROUTES.myPagePaymentMethods}
-                        className="rounded-[20px] border-2 border-dashed border-neutral-200 px-4 py-3.5 text-center text-sm font-medium text-sky-600"
+                        className="rounded-[20px] border-2 border-dashed border-neutral-200 px-4 py-3.5 text-center text-sm font-medium text-sky-600 transition-transform active:scale-[0.98]"
                       >
                         등록된 카드가 없어요 · 카드 등록하기
                       </Link>

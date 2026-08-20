@@ -108,14 +108,14 @@ export function AutoCheckInPage() {
             <div className="flex items-center gap-3">
               <Link
                 href={ROUTES.boardingPass}
-                className="flex flex-1 flex-col items-center gap-2.5 rounded-[20px] bg-neutral-100 py-6"
+                className="flex flex-1 flex-col items-center gap-2.5 rounded-[20px] bg-neutral-100 py-6 transition-transform active:scale-[0.97]"
               >
                 <TicketStubIcon />
                 <span className="text-base font-semibold text-neutral-900">탑승권 보기</span>
               </Link>
               <Link
                 href={ROUTES.vipFitting}
-                className="flex flex-1 flex-col items-center gap-2.5 rounded-[20px] bg-neutral-100 py-6"
+                className="flex flex-1 flex-col items-center gap-2.5 rounded-[20px] bg-neutral-100 py-6 transition-transform active:scale-[0.97]"
               >
                 <ShoppingBagIcon />
                 <span className="text-base font-semibold text-neutral-900">예약 주문 확인</span>

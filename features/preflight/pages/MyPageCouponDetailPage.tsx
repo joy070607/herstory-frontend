@@ -115,7 +115,7 @@ export function MyPageCouponDetailPage({ couponId }: { couponId: string }) {
                       setCopied(true);
                       setTimeout(() => setCopied(false), 1500);
                     }}
-                    className="rounded-full border border-sky-500 px-3 py-1.5 text-xs font-medium text-sky-600"
+                    className="rounded-full border border-sky-500 px-3 py-1.5 text-xs font-medium text-sky-600 transition-transform active:scale-95"
                   >
                     {copied ? "복사됨" : "코드 복사"}
                   </button>

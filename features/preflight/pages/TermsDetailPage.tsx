@@ -82,7 +82,7 @@ export function TermsDetailPage({ slug }: { slug: string }) {
           <button
             type="button"
             onClick={() => setAgreed(!agreed)}
-            className="rounded-full border border-neutral-300 py-3.5 text-center text-sm font-medium text-neutral-500"
+            className="rounded-full border border-neutral-300 py-3.5 text-center text-sm font-medium text-neutral-500 transition-transform active:scale-[0.98]"
           >
             {agreed ? "동의 철회" : "다시 동의하기"}
           </button>
@@ -90,7 +90,7 @@ export function TermsDetailPage({ slug }: { slug: string }) {
           <button
             type="button"
             onClick={() => setDownloaded(true)}
-            className="rounded-full border border-neutral-300 py-3.5 text-center text-sm font-medium text-neutral-500"
+            className="rounded-full border border-neutral-300 py-3.5 text-center text-sm font-medium text-neutral-500 transition-transform active:scale-[0.98]"
           >
             ↓ 전문 내려받기
           </button>

@@ -55,7 +55,7 @@ export function BoardingPassScanForm() {
           type="button"
           onClick={() => member && setCameraOpen(true)}
           disabled={!member || scanJourney.isPending}
-          className="mx-6 mb-3 flex flex-col items-center justify-center rounded-[20px] border-[3px] border-[#0EA5E9] bg-[#E7F6FD]/30 py-36 disabled:opacity-60"
+          className="mx-6 mb-3 flex flex-col items-center justify-center rounded-[20px] border-[3px] border-[#0EA5E9] bg-[#E7F6FD]/30 py-36 transition-transform active:scale-[0.98] disabled:opacity-60 disabled:active:scale-100"
         >
           <span className="whitespace-nowrap text-center text-2xl leading-tight text-[#0A0A0A]">
             {scanJourney.isPending ? "스캔 중..." : "QR 카메라 스캔"}
@@ -72,7 +72,7 @@ export function BoardingPassScanForm() {
       <button
         type="button"
         onClick={() => setManualMode((prev) => !prev)}
-        className="mx-6 mb-3 rounded-[20px] bg-[#E7F6FD] py-3 text-2xl text-[#868686]"
+        className="mx-6 mb-3 rounded-[20px] bg-[#E7F6FD] py-3 text-2xl text-[#868686] transition-transform active:scale-[0.98]"
       >
         PNR 수동 입력
       </button>
@@ -111,7 +111,7 @@ export function BoardingPassScanForm() {
             type="button"
             onClick={handleManualSubmit}
             disabled={!member || !pnr.trim() || scanJourney.isPending}
-            className="rounded-[20px] bg-[#0A0A0A] py-3 text-center text-sm font-medium text-white disabled:opacity-40"
+            className="rounded-[20px] bg-[#0A0A0A] py-3 text-center text-sm font-medium text-white transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
           >
             여정 등록하기
           </button>

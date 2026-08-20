@@ -78,7 +78,7 @@ export function SmartCartPage() {
             <BackButton className="mb-3" />
             <Link
               href={ROUTES.boardingPass}
-              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
             >
               <TicketIcon className="mb-1 text-neutral-400" />
               <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -105,7 +105,7 @@ export function SmartCartPage() {
               <BackButton className="self-center" />
               <Link
                 href={ROUTES.vipFitting}
-                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50 transition-transform active:scale-[0.97]"
               >
                 <ShirtIcon className="h-6 w-6 shrink-0" />
                 <span className="flex flex-col">
@@ -115,7 +115,7 @@ export function SmartCartPage() {
               </Link>
               <Link
                 href={ROUTES.terminalMap}
-                className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
+                className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900 transition-transform active:scale-[0.97]"
               >
                 <SpotIcon className="h-3.5 w-3.5 shrink-0 text-neutral-500" />
                 터미널 1
@@ -142,7 +142,7 @@ export function SmartCartPage() {
                   type="button"
                   onClick={() => handleAdd(hero.id)}
                   disabled={!memberId || heroInCart || pendingProductId === hero.id}
-                  className={`flex w-full items-center justify-center gap-1.5 rounded-[20px] py-3 text-sm font-semibold disabled:opacity-40 ${
+                  className={`flex w-full items-center justify-center gap-1.5 rounded-[20px] py-3 text-sm font-semibold transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100 ${
                     heroInCart ? "bg-neutral-200 text-neutral-500" : "bg-sky-500 text-sky-50"
                   }`}
                 >
@@ -155,7 +155,7 @@ export function SmartCartPage() {
             {justAdded && (
               <Link
                 href={ROUTES.vipFitting}
-                className="animate-slide-up-in mb-5 flex items-center justify-between gap-3 rounded-[20px] bg-sky-500 px-5 py-4 text-sky-50"
+                className="animate-slide-up-in mb-5 flex items-center justify-between gap-3 rounded-[20px] bg-sky-500 px-5 py-4 text-sky-50 transition-transform active:scale-[0.98]"
               >
                 <span className="flex items-center gap-2 text-sm font-semibold">
                   <CheckCircleIcon className="h-4 w-4 shrink-0" />
@@ -171,7 +171,7 @@ export function SmartCartPage() {
                   key={filter.label}
                   type="button"
                   onClick={() => setActiveFilter(index)}
-                  className={`flex-1 rounded-[20px] py-3 text-sm font-medium transition-colors ${
+                  className={`flex-1 rounded-[20px] py-3 text-sm font-medium transition-all active:scale-[0.97] ${
                     activeFilter === index
                       ? "bg-neutral-900 text-neutral-100"
                       : "bg-neutral-100 text-neutral-900"
@@ -252,7 +252,7 @@ function ProductCard({
           type="button"
           onClick={onAdd}
           disabled={disabled}
-          className={`mt-2 flex items-center gap-1 self-end rounded-[20px] border px-3.5 py-1 text-sm font-medium disabled:opacity-40 ${
+          className={`mt-2 flex items-center gap-1 self-end rounded-[20px] border px-3.5 py-1 text-sm font-medium transition-transform active:scale-[0.95] disabled:opacity-40 disabled:active:scale-100 ${
             inCart
               ? "border-neutral-300 bg-neutral-100 text-neutral-500"
               : "border-sky-500 bg-sky-50 text-sky-500"
