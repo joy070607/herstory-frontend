@@ -27,6 +27,7 @@ import type {
   PassportResponse,
   PasswordResponse,
   PaymentMethodItem,
+  PickupScheduleResponse,
   Product,
   ProfileResponse,
   RedeemBenefitRequest,
@@ -157,6 +158,10 @@ export const storeApi = {
 export const airportApi = {
   startFitting: (journeyId: string) =>
     apiClient.post<FittingResponse>(`/airport/${journeyId}/fitting`).then((res) => res.data),
+  getPickupSchedule: (journeyId: string) =>
+    apiClient
+      .get<PickupScheduleResponse>(`/airport/${journeyId}/pickup-schedule`)
+      .then((res) => res.data),
 };
 
 // 면세 한도 할인 계산 & Fast Checkout 수령 처리 (현장 즉시 착장 수령 및 결제 처리 시 호출)

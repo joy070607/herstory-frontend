@@ -1,13 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
-import { useAiCareTip, useJourney } from "@/hooks/queries";
+import { useAiCareTip, useJourney, useJourneyAnalysis } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
+import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
+import { ROUTES } from "@/constants/routes";
+import { ChevronRightIcon, SpotIcon, WeatherIcon } from "@/components/icons";
+import { parseWeatherInfo } from "@/utils/weather";
+
+// 강수 확률이 이 값 이상이면 파란색, 아니면서 기온이 HOT_TEMP_C 이상이면 빨간색 카드로 표시합니다.
+const RAINY_PROBABILITY_PERCENT = 50;
+const HOT_TEMP_C = 28;
 
 // 알림 카드에 표시할 대상 제품 — 실제 개인 컬렉션 API가 아직 없어 데모에 쓰인 제품명을 그대로 질의합니다.
 const FEATURED_PRODUCT = "비세토스 스타크 백팩";
@@ -16,6 +26,8 @@ export function LeatherCarePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const lang = useJourneyStore((state) => state.lang);
   const { data: journey } = useJourney(journeyId);
+  const { data: analysis } = useJourneyAnalysis(journeyId);
+  const [showRain, setShowRain] = useState(true);
 
   const {
     data: careTip,
@@ -28,6 +40,12 @@ export function LeatherCarePage() {
     lang,
   });
 
+  const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
+  const rainProbabilityPercent = analysis ? Number(analysis.rainProbability.replace("%", "")) : 0;
+  const isRainy = rainProbabilityPercent >= RAINY_PROBABILITY_PERCENT;
+  const isHot = weather?.temp != null && weather.temp >= HOT_TEMP_C;
+  const cardColorClass = !isRainy && isHot ? "bg-red-500" : "bg-sky-600";
+
   return (
     <div className="flex flex-1 flex-col">
       <AppHeader />
@@ -37,26 +55,39 @@ export function LeatherCarePage() {
           <BackButton />
         </div>
 
-        <div className="mx-6 mb-5 rounded-[30px] bg-[#0EA5E9] px-[23px] pb-[18px] pt-5">
-          <p className="mb-3.5 text-[15px] text-[#E6F7FF]">현재 환경</p>
-          <p className="mb-6 ml-px text-[22px] font-bold text-[#E6F7FF]">
-            {journey?.destination ?? "여정 정보 없음"}
-          </p>
-          {journey?.destinationWeather && (
-            <div className="flex items-center justify-between px-0.5 pt-5">
-              <p className="pr-4 text-sm text-[#E6F7FF]">{journey.destinationWeather}</p>
-              <Image
-                src="/icons/humidity.png"
-                alt=""
-                width={21}
-                height={21}
-                className="h-[21px] w-[21px] shrink-0"
-              />
+        <h2 className="mb-3.5 px-6 text-xl font-bold text-neutral-900">현재 환경</h2>
+        <div className="mx-6 mb-5 overflow-hidden rounded-[20px]">
+          <button
+            type="button"
+            onClick={() => setShowRain((prev) => !prev)}
+            className={`relative w-full px-6 py-5 text-left transition-colors ${cardColorClass}`}
+          >
+            {showRain && <RainOverlay />}
+            <div className="relative z-10 flex items-center gap-3">
+              <WeatherIcon className="h-9 w-10 shrink-0" />
+              <div>
+                <p className="text-3xl font-bold leading-none text-white">
+                  {weather?.temp != null ? `${weather.temp}°` : "-"}
+                </p>
+                <p className="mt-1.5 text-base font-medium text-white">
+                  {weather?.condition ?? "날씨 정보 없음"}
+                </p>
+              </div>
             </div>
-          )}
+            <div className="relative z-10 mt-4 rounded-[14px] bg-black/15 px-4 py-3.5">
+              <p className="text-sm font-semibold text-white">
+                {journey?.destination ?? "여정 정보 없음"}
+              </p>
+              {journey?.destinationWeather && (
+                <p className="mt-1.5 text-sm font-medium leading-relaxed text-white">
+                  {journey.destinationWeather}
+                </p>
+              )}
+            </div>
+          </button>
         </div>
 
-        <div className="mx-6 mb-7 rounded-[30px] bg-[#E6F7FF] py-4 pl-[15px] pr-[34px]">
+        <div className="mx-6 mb-7 rounded-[20px] bg-sky-50 py-4 pl-[15px] pr-[18px]">
           <div className="mb-3.5 flex items-center gap-1.5">
             <Image
               src="/icons/care-alert.png"
@@ -65,56 +96,31 @@ export function LeatherCarePage() {
               height={20}
               className="h-5 w-5"
             />
-            <span className="text-[15px] text-[#0369A1]">긴급 케어 알림</span>
+            <span className="text-sm font-semibold text-sky-700">긴급 케어 알림</span>
           </div>
-          <p className="mb-6 ml-[3px] text-[22px] font-bold text-[#0A0A0A]">{FEATURED_PRODUCT}</p>
+          <p className="mb-4 ml-[3px] text-xl font-bold text-neutral-900">{FEATURED_PRODUCT}</p>
           {isLoading && <WakingScreen />}
           {isError && <ErrorState onRetry={() => refetch()} />}
-          {careTip && <p className="ml-0.5 text-xs leading-relaxed text-[#0A0A0A]">{careTip}</p>}
+          {careTip && (
+            <p className="ml-0.5 text-sm leading-relaxed text-neutral-800">{careTip}</p>
+          )}
         </div>
 
-        <div className="mb-4 flex items-center justify-between px-[26px]">
-          <span className="text-[22px] font-bold text-[#0A0A0A]">나의 컬렉션 상태</span>
-          <span className="text-[13px] text-[#0369A1]">전체 보기</span>
-        </div>
-
-        <div className="mx-6 mb-[15px] flex items-center rounded-[20px] bg-[#D9D9D966] px-2 py-2.5">
-          <Image
-            src="/care/bag-tote.png"
-            alt="비세토스 뮌헨 토트"
-            width={65}
-            height={65}
-            className="mr-[22px] h-[65px] w-[65px] rounded-xl object-cover"
-          />
-          <div className="flex flex-1 items-center justify-between">
-            <div>
-              <p className="mb-3 text-lg text-[#0A0A0A]">비세토스 뮌헨 토트</p>
-              <p className="text-[13px] text-[#0A0A0A]">최근 관리일: 12일 전</p>
-            </div>
-            <span className="rounded-[20px] bg-[#D3F0DF] px-[11px] py-1 text-[13px] text-[#44C67C]">
-              최적
-            </span>
+        <Link
+          href={ROUTES.visetosMap}
+          className="mx-6 mb-7 flex items-center gap-3 rounded-[20px] bg-neutral-900 px-5 py-4"
+        >
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400">
+            <SpotIcon className="h-5 w-5" />
           </div>
-        </div>
-
-        <div className="mx-6 flex items-center rounded-[20px] bg-[#D9D9D966] px-2 py-2.5">
-          <Image
-            src="/care/bag-crossbody.png"
-            alt="아렌 크로스바디"
-            width={65}
-            height={65}
-            className="mr-[22px] h-[65px] w-[65px] rounded-xl object-cover"
-          />
-          <div className="flex flex-1 items-center justify-between">
-            <div>
-              <p className="mb-2 text-lg text-[#0A0A0A]">아렌 크로스바디</p>
-              <p className="text-[13px] text-[#0A0A0A]">최근 관리일: 84일 전</p>
-            </div>
-            <span className="rounded-[20px] bg-[#F0D3D3] px-1 py-[5px] text-[13px] text-[#C64F44]">
-              컨디셔닝 필요
-            </span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white">MCM 스페셜 스팟 발견하기</p>
+            <p className="mt-1 text-xs leading-relaxed text-neutral-400">
+              근처 부티크를 방문하고 시티 패스포트 스탬프를 모아 리워드를 잠금 해제하세요
+            </p>
           </div>
-        </div>
+          <ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-400" />
+        </Link>
       </div>
 
       <div className="mt-auto">

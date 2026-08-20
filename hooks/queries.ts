@@ -55,6 +55,7 @@ export const queryKeys = {
   paymentMethods: (memberId: number) => ["members", "payment-methods", memberId] as const,
   myCoupons: (memberId: number) => ["coupon", "my", memberId] as const,
   myJourneys: (memberId: number) => ["journey", "list", memberId] as const,
+  pickupSchedule: (journeyId: string) => ["airport", "pickup-schedule", journeyId] as const,
 };
 
 // 백엔드 테스트 데이터가 리셋되면 로컬에 저장해둔 journeyId가 더 이상 존재하지 않는
@@ -220,6 +221,14 @@ export function useAddToCart(memberId: number | null) {
 export function useStartFitting() {
   return useMutation({
     mutationFn: (journeyId: string) => airportApi.startFitting(journeyId),
+  });
+}
+
+export function usePickupSchedule(journeyId: string | null) {
+  return useQuery({
+    queryKey: queryKeys.pickupSchedule(journeyId ?? ""),
+    queryFn: () => airportApi.getPickupSchedule(journeyId as string),
+    enabled: Boolean(journeyId),
   });
 }
 

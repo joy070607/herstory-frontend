@@ -6,11 +6,13 @@ import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
 import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries";
+import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { WakingScreen } from "@/components/system/WakingScreen";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
-import { ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
+import { CheckCircleIcon, ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
 
 const CATEGORY_LABELS: Record<ProductCategory, string> = {
   WATERPROOF: "방수",
@@ -52,7 +54,10 @@ export function SmartCartPage() {
   };
 
   const hero = products?.[0];
-  const restProducts = products?.slice(1) ?? [];
+  const heroInCart = hero ? (cart?.items.some((item) => item.productId === hero.id) ?? false) : false;
+  // 추천 상품이 1개뿐일 때도(hero만 있고 slice(1)이 비어) 큐레이션 목록이 통째로
+  // 비어 보이지 않도록, hero를 제외하지 않고 전체 목록을 그대로 필터링합니다.
+  const restProducts = products ?? [];
   const activeCategories = CATEGORY_FILTERS[activeFilter].categories;
   const filteredProducts = activeCategories
     ? restProducts.filter((product) => activeCategories.includes(product.category))
@@ -80,31 +85,37 @@ export function SmartCartPage() {
         )}
 
         {journeyId && isLoading && (
-          <div className="h-[420px] animate-pulse rounded-[20px] bg-neutral-100" />
+          <WakingScreen message="맞춤 스타일 추천을 불러오는 중입니다." />
         )}
 
         {journeyId && products && (
           <>
             <div className="mb-5 flex items-center gap-2">
-              <span className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50">
+              <Link
+                href={ROUTES.vipFitting}
+                className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+              >
                 <ShirtIcon className="h-4 w-4 shrink-0" />
                 피팅 {cart?.items.length ?? 0}개 준비 완료
-              </span>
-              <span className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900">
+              </Link>
+              <Link
+                href={ROUTES.terminalMap}
+                className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
+              >
                 <SpotIcon className="h-3.5 w-3.5 shrink-0 text-neutral-500" />
                 터미널 1
-              </span>
+              </Link>
             </div>
 
             {hero && (
               <div className="mb-5 rounded-[20px] bg-neutral-100 p-3.5">
-                <div className="relative mb-3 h-[180px] overflow-hidden rounded-[16px] bg-neutral-200">
+                <div className="relative mb-3 h-[250px] overflow-hidden rounded-[16px] bg-neutral-200">
                   <Image
                     src={hero.imageUrl}
                     alt={hero.name}
                     fill
                     sizes="360px"
-                    className="object-contain"
+                    className="object-cover"
                   />
                 </div>
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-sky-700">
@@ -115,10 +126,13 @@ export function SmartCartPage() {
                 <button
                   type="button"
                   onClick={() => handleAdd(hero.id)}
-                  disabled={!memberId || pendingProductId === hero.id}
-                  className="w-full rounded-[20px] bg-sky-500 py-3 text-sm font-semibold text-sky-50 disabled:opacity-40"
+                  disabled={!memberId || heroInCart || pendingProductId === hero.id}
+                  className={`flex w-full items-center justify-center gap-1.5 rounded-[20px] py-3 text-sm font-semibold disabled:opacity-40 ${
+                    heroInCart ? "bg-neutral-200 text-neutral-500" : "bg-sky-500 text-sky-50"
+                  }`}
                 >
-                  스마트 피팅 담기
+                  {heroInCart && <CheckCircleIcon className="h-4 w-4 shrink-0" />}
+                  {heroInCart ? "담기 완료" : "스마트 피팅 담기"}
                 </button>
               </div>
             )}
@@ -146,14 +160,19 @@ export function SmartCartPage() {
               </p>
             ) : (
               <div className="mb-4 flex flex-col gap-3.5">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    disabled={!memberId || pendingProductId === product.id}
-                    onAdd={() => handleAdd(product.id)}
-                  />
-                ))}
+                {filteredProducts.map((product, index) => {
+                  const inCart = cart?.items.some((item) => item.productId === product.id) ?? false;
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      index={index}
+                      disabled={!memberId || inCart || pendingProductId === product.id}
+                      onAdd={() => handleAdd(product.id)}
+                      inCart={inCart}
+                    />
+                  );
+                })}
               </div>
             )}
           </>
@@ -169,15 +188,27 @@ export function SmartCartPage() {
 
 function ProductCard({
   product,
+  index,
   disabled,
   onAdd,
+  inCart,
 }: {
   product: Product;
+  index: number;
   disabled: boolean;
   onAdd: () => void;
+  inCart: boolean;
 }) {
+  const { ref, inView } = useInView<HTMLDivElement>();
+
   return (
-    <div className="flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5">
+    <div
+      ref={ref}
+      className={`flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5 transition-all duration-700 ease-out ${
+        inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+      }`}
+      style={{ transitionDelay: inView ? `${index * 100}ms` : "0ms" }}
+    >
       <div className="relative h-[75px] w-[75px] shrink-0 overflow-hidden rounded-2xl bg-neutral-200">
         <Image src={product.imageUrl} alt={product.name} fill sizes="75px" className="object-cover" />
       </div>
@@ -193,9 +224,14 @@ function ProductCard({
           type="button"
           onClick={onAdd}
           disabled={disabled}
-          className="mt-2 self-end rounded-[20px] border border-sky-500 bg-sky-50 px-3.5 py-1 text-sm font-medium text-sky-500 disabled:opacity-40"
+          className={`mt-2 flex items-center gap-1 self-end rounded-[20px] border px-3.5 py-1 text-sm font-medium disabled:opacity-40 ${
+            inCart
+              ? "border-neutral-300 bg-neutral-100 text-neutral-500"
+              : "border-sky-500 bg-sky-50 text-sky-500"
+          }`}
         >
-          + 담기
+          {inCart && <CheckCircleIcon className="h-3.5 w-3.5 shrink-0" />}
+          {inCart ? "담김" : "+ 담기"}
         </button>
       </div>
     </div>

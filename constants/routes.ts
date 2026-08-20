@@ -10,11 +10,13 @@ export const ROUTES = {
   styleEngine: "/style",
   popupSpot: "/popup",
   smartCart: "/cart",
+  terminalMap: "/terminal-map",
 
   autoCheckIn: "/check-in",
   vipFitting: "/fitting",
   fastCheckout: "/checkout",
   reEntry: "/re-entry",
+  airportMap: "/airport-map",
 
   leatherCare: "/care",
   visetosMap: "/map",
@@ -30,6 +32,7 @@ export const ROUTES = {
   myPageCoupons: "/mypage/coupons",
   myPageJourneyHistory: "/mypage/journey-history",
   myPageMilesHistory: "/mypage/miles-history",
+  myPagePickupSchedule: "/mypage/pickup-schedule",
   myPageInquiry: "/mypage/inquiry",
   myPageTerms: "/mypage/terms",
   myPageFaq: "/mypage/faq",

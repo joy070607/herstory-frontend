@@ -8,6 +8,7 @@ import { useJourneyAnalysis } from "@/hooks/queries";
 import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { WakingScreen } from "@/components/system/WakingScreen";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { WeatherIcon, TicketIcon } from "@/components/icons";
@@ -59,7 +60,7 @@ export function StyleEnginePage() {
         )}
 
         {journeyId && isLoading && (
-          <div className="h-[420px] animate-pulse rounded-[20px] bg-neutral-100" />
+          <WakingScreen message="AI가 여정에 맞는 스타일을 분석하고 있어요." />
         )}
 
         {journeyId && analysis && (

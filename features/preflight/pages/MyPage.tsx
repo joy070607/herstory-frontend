@@ -10,6 +10,7 @@ import { useMemberSummary, useMyCoupons, useUpdateSettings } from "@/hooks/queri
 import { ROUTES } from "@/constants/routes";
 import {
   AppVersionIcon,
+  BagIcon,
   ChevronRightIcon,
   CouponIcon,
   EditProfileIcon,
@@ -229,6 +230,12 @@ export function MyPage() {
             title="결제 수단"
             subtitle="등록된 카드 관리"
             href={ROUTES.myPagePaymentMethods}
+          />
+          <MenuRow
+            icon={<BagIcon className="h-5 w-5" />}
+            title="픽업 일정"
+            subtitle="면세품 수령 장소 및 시간"
+            href={ROUTES.myPagePickupSchedule}
           />
         </SectionCard>
 

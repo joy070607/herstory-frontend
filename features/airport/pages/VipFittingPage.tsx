@@ -10,7 +10,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
-import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
+import { HangerIcon, TicketIcon } from "@/components/icons";
 
 export function VipFittingPage() {
   const member = useAuthStore((state) => state.member);
@@ -74,12 +74,12 @@ export function VipFittingPage() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                type="button"
+              <Link
+                href={ROUTES.airportMap}
                 className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white"
               >
                 피팅룸 위치 보기
-              </button>
+              </Link>
               <Link
                 href={ROUTES.smartCart}
                 className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500"
@@ -89,24 +89,6 @@ export function VipFittingPage() {
             </div>
           </div>
         )}
-
-        <div className="flex items-center gap-4 rounded-[20px] bg-neutral-50 px-6 py-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-            <UserIcon className="h-6 w-6" />
-          </div>
-          <div className="flex flex-1 flex-col gap-3">
-            <div>
-              <p className="text-sm font-bold text-neutral-900">엘레나 R.</p>
-              <p className="text-xs text-neutral-400">신뢰 판매원</p>
-            </div>
-            <button
-              type="button"
-              className="self-start rounded-full border-2 border-[#BEC7D4] px-4 py-1 text-xs text-neutral-900"
-            >
-              메시지 보내기
-            </button>
-          </div>
-        </div>
 
         <div>
           <h2 className="mb-3.5 text-base font-bold text-neutral-900">
@@ -123,7 +105,7 @@ export function VipFittingPage() {
 
           {memberId && cart && items.length === 0 && (
             <Link
-              href={ROUTES.boardingPass}
+              href={ROUTES.smartCart}
               className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center"
             >
               <TicketIcon className="mb-1 text-neutral-400" />
@@ -159,6 +141,15 @@ export function VipFittingPage() {
             </div>
           )}
         </div>
+
+        {journeyId && (
+          <Link
+            href={ROUTES.fastCheckout}
+            className="rounded-[20px] bg-sky-500 py-3.5 text-center text-base font-bold text-white"
+          >
+            구매하기
+          </Link>
+        )}
       </div>
 
       <div className="mt-auto">

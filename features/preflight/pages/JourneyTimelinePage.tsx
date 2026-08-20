@@ -80,7 +80,7 @@ function TimelineStepRow({
               <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">{item.description}</p>
             )}
           </div>
-          <span className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-medium text-neutral-600">
+          <span className="shrink-0 rounded-full bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white">
             {item.time}
           </span>
         </div>
@@ -122,9 +122,9 @@ function RecommendedSection({ analysis }: { analysis: JourneyAnalysisResponse })
           <div
             key={product.id}
             className={`flex items-center gap-3.5 rounded-[20px] bg-[#F0F0F0] p-3 transition-all duration-700 ease-out ${
-              inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              inView ? "translate-y-0 scale-100 opacity-100" : "translate-y-12 scale-95 opacity-0"
             }`}
-            style={{ transitionDelay: inView ? `${150 + index * 120}ms` : "0ms" }}
+            style={{ transitionDelay: inView ? `${200 + index * 180}ms` : "0ms" }}
           >
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-white">
               <Image src={product.imageUrl} alt={product.name} fill sizes="64px" className="object-cover" />

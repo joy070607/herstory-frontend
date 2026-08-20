@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
-import { useCart, useCheckout } from "@/hooks/queries";
+import { useCart, useCheckout, usePaymentMethods, usePickupSchedule } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
@@ -15,45 +16,32 @@ import { getDutyFreeStatus } from "@/utils/dutyFree";
 import {
   CheckCircleIcon,
   CreditCardWalletIcon,
-  DigitalWalletIcon,
   LockFilledIcon,
+  SparklesIcon,
+  SpotIcon,
   TicketIcon,
 } from "@/components/icons";
 
-type PaymentMethod = "card" | "wallet";
-
-// 결제 수단/픽업 일정은 실제 대응 API가 없어서 정적 옵션이에요 (하드코딩이 아니라
-// "선택할 수 있는 목록"을 화면에서만 관리하는 거고, 서버로 전송되진 않아요).
-const CARD_OPTIONS = [
-  { id: "visa-4242", label: "VISA •••• 4242", expiry: "12/25" },
-  { id: "mc-8821", label: "Mastercard •••• 8821", expiry: "09/26" },
-  { id: "amex-1004", label: "AMEX •••• 1004", expiry: "03/27" },
-];
-
-const WALLET_OPTIONS = [
-  { id: "apple-pay", label: "Apple Pay" },
-  { id: "google-pay", label: "Google Pay" },
-  { id: "samsung-pay", label: "Samsung Pay" },
-];
-
-const PICKUP_MONTHS = ["11월", "12월", "1월"];
-const PICKUP_DAYS = ["19일", "20일", "21일"];
-const PICKUP_TIMES = ["11:00 AM", "1:00 PM", "3:00 PM"];
-
 export function FastCheckoutPage() {
+  const router = useRouter();
   const journeyId = useJourneyStore((state) => state.journeyId);
   const setPurchaseStatus = useJourneyStore((state) => state.setPurchaseStatus);
   const member = useAuthStore((state) => state.member);
   const memberId = member ? Number(member.id) : null;
 
   const { data: cart, isLoading } = useCart(memberId);
+  const { data: cards } = usePaymentMethods(memberId);
+  const { data: pickupSchedule } = usePickupSchedule(journeyId);
   const checkout = useCheckout();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
-  const [selectedCardId, setSelectedCardId] = useState(CARD_OPTIONS[0].id);
-  const [selectedWalletId, setSelectedWalletId] = useState(WALLET_OPTIONS[0].id);
-  const [pickupMonth, setPickupMonth] = useState(PICKUP_MONTHS[1]);
-  const [pickupDay, setPickupDay] = useState(PICKUP_DAYS[1]);
-  const [pickupTime, setPickupTime] = useState(PICKUP_TIMES[1]);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+  const [pickupMonth, setPickupMonth] = useState<string | null>(null);
+  const [pickupDay, setPickupDay] = useState<string | null>(null);
+  const [pickupTime, setPickupTime] = useState<string | null>(null);
+
+  const activeCardId = selectedCardId ?? cards?.[0]?.cardId ?? null;
+  const activePickupMonth = pickupMonth ?? pickupSchedule?.defaultMonth ?? null;
+  const activePickupDay = pickupDay ?? pickupSchedule?.defaultDay ?? null;
+  const activePickupTime = pickupTime ?? pickupSchedule?.defaultTime ?? null;
 
   const spentKrw = cart?.totalPrice ?? 0;
   const { limitKrw, isOverLimit } = getDutyFreeStatus(spentKrw);
@@ -62,8 +50,21 @@ export function FastCheckoutPage() {
   const handleCheckout = () => {
     if (!member || !journeyId) return;
     checkout.mutate(
-      { memberId: Number(member.id), journeyId: Number(journeyId) },
-      { onSuccess: () => setPurchaseStatus("PURCHASED") }
+      {
+        memberId: Number(member.id),
+        journeyId: Number(journeyId),
+        pickupMonth: activePickupMonth ?? undefined,
+        pickupDay: activePickupDay ?? undefined,
+        pickupTime: activePickupTime ?? undefined,
+        pickupLocation: pickupSchedule?.pickupDeskLocation,
+      },
+      {
+        onSuccess: () => {
+          setPurchaseStatus("PURCHASED");
+          // 결제 완료 카드를 잠깐 보여준 뒤 케어 가이드로 넘어갑니다.
+          setTimeout(() => router.push(ROUTES.leatherCare), 1800);
+        },
+      }
     );
   };
 
@@ -183,42 +184,15 @@ export function FastCheckoutPage() {
 
                 <div>
                   <h2 className="mb-3.5 text-base font-bold text-neutral-900">결제 수단</h2>
-                  <div className="mb-3 flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("card")}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-[20px] py-3 text-sm font-medium transition-all active:scale-[0.98] ${
-                        paymentMethod === "card"
-                          ? "bg-sky-500 text-sky-50"
-                          : "bg-neutral-100 text-neutral-700"
-                      }`}
-                    >
-                      <CreditCardWalletIcon className="h-4 w-5" />
-                      신용카드
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("wallet")}
-                      className={`flex flex-1 items-center justify-center gap-2 rounded-[20px] py-3 text-sm font-medium transition-all active:scale-[0.98] ${
-                        paymentMethod === "wallet"
-                          ? "bg-sky-500 text-sky-50"
-                          : "bg-neutral-100 text-neutral-700"
-                      }`}
-                    >
-                      <DigitalWalletIcon className="h-4 w-5" />
-                      디지털 지갑
-                    </button>
-                  </div>
-
-                  {paymentMethod === "card" && (
-                    <div className="flex flex-col gap-2.5">
-                      {CARD_OPTIONS.map((card) => {
-                        const selected = card.id === selectedCardId;
+                  <div className="flex flex-col gap-2.5">
+                    {cards && cards.length > 0 ? (
+                      cards.map((card) => {
+                        const selected = card.cardId === activeCardId;
                         return (
                           <button
-                            key={card.id}
+                            key={card.cardId}
                             type="button"
-                            onClick={() => setSelectedCardId(card.id)}
+                            onClick={() => setSelectedCardId(card.cardId)}
                             className={`flex items-center gap-3 rounded-[20px] border-2 px-4 py-3.5 text-left transition-all active:scale-[0.99] ${
                               selected
                                 ? "border-sky-500 bg-sky-50"
@@ -228,50 +202,61 @@ export function FastCheckoutPage() {
                             <CreditCardWalletIcon
                               className={`h-4 w-5 shrink-0 ${selected ? "text-sky-600" : "text-neutral-400"}`}
                             />
-                            <span className="flex-1 text-sm text-neutral-900">{card.label}</span>
-                            <span className="text-xs text-neutral-400">{card.expiry}</span>
+                            <span className="flex-1 text-sm text-neutral-900">{card.cardName}</span>
+                            <span className="text-xs text-neutral-400">
+                              {card.subtitle || card.cardNumberMasked}
+                            </span>
                             {selected && <CheckCircleIcon className="h-4 w-4 shrink-0 text-sky-500" />}
                           </button>
                         );
-                      })}
-                    </div>
-                  )}
-
-                  {paymentMethod === "wallet" && (
-                    <div className="flex flex-col gap-2.5">
-                      {WALLET_OPTIONS.map((wallet) => {
-                        const selected = wallet.id === selectedWalletId;
-                        return (
-                          <button
-                            key={wallet.id}
-                            type="button"
-                            onClick={() => setSelectedWalletId(wallet.id)}
-                            className={`flex items-center gap-3 rounded-[20px] border-2 px-4 py-3.5 text-left transition-all active:scale-[0.99] ${
-                              selected
-                                ? "border-sky-500 bg-sky-50"
-                                : "border-transparent bg-neutral-100"
-                            }`}
-                          >
-                            <DigitalWalletIcon
-                              className={`h-4 w-5 shrink-0 ${selected ? "text-sky-600" : "text-neutral-400"}`}
-                            />
-                            <span className="flex-1 text-sm text-neutral-900">{wallet.label}</span>
-                            {selected && <CheckCircleIcon className="h-4 w-4 shrink-0 text-sky-500" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <h2 className="mb-3.5 text-base font-bold text-neutral-900">픽업 일정</h2>
-                  <div className="flex flex-col gap-2">
-                    <PickupSlotRow options={PICKUP_MONTHS} value={pickupMonth} onChange={setPickupMonth} />
-                    <PickupSlotRow options={PICKUP_DAYS} value={pickupDay} onChange={setPickupDay} />
-                    <PickupSlotRow options={PICKUP_TIMES} value={pickupTime} onChange={setPickupTime} />
+                      })
+                    ) : (
+                      <Link
+                        href={ROUTES.myPagePaymentMethods}
+                        className="rounded-[20px] border-2 border-dashed border-neutral-200 px-4 py-3.5 text-center text-sm font-medium text-sky-600"
+                      >
+                        등록된 카드가 없어요 · 카드 등록하기
+                      </Link>
+                    )}
                   </div>
                 </div>
+
+                {pickupSchedule && (
+                  <div>
+                    <h2 className="mb-3.5 text-base font-bold text-neutral-900">픽업 일정</h2>
+                    <div className="flex flex-col gap-2">
+                      <PickupSlotRow
+                        options={pickupSchedule.months}
+                        value={activePickupMonth}
+                        onChange={setPickupMonth}
+                      />
+                      <PickupSlotRow
+                        options={pickupSchedule.days}
+                        value={activePickupDay}
+                        onChange={setPickupDay}
+                      />
+                      <PickupSlotRow
+                        options={pickupSchedule.times}
+                        value={activePickupTime}
+                        onChange={setPickupTime}
+                      />
+                    </div>
+                    <div className="mt-3 flex flex-col gap-2.5">
+                      <div className="flex items-start gap-2.5 rounded-2xl bg-neutral-100 px-4 py-3.5">
+                        <SpotIcon className="mt-0.5 h-4 w-4 shrink-0 text-neutral-500" />
+                        <p className="text-sm leading-relaxed text-neutral-700">
+                          {pickupSchedule.pickupDeskLocation}
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2.5 rounded-2xl bg-sky-50 px-4 py-3.5">
+                        <SparklesIcon className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" />
+                        <p className="text-sm leading-relaxed text-sky-800">
+                          {pickupSchedule.recommendedNotice}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -306,7 +291,7 @@ function PickupSlotRow({
   onChange,
 }: {
   options: string[];
-  value: string;
+  value: string | null;
   onChange: (value: string) => void;
 }) {
   return (

@@ -392,6 +392,30 @@ export interface ReEntryResponse {
 export interface CheckoutRequest {
   memberId: number;
   journeyId: number;
+  pickupMonth?: string;
+  pickupDay?: string;
+  pickupTime?: string;
+  pickupLocation?: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/airport/{journeyId}/pickup-schedule)
+export interface PickupScheduleResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber: string;
+  airportName: string;
+  terminal: string;
+  departureDateTime: string;
+  departureDate: string;
+  departureTime: string;
+  pickupDeskLocation: string;
+  months: string[];
+  days: string[];
+  times: string[];
+  defaultMonth: string;
+  defaultDay: string;
+  defaultTime: string;
+  recommendedNotice: string;
 }
 
 export interface OrderItemDetail {
