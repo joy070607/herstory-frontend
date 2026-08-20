@@ -8,11 +8,8 @@ import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { useAuthStore } from "@/store/authStore";
 import { useCareGoogleMapsSpots, usePopupSpots } from "@/hooks/queries";
+import { AIRPORT_DESTINATION, isNearAirport } from "@/utils/airport";
 import type { CareGoogleMapsSpot, Product } from "@/types/api.types";
-
-// 인천공항 실제 매장/면세점 좌표 — Bangkok 등 여정 목적지 도시 스팟이 아니라
-// 공항 현지 스팟만 보여주기 위해 destination을 "ICN"으로 고정해서 조회합니다.
-const AIRPORT_DESTINATION = "ICN";
 
 // 이 API는 "ICN 럭셔리" 실시간 Google Places 검색이라 호텔·라운지·캡슐호텔 체인까지
 // 같이 섞여 나와요(호텔 체인명엔 "호텔"이라는 단어가 없는 경우도 많아 이름만으론 못 거릅니다).
@@ -26,23 +23,11 @@ const LODGING_KEYWORDS = [
 const SHOPPING_KEYWORDS = ["duty free", "boutique", "store", "outlet", "shop", "flagship"];
 const GENERIC_BRAND = "LUXURY BRAND";
 
-// 인천공항(제1여객터미널) 좌표. "ICN" 검색 결과에 인천 시내 매장이 섞여 나올 때가 있어서
-// (예: 미추홀구 롯데백화점) 이 좌표에서 너무 멀면 지도 중심 계산에서 제외합니다.
-const AIRPORT_COORDS = { lat: 37.4602, lng: 126.4407 };
-const MAX_DEGREES_FROM_AIRPORT = 0.1; // 약 10km 이내만 "공항 스팟"으로 인정
-
 function isShoppingSpot(spot: CareGoogleMapsSpot) {
   const name = spot.spotName.toLowerCase();
   if (LODGING_KEYWORDS.some((keyword) => name.includes(keyword))) return false;
   if (spot.brand !== GENERIC_BRAND) return true;
   return SHOPPING_KEYWORDS.some((keyword) => name.includes(keyword));
-}
-
-function isNearAirport(spot: CareGoogleMapsSpot) {
-  return (
-    Math.abs(spot.latitude - AIRPORT_COORDS.lat) < MAX_DEGREES_FROM_AIRPORT &&
-    Math.abs(spot.longitude - AIRPORT_COORDS.lng) < MAX_DEGREES_FROM_AIRPORT
-  );
 }
 
 function mapEmbedUrl(spots: CareGoogleMapsSpot[]) {
@@ -55,6 +40,7 @@ export function PopupSpotPage() {
   const member = useAuthStore((state) => state.member);
   const memberId = member ? Number(member.id) : null;
 
+  // 여정의 실제 목적지가 아니라 인천공항 현지 팝업 스팟을 보여주는 화면이라 destination을 고정합니다.
   const {
     data: rawSpots,
     isLoading: isSpotsLoading,
