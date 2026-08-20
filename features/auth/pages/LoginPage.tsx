@@ -46,7 +46,7 @@ export function LoginPage() {
       </div>
 
       <form
-        className="flex flex-col gap-7 px-9 pb-8"
+        className="flex flex-col gap-7 px-9 pb-8 pt-5"
         onSubmit={(e) => {
           e.preventDefault();
           loginMutation.mutate();
