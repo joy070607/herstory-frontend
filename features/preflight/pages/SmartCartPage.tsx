@@ -9,6 +9,7 @@ import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries"
 import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
@@ -44,12 +45,16 @@ export function SmartCartPage() {
 
   const [activeFilter, setActiveFilter] = useState(0);
   const [pendingProductId, setPendingProductId] = useState<number | null>(null);
+  const [justAdded, setJustAdded] = useState(false);
 
   const handleAdd = (productId: number) => {
     setPendingProductId(productId);
     addToCart.mutate(
       { productId },
-      { onSettled: () => setPendingProductId(null) }
+      {
+        onSuccess: () => setJustAdded(true),
+        onSettled: () => setPendingProductId(null),
+      }
     );
   };
 
@@ -68,6 +73,8 @@ export function SmartCartPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col px-6 py-5">
+        <BackButton className="mb-3" />
+
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
@@ -135,6 +142,19 @@ export function SmartCartPage() {
                   {heroInCart ? "담기 완료" : "스마트 피팅 담기"}
                 </button>
               </div>
+            )}
+
+            {justAdded && (
+              <Link
+                href={ROUTES.vipFitting}
+                className="animate-slide-up-in mb-5 flex items-center justify-between gap-3 rounded-[20px] bg-sky-500 px-5 py-4 text-sky-50"
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <CheckCircleIcon className="h-4 w-4 shrink-0" />
+                  장바구니에 담았어요. 피팅룸에서 바로 입어보세요
+                </span>
+                <span className="shrink-0 text-lg">›</span>
+              </Link>
             )}
 
             <div className="mb-5 flex items-center gap-2">
