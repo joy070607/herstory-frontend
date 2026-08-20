@@ -26,7 +26,6 @@ interface FaqItem {
   answer: string;
 }
 
-// api연동 전 하드코딩 목업 데이터입니다.
 const FAQ_ITEMS: FaqItem[] = [
   {
     id: "earn-timing",

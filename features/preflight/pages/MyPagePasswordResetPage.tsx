@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
-import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/store/authStore";
+import { useChangePassword } from "@/hooks/queries";
 import { CheckCircleIcon } from "@/components/icons";
 
 function RequirementRow({ label, satisfied }: { label: string; satisfied: boolean }) {
@@ -18,10 +18,13 @@ function RequirementRow({ label, satisfied }: { label: string; satisfied: boolea
 }
 
 export function MyPagePasswordResetPage() {
+  const member = useAuthStore((state) => state.member);
+  const memberId = member ? Number(member.id) : null;
+  const changePasswordMutation = useChangePassword(memberId);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [saved, setSaved] = useState(false);
 
   const hasMinLength = newPassword.length >= 8;
   const hasLettersAndDigits = /[A-Za-z]/.test(newPassword) && /[0-9]/.test(newPassword);
@@ -49,7 +52,18 @@ export function MyPagePasswordResetPage() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!canSubmit) return;
-            setSaved(true);
+            changePasswordMutation.mutate(
+              { currentPassword, newPassword },
+              {
+                onSuccess: (data) => {
+                  if (data.success) {
+                    setCurrentPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                  }
+                },
+              }
+            );
           }}
         >
           <div>
@@ -59,7 +73,7 @@ export function MyPagePasswordResetPage() {
               value={currentPassword}
               onChange={(e) => {
                 setCurrentPassword(e.target.value);
-                setSaved(false);
+                changePasswordMutation.reset();
               }}
               placeholder="현재 비밀번호 입력"
               className="w-full rounded-2xl border border-black/50 px-4 py-5 text-lg text-neutral-900 outline-none placeholder:text-neutral-400"
@@ -73,7 +87,7 @@ export function MyPagePasswordResetPage() {
               value={newPassword}
               onChange={(e) => {
                 setNewPassword(e.target.value);
-                setSaved(false);
+                changePasswordMutation.reset();
               }}
               placeholder="영문 · 숫자 · 특수문자 조합"
               className="w-full rounded-2xl border border-black/50 px-4 py-5 text-lg text-neutral-900 outline-none placeholder:text-neutral-400"
@@ -87,7 +101,7 @@ export function MyPagePasswordResetPage() {
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
-                setSaved(false);
+                changePasswordMutation.reset();
               }}
               placeholder="다시 한 번 입력"
               className="w-full rounded-2xl border border-black/50 px-4 py-5 text-lg text-neutral-900 outline-none placeholder:text-neutral-400"
@@ -100,23 +114,30 @@ export function MyPagePasswordResetPage() {
             <RequirementRow label="새 비밀번호 일치" satisfied={passwordsMatch} />
           </div>
 
-          <Link
-            href={ROUTES.forgotPassword}
-            className="text-center text-sm text-neutral-400 underline underline-offset-2"
-          >
-            현재 비밀번호를 잊으셨나요? 이메일로 재설정 링크 받기
-          </Link>
-
-          {saved && (
-            <p className="text-center text-sm font-medium text-sky-600">비밀번호가 변경되었습니다.</p>
+          {changePasswordMutation.isSuccess && (
+            <p
+              className={`text-center text-sm font-medium ${
+                changePasswordMutation.data.success ? "text-sky-600" : "text-red-600"
+              }`}
+            >
+              {changePasswordMutation.data.message ||
+                (changePasswordMutation.data.success
+                  ? "비밀번호가 변경되었습니다."
+                  : "비밀번호 변경에 실패했습니다.")}
+            </p>
+          )}
+          {changePasswordMutation.isError && (
+            <p className="text-center text-sm font-medium text-red-600">
+              비밀번호 변경에 실패했습니다. 현재 비밀번호를 확인해 주세요.
+            </p>
           )}
 
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={!canSubmit || changePasswordMutation.isPending}
             className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] disabled:opacity-40"
           >
-            비밀번호 변경
+            {changePasswordMutation.isPending ? "변경 중..." : "비밀번호 변경"}
           </button>
         </form>
       </div>

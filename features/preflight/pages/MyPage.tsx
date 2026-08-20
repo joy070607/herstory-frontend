@@ -6,7 +6,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { Toggle } from "@/components/ui/Toggle";
 import { useAuthStore } from "@/store/authStore";
-import { useMemberSummary, useUpdateSettings } from "@/hooks/queries";
+import { useMemberSummary, useMyCoupons, useUpdateSettings } from "@/hooks/queries";
 import { ROUTES } from "@/constants/routes";
 import {
   BellIcon,
@@ -102,6 +102,9 @@ export function MyPage() {
   const memberId = member ? Number(member.id) : null;
   const { data: summary } = useMemberSummary(memberId);
   const updateSettings = useUpdateSettings(memberId);
+  const { data: coupons } = useMyCoupons(memberId);
+  const urgentCouponCount =
+    coupons?.items.filter((item) => item.urgent && item.status === "AVAILABLE").length ?? 0;
 
   const settings = summary?.settings;
   const toggleSetting = (key: keyof NonNullable<typeof settings>, value: boolean) => {
@@ -182,7 +185,7 @@ export function MyPage() {
             title="마일리지 상세 내역"
             subtitle="적립 · 사용 · 소멸예정"
             badge="등록됨"
-            href={ROUTES.nomadMiles}
+            href={ROUTES.myPageMilesHistory}
           />
           <MenuRow
             icon={<CouponIcon className="h-4 w-5" />}
@@ -190,6 +193,8 @@ export function MyPage() {
             subtitle={
               summary ? `사용 가능 ${summary.couponCount}장` : "쿠폰 · 혜택 보관함"
             }
+            badge={urgentCouponCount > 0 ? `만료 임박 ${urgentCouponCount}장` : undefined}
+            badgeTone="warning"
             href={ROUTES.myPageCoupons}
           />
         </SectionCard>

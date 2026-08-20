@@ -1227,3 +1227,25 @@ export function DiscountIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function AlertTriangleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="18"
+      viewBox="0 0 20 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8.257 1.5c.77-1.333 2.716-1.333 3.486 0l7.312 12.667c.77 1.333-.192 3-1.732 3H2.677c-1.54 0-2.502-1.667-1.732-3L8.257 1.5z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M10 6.5v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="10" cy="13.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
