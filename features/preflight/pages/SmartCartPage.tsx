@@ -95,7 +95,7 @@ export function SmartCartPage() {
                 피팅 {cart?.items.length ?? 0}개 준비 완료
               </span>
               <Link
-                href={ROUTES.airportMap}
+                href={ROUTES.terminalMap}
                 className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
               >
                 <SpotIcon className="h-3.5 w-3.5 shrink-0 text-neutral-500" />

@@ -10,6 +10,7 @@ export const ROUTES = {
   styleEngine: "/style",
   popupSpot: "/popup",
   smartCart: "/cart",
+  terminalMap: "/terminal-map",
 
   autoCheckIn: "/check-in",
   vipFitting: "/fitting",

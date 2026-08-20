@@ -59,7 +59,8 @@ export function FastCheckoutPage() {
       {
         onSuccess: () => {
           setPurchaseStatus("PURCHASED");
-          router.push(ROUTES.leatherCare);
+          // 결제 완료 카드를 잠깐 보여준 뒤 케어 가이드로 넘어갑니다.
+          setTimeout(() => router.push(ROUTES.leatherCare), 1800);
         },
       }
     );

@@ -28,7 +28,7 @@ function mapEmbedUrl(spots: CareGoogleMapsSpot[]) {
   return `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
 }
 
-export function AirportMapPage() {
+function AirportLocationMapPage({ title }: { title: string }) {
   const {
     data: rawSpots,
     isLoading,
@@ -44,7 +44,7 @@ export function AirportMapPage() {
       <div className="px-6 pt-6">
         <div className="mb-5 flex items-center gap-2">
           <BackButton />
-          <h1 className="text-2xl font-bold text-neutral-900">공항 내 위치</h1>
+          <h1 className="text-2xl font-bold text-neutral-900">{title}</h1>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export function AirportMapPage() {
 
       {spots && spots.length > 0 && (
         <iframe
-          title="공항 내 위치 지도"
+          title={title}
           src={mapEmbedUrl(spots)}
           className="h-[420px] w-full border-0"
           loading="lazy"
@@ -73,4 +73,12 @@ export function AirportMapPage() {
       </div>
     </div>
   );
+}
+
+export function FittingRoomMapPage() {
+  return <AirportLocationMapPage title="피팅룸 위치" />;
+}
+
+export function TerminalMapPage() {
+  return <AirportLocationMapPage title="터미널 위치" />;
 }

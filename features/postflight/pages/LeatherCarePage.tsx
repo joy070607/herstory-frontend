@@ -22,28 +22,11 @@ const HOT_TEMP_C = 28;
 // 알림 카드에 표시할 대상 제품 — 실제 개인 컬렉션 API가 아직 없어 데모에 쓰인 제품명을 그대로 질의합니다.
 const FEATURED_PRODUCT = "비세토스 스타크 백팩";
 
-// 컬렉션 API가 아직 없어서 "전체 보기"로 펼쳐지는 나머지 항목도 데모용으로 고정된 값이에요.
-const MORE_COLLECTION_ITEMS = [
-  {
-    image: "/care/bag-tote.png",
-    name: "노마드 시티 백팩",
-    lastCareLabel: "최근 관리일: 3일 전",
-    status: "최적" as const,
-  },
-  {
-    image: "/care/bag-crossbody.png",
-    name: "아렌 웍스 파우치",
-    lastCareLabel: "최근 관리일: 41일 전",
-    status: "컨디셔닝 필요" as const,
-  },
-];
-
 export function LeatherCarePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const lang = useJourneyStore((state) => state.lang);
   const { data: journey } = useJourney(journeyId);
   const { data: analysis } = useJourneyAnalysis(journeyId);
-  const [showAllCollection, setShowAllCollection] = useState(false);
   const [showRain, setShowRain] = useState(true);
 
   const {
@@ -72,7 +55,7 @@ export function LeatherCarePage() {
           <BackButton />
         </div>
 
-        <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">현재 환경</h2>
+        <h2 className="mb-3.5 px-6 text-xl font-bold text-neutral-900">현재 환경</h2>
         <div className="mx-6 mb-5 overflow-hidden rounded-[20px]">
           <button
             type="button"
@@ -138,78 +121,10 @@ export function LeatherCarePage() {
           </div>
           <ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-400" />
         </Link>
-
-        <div className="mb-4 flex items-center justify-between px-6">
-          <span className="text-xl font-bold text-neutral-900">나의 컬렉션 상태</span>
-          <button
-            type="button"
-            onClick={() => setShowAllCollection((prev) => !prev)}
-            className="text-sm font-medium text-sky-700"
-          >
-            {showAllCollection ? "접기" : "전체 보기"}
-          </button>
-        </div>
-
-        <div className="mx-6 flex flex-col gap-3">
-          <CollectionRow
-            image="/care/bag-tote.png"
-            name="비세토스 뮌헨 토트"
-            lastCareLabel="최근 관리일: 12일 전"
-            status="최적"
-          />
-          <CollectionRow
-            image="/care/bag-crossbody.png"
-            name="아렌 크로스바디"
-            lastCareLabel="최근 관리일: 84일 전"
-            status="컨디셔닝 필요"
-          />
-          {showAllCollection &&
-            MORE_COLLECTION_ITEMS.map((item) => <CollectionRow key={item.name} {...item} />)}
-        </div>
       </div>
 
       <div className="mt-auto">
         <AiHotBar />
-      </div>
-    </div>
-  );
-}
-
-const STATUS_STYLE = {
-  최적: "bg-emerald-50 text-emerald-700",
-  "컨디셔닝 필요": "bg-red-50 text-red-700",
-} as const;
-
-function CollectionRow({
-  image,
-  name,
-  lastCareLabel,
-  status,
-}: {
-  image: string;
-  name: string;
-  lastCareLabel: string;
-  status: keyof typeof STATUS_STYLE;
-}) {
-  return (
-    <div className="flex items-center gap-4 rounded-[20px] bg-neutral-100 px-3 py-3">
-      <Image
-        src={image}
-        alt={name}
-        width={65}
-        height={65}
-        className="h-[65px] w-[65px] shrink-0 rounded-xl object-cover"
-      />
-      <div className="flex flex-1 items-center justify-between gap-2">
-        <div className="min-w-0">
-          <p className="break-keep text-base font-semibold text-neutral-900">{name}</p>
-          <p className="mt-1.5 break-keep text-sm text-neutral-500">{lastCareLabel}</p>
-        </div>
-        <span
-          className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-medium ${STATUS_STYLE[status]}`}
-        >
-          {status}
-        </span>
       </div>
     </div>
   );
