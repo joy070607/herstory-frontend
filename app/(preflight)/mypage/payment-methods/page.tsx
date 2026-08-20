@@ -1,5 +1,5 @@
-import { PaymentMethodsPage } from "@/features/preflight/pages/PaymentMethodsPage";
+import { MyPagePaymentMethodsPage } from "@/features/preflight/pages/MyPagePaymentMethodsPage";
 
 export default function Page() {
-  return <PaymentMethodsPage />;
+  return <MyPagePaymentMethodsPage />;
 }

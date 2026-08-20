@@ -1,5 +1,5 @@
-import { PassportInfoPage } from "@/features/preflight/pages/PassportInfoPage";
+import { MyPagePassportInfoPage } from "@/features/preflight/pages/MyPagePassportInfoPage";
 
 export default function Page() {
-  return <PassportInfoPage />;
+  return <MyPagePassportInfoPage />;
 }

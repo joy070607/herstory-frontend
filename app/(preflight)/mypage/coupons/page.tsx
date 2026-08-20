@@ -1,5 +1,5 @@
-import { CouponsPage } from "@/features/preflight/pages/CouponsPage";
+import { MyPageCouponsPage } from "@/features/preflight/pages/MyPageCouponsPage";
 
 export default function Page() {
-  return <CouponsPage />;
+  return <MyPageCouponsPage />;
 }

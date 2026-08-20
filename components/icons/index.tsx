@@ -1165,3 +1165,65 @@ export function Lock2Icon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function UserPlusIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx="8" cy="6" r="3.25" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M1.5 17c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path d="M16.5 5v6M13.5 8h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function SparklesIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M7 2L8.2 5.8L12 7L8.2 8.2L7 12L5.8 8.2L2 7L5.8 5.8L7 2Z" fill="currentColor" />
+      <path
+        d="M15 10L15.75 12.25L18 13L15.75 13.75L15 16L14.25 13.75L12 13L14.25 12.25L15 10Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function DiscountIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M1.667 10.809V4.167C1.667 2.786 2.786 1.667 4.167 1.667H10.809C11.472 1.667 12.108 1.93 12.577 2.399L17.935 7.756C18.911 8.732 18.911 10.315 17.935 11.291L11.291 17.935C10.315 18.911 8.732 18.911 7.756 17.935L2.399 12.577C1.93 12.108 1.667 11.472 1.667 10.809Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="6.5" cy="6.5" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
