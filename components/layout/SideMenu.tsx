@@ -80,8 +80,8 @@ const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
   {
     title: "기타",
     items: [
-      { label: "고객 지원", Icon: ChatIcon, disabled: true },
-      { label: "약관 및 정책", Icon: DocumentIcon, disabled: true },
+      { label: "고객 지원", href: ROUTES.myPageInquiry, Icon: ChatIcon },
+      { label: "약관 및 정책", href: ROUTES.myPageTerms, Icon: DocumentIcon },
     ],
   },
 ];
@@ -157,7 +157,7 @@ export function SideMenu({ open, onClose }: { open: boolean; onClose: () => void
     >
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
-        className={`absolute inset-y-0 right-0 flex w-[82%] max-w-[340px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
+        className={`absolute inset-y-0 right-0 flex w-[82%] max-w-[340px] flex-col overflow-hidden rounded-l-2xl bg-white shadow-2xl transition-transform duration-300 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

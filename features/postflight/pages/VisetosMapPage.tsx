@@ -7,7 +7,8 @@ import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
 import { useAuthStore } from "@/store/authStore";
-import { useCareGoogleMapsSpots, useCityStampCheckIn } from "@/hooks/queries";
+import { useJourneyStore } from "@/store/journeyStore";
+import { useCareGoogleMapsSpots, useCityStampCheckIn, useJourney } from "@/hooks/queries";
 import type { CareGoogleMapsSpot, StampCheckInResponse } from "@/types/api.types";
 
 function directionsUrl(spot: CareGoogleMapsSpot) {
@@ -70,8 +71,10 @@ function SpotCard({
 }
 
 export function VisetosMapPage() {
-  const destination = "Bangkok";
   const member = useAuthStore((state) => state.member);
+  const journeyId = useJourneyStore((state) => state.journeyId);
+  const { data: journey } = useJourney(journeyId);
+  const destination = journey?.destination ?? "Bangkok";
   const { data: spots, isLoading, isError, refetch } = useCareGoogleMapsSpots(destination);
 
   const [stampedSpots, setStampedSpots] = useState<Set<string>>(new Set());
