@@ -35,7 +35,6 @@ function resolveStepIcon(item: TimelineItem) {
   return { Icon: PlaneInFlightIcon, circleClassName: "bg-sky-500" };
 }
 
-// 항공 상태(flightStatus)와 실제 출발 시각을 비교해 3단계(출발/비행중/도착) 중 현재 위치를 계산합니다.
 function resolveJourneyStage(journey: Journey): number {
   if (journey.flightStatus === "COMPLETED") return 2;
   if (journey.flightStatus === "CANCELLED") return 0;

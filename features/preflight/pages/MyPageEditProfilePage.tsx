@@ -32,8 +32,6 @@ export function MyPageEditProfilePage() {
   const [englishName, setEnglishName] = useState("");
   const [email, setEmail] = useState("");
 
-  // 프로필 조회 응답이 도착하면 폼 초기값으로 한 번만 반영합니다
-  // (그 이후엔 사용자가 입력 중인 값을 덮어쓰지 않음).
   useEffect(() => {
     if (profile && !hasSyncedForm.current) {
       setEnglishName(profile.englishName);

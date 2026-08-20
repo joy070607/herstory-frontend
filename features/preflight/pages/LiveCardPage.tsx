@@ -43,7 +43,6 @@ export function LiveCardPage() {
   const { data: liveCard, isLoading } = useLiveCard(journeyId);
   // 30초마다 오는 서버 값 대신, 남은 시간은 초 단위로 직접 카운트다운합니다.
   const countdown = useCountdown(liveCard?.departureDateTime ?? null);
-  // 인천공항 실제 전광판과 1분 단위로 동기화되는 AODB 실시간 조회
   const { data: flightLookup } = useFlightLookup(liveCard?.flightNumber);
 
   return (

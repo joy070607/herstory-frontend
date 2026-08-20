@@ -17,8 +17,6 @@ import {
   TicketStubIcon,
 } from "@/components/icons";
 
-// welcomeCouponMessage는 "환영 문구! 세부 혜택 문구." 형태의 한 문장이라,
-// 느낌표 기준으로 헤드라인/설명을 나눠서 보여줍니다. 느낌표가 없으면 전체를 헤드라인으로 씁니다.
 function splitWelcomeMessage(message: string) {
   const exclaimIndex = message.indexOf("!");
   if (exclaimIndex === -1) return { headline: message, detail: "" };
