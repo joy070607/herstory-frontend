@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAiCareTip, useJourney } from "@/hooks/queries";
@@ -8,14 +9,45 @@ import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { WakingScreen } from "@/components/system/WakingScreen";
 import { ErrorState } from "@/components/system/ErrorState";
+import { WeatherIcon } from "@/components/icons";
 
 // 알림 카드에 표시할 대상 제품 — 실제 개인 컬렉션 API가 아직 없어 데모에 쓰인 제품명을 그대로 질의합니다.
 const FEATURED_PRODUCT = "비세토스 스타크 백팩";
+
+// 컬렉션 API가 아직 없어서 "전체 보기"로 펼쳐지는 나머지 항목도 데모용으로 고정된 값이에요.
+const MORE_COLLECTION_ITEMS = [
+  {
+    image: "/care/bag-tote.png",
+    name: "노마드 시티 백팩",
+    lastCareLabel: "최근 관리일: 3일 전",
+    status: "최적" as const,
+  },
+  {
+    image: "/care/bag-crossbody.png",
+    name: "아렌 웍스 파우치",
+    lastCareLabel: "최근 관리일: 41일 전",
+    status: "컨디셔닝 필요" as const,
+  },
+];
+
+// destinationWeather는 자유 문장이라 형식이 두 가지로 섞여 있어요:
+// "열대성 스콜 (기온 32°C, 습도 85%)" 또는 "...기온 26.5°C... (우천/스콜 예상)".
+// 둘 다에서 온도와, 괄호 앞/뒤 중 실제 날씨 요약에 해당하는 쪽을 뽑아냅니다.
+function parseDestinationWeather(text: string) {
+  const tempMatch = text.match(/기온\s*([\d.]+)\s*°C/);
+  const temp = tempMatch ? Math.round(Number(tempMatch[1])) : null;
+  const beforeParen = text.split("(")[0].trim();
+  const parenMatch = text.match(/\(([^)]+)\)/);
+  const condition =
+    beforeParen && !beforeParen.includes("기온") ? beforeParen : (parenMatch?.[1] ?? text);
+  return { temp, condition };
+}
 
 export function LeatherCarePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const lang = useJourneyStore((state) => state.lang);
   const { data: journey } = useJourney(journeyId);
+  const [showAllCollection, setShowAllCollection] = useState(false);
 
   const {
     data: careTip,
@@ -28,6 +60,10 @@ export function LeatherCarePage() {
     lang,
   });
 
+  const weather = journey?.destinationWeather
+    ? parseDestinationWeather(journey.destinationWeather)
+    : null;
+
   return (
     <div className="flex flex-1 flex-col">
       <AppHeader />
@@ -37,26 +73,32 @@ export function LeatherCarePage() {
           <BackButton />
         </div>
 
-        <div className="mx-6 mb-5 rounded-[30px] bg-[#0EA5E9] px-[23px] pb-[18px] pt-5">
-          <p className="mb-3.5 text-[15px] text-[#E6F7FF]">현재 환경</p>
-          <p className="mb-6 ml-px text-[22px] font-bold text-[#E6F7FF]">
-            {journey?.destination ?? "여정 정보 없음"}
-          </p>
-          {journey?.destinationWeather && (
-            <div className="flex items-center justify-between px-0.5 pt-5">
-              <p className="pr-4 text-sm text-[#E6F7FF]">{journey.destinationWeather}</p>
-              <Image
-                src="/icons/humidity.png"
-                alt=""
-                width={21}
-                height={21}
-                className="h-[21px] w-[21px] shrink-0"
-              />
+        <h2 className="mb-3.5 px-6 text-sm font-medium text-neutral-900">현재 환경</h2>
+        <div className="mx-6 mb-5 overflow-hidden rounded-[20px] bg-sky-600 px-6 py-5">
+          <div className="flex items-center gap-3">
+            <WeatherIcon className="h-9 w-10 shrink-0" />
+            <div>
+              <p className="text-3xl font-bold leading-none text-white">
+                {weather?.temp != null ? `${weather.temp}°` : "-"}
+              </p>
+              <p className="mt-1.5 text-base font-medium text-white">
+                {weather?.condition ?? "날씨 정보 없음"}
+              </p>
             </div>
-          )}
+          </div>
+          <div className="mt-4 rounded-[14px] bg-black/15 px-4 py-3.5">
+            <p className="text-sm font-semibold text-white">
+              {journey?.destination ?? "여정 정보 없음"}
+            </p>
+            {journey?.destinationWeather && (
+              <p className="mt-1.5 text-sm font-medium leading-relaxed text-white">
+                {journey.destinationWeather}
+              </p>
+            )}
+          </div>
         </div>
 
-        <div className="mx-6 mb-7 rounded-[30px] bg-[#E6F7FF] py-4 pl-[15px] pr-[34px]">
+        <div className="mx-6 mb-7 rounded-[20px] bg-sky-50 py-4 pl-[15px] pr-[18px]">
           <div className="mb-3.5 flex items-center gap-1.5">
             <Image
               src="/icons/care-alert.png"
@@ -65,60 +107,87 @@ export function LeatherCarePage() {
               height={20}
               className="h-5 w-5"
             />
-            <span className="text-[15px] text-[#0369A1]">긴급 케어 알림</span>
+            <span className="text-sm font-semibold text-sky-700">긴급 케어 알림</span>
           </div>
-          <p className="mb-6 ml-[3px] text-[22px] font-bold text-[#0A0A0A]">{FEATURED_PRODUCT}</p>
+          <p className="mb-4 ml-[3px] text-xl font-bold text-neutral-900">{FEATURED_PRODUCT}</p>
           {isLoading && <WakingScreen />}
           {isError && <ErrorState onRetry={() => refetch()} />}
-          {careTip && <p className="ml-0.5 text-xs leading-relaxed text-[#0A0A0A]">{careTip}</p>}
+          {careTip && (
+            <p className="ml-0.5 text-sm leading-relaxed text-neutral-800">{careTip}</p>
+          )}
         </div>
 
-        <div className="mb-4 flex items-center justify-between px-[26px]">
-          <span className="text-[22px] font-bold text-[#0A0A0A]">나의 컬렉션 상태</span>
-          <span className="text-[13px] text-[#0369A1]">전체 보기</span>
+        <div className="mb-4 flex items-center justify-between px-6">
+          <span className="text-xl font-bold text-neutral-900">나의 컬렉션 상태</span>
+          <button
+            type="button"
+            onClick={() => setShowAllCollection((prev) => !prev)}
+            className="text-sm font-medium text-sky-700"
+          >
+            {showAllCollection ? "접기" : "전체 보기"}
+          </button>
         </div>
 
-        <div className="mx-6 mb-[15px] flex items-center rounded-[20px] bg-[#D9D9D966] px-2 py-2.5">
-          <Image
-            src="/care/bag-tote.png"
-            alt="비세토스 뮌헨 토트"
-            width={65}
-            height={65}
-            className="mr-[22px] h-[65px] w-[65px] rounded-xl object-cover"
+        <div className="mx-6 flex flex-col gap-3">
+          <CollectionRow
+            image="/care/bag-tote.png"
+            name="비세토스 뮌헨 토트"
+            lastCareLabel="최근 관리일: 12일 전"
+            status="최적"
           />
-          <div className="flex flex-1 items-center justify-between">
-            <div>
-              <p className="mb-3 text-lg text-[#0A0A0A]">비세토스 뮌헨 토트</p>
-              <p className="text-[13px] text-[#0A0A0A]">최근 관리일: 12일 전</p>
-            </div>
-            <span className="rounded-[20px] bg-[#D3F0DF] px-[11px] py-1 text-[13px] text-[#44C67C]">
-              최적
-            </span>
-          </div>
-        </div>
-
-        <div className="mx-6 flex items-center rounded-[20px] bg-[#D9D9D966] px-2 py-2.5">
-          <Image
-            src="/care/bag-crossbody.png"
-            alt="아렌 크로스바디"
-            width={65}
-            height={65}
-            className="mr-[22px] h-[65px] w-[65px] rounded-xl object-cover"
+          <CollectionRow
+            image="/care/bag-crossbody.png"
+            name="아렌 크로스바디"
+            lastCareLabel="최근 관리일: 84일 전"
+            status="컨디셔닝 필요"
           />
-          <div className="flex flex-1 items-center justify-between">
-            <div>
-              <p className="mb-2 text-lg text-[#0A0A0A]">아렌 크로스바디</p>
-              <p className="text-[13px] text-[#0A0A0A]">최근 관리일: 84일 전</p>
-            </div>
-            <span className="rounded-[20px] bg-[#F0D3D3] px-1 py-[5px] text-[13px] text-[#C64F44]">
-              컨디셔닝 필요
-            </span>
-          </div>
+          {showAllCollection &&
+            MORE_COLLECTION_ITEMS.map((item) => <CollectionRow key={item.name} {...item} />)}
         </div>
       </div>
 
       <div className="mt-auto">
         <AiHotBar />
+      </div>
+    </div>
+  );
+}
+
+const STATUS_STYLE = {
+  최적: "bg-emerald-50 text-emerald-700",
+  "컨디셔닝 필요": "bg-red-50 text-red-700",
+} as const;
+
+function CollectionRow({
+  image,
+  name,
+  lastCareLabel,
+  status,
+}: {
+  image: string;
+  name: string;
+  lastCareLabel: string;
+  status: keyof typeof STATUS_STYLE;
+}) {
+  return (
+    <div className="flex items-center gap-4 rounded-[20px] bg-neutral-100 px-3 py-3">
+      <Image
+        src={image}
+        alt={name}
+        width={65}
+        height={65}
+        className="h-[65px] w-[65px] shrink-0 rounded-xl object-cover"
+      />
+      <div className="flex flex-1 items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="break-keep text-base font-semibold text-neutral-900">{name}</p>
+          <p className="mt-1.5 break-keep text-sm text-neutral-500">{lastCareLabel}</p>
+        </div>
+        <span
+          className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-medium ${STATUS_STYLE[status]}`}
+        >
+          {status}
+        </span>
       </div>
     </div>
   );

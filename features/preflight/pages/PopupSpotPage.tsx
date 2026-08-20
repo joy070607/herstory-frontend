@@ -13,51 +13,62 @@ import type { CareGoogleMapsSpot, Product } from "@/types/api.types";
 
 const AIRPORT_POPUP_BRAND = "HERSTORY";
 
-function mapEmbedUrl(spots: CareGoogleMapsSpot[]) {
+function mapEmbedUrl(spots: CareGoogleMapsSpot[], zoom: number) {
   const lat = spots.reduce((sum, spot) => sum + spot.latitude, 0) / spots.length;
   const lng = spots.reduce((sum, spot) => sum + spot.longitude, 0) / spots.length;
-  // 공항 터미널 내부 지점끼리 붙어있어서 도시 지도(z=13)보다 훨씬 확대해서 보여줍니다.
-  return `https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
+  return `https://maps.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
 }
 
 export function PopupSpotPage() {
   const member = useAuthStore((state) => state.member);
   const { data, isLoading, isError, refetch } = usePopupSpots(member ? Number(member.id) : null);
 
-  // 이 엔드포인트는 목적지 도시 부티크(샤넬/LV 등)와 공항 팝업 스팟을 한 배열에 같이 내려줘서,
-  // 공항 한정 팝업 스팟(HERSTORY 브랜드)만 걸러냅니다.
-  const spots = data?.visetosSpots.filter((spot) => spot.brand === AIRPORT_POPUP_BRAND);
+  // 이 엔드포인트는 목적지 도시 부티크(샤넬/LV 등)와 공항 팝업 스팟을 한 배열에 같이 내려주는데,
+  // "HERSTORY" 브랜드 태그는 실시간 검색 결과라 항상 붙어있진 않아요. 공항 한정 팝업 스팟이
+  // 있으면 그것만(터미널 내부라 확대해서), 없으면 전체 추천 스팟을 지도에 보여줍니다.
+  const herstorySpots = data?.visetosSpots.filter((spot) => spot.brand === AIRPORT_POPUP_BRAND);
+  const usingAirportSpots = Boolean(herstorySpots && herstorySpots.length > 0);
+  const spots = usingAirportSpots ? herstorySpots : data?.visetosSpots;
+  const mapZoom = usingAirportSpots ? 17 : 13;
 
   return (
     <div className="flex flex-1 flex-col">
       <AppHeader />
 
-      <div className="flex flex-1 flex-col gap-5 px-6 py-6">
-        <div className="flex items-center gap-2">
+      <div className="px-6 pt-6">
+        <div className="mb-5 flex items-center gap-2">
           <BackButton />
           <h1 className="text-2xl font-bold text-neutral-900">POP-UP STORE</h1>
         </div>
+      </div>
 
-        {isLoading && <WakingScreen />}
-        {isError && <ErrorState onRetry={() => refetch()} />}
+      {isLoading && (
+        <div className="px-6">
+          <WakingScreen />
+        </div>
+      )}
+      {isError && (
+        <div className="px-6">
+          <ErrorState onRetry={() => refetch()} />
+        </div>
+      )}
 
+      {spots && spots.length > 0 && (
+        <iframe
+          title="공항 팝업 스팟 지도"
+          src={mapEmbedUrl(spots, mapZoom)}
+          className="h-[260px] w-full border-0"
+          loading="lazy"
+        />
+      )}
+
+      <div className="flex flex-1 flex-col gap-5 px-6 py-6">
         {spots && spots.length > 0 && (
-          <>
-            <div className="aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-neutral-200">
-              <iframe
-                title="공항 팝업 스팟 지도"
-                src={mapEmbedUrl(spots)}
-                className="h-full w-full border-0"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="flex flex-col divide-y divide-neutral-200">
-              {spots.map((spot) => (
-                <SpotRow key={spot.spotName} spot={spot} />
-              ))}
-            </div>
-          </>
+          <div className="flex flex-col divide-y divide-neutral-200">
+            {spots.map((spot) => (
+              <SpotRow key={spot.spotName} spot={spot} />
+            ))}
+          </div>
         )}
 
         {spots && spots.length === 0 && (
