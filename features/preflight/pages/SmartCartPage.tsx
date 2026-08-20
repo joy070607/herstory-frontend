@@ -103,7 +103,7 @@ export function SmartCartPage() {
                 className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
               >
                 <ShirtIcon className="h-4 w-4 shrink-0" />
-                피팅 {cart?.items.length ?? 0}개 준비 완료
+                피팅 {cart?.items.length ?? 0}개 준비 완료 [피팅룸으로 가기]
               </Link>
               <Link
                 href={ROUTES.terminalMap}
