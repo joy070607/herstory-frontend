@@ -19,7 +19,6 @@ interface Inquiry {
 
 const INQUIRY_TYPES: InquiryType[] = ["마일리지", "면세 · 결제", "여정 · 항공편", "계정 · 로그인", "기타"];
 
-// api연동 전 하드코딩 목업 데이터입니다.
 const INITIAL_INQUIRIES: Inquiry[] = [
   {
     id: "inq-1",

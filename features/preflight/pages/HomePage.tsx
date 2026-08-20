@@ -187,13 +187,13 @@ export function HomePage() {
         )}
 
         <div className="flex items-center gap-4 px-6">
-          <button
-            type="button"
+          <Link
+            href={ROUTES.myPagePassportInfo}
             className="flex flex-1 items-center justify-center gap-3.5 rounded-[20px] border border-sky-500 py-4 text-sky-500"
           >
             <PassportIcon className="h-4 w-4" />
             <span className="text-sm">내 패스포트</span>
-          </button>
+          </Link>
           <Link
             href={ROUTES.liveCard}
             className="flex flex-1 items-center justify-center gap-2 rounded-[20px] border border-neutral-400 py-4 text-neutral-900"

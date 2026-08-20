@@ -1,46 +1,60 @@
 "use client";
 
-import { useState } from "react";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { Toggle } from "@/components/ui/Toggle";
+import { useAuthStore } from "@/store/authStore";
+import { useMemberPassport, useUpdatePassport } from "@/hooks/queries";
+import { WakingScreen } from "@/components/system/WakingScreen";
+import { ErrorState } from "@/components/system/ErrorState";
+import { ROUTES } from "@/constants/routes";
 import { ChevronRightIcon, PassportIcon, SparklesIcon, UserPlusIcon } from "@/components/icons";
-
-// api연동 전 하드코딩 목업 데이터입니다.
-const PASSPORT = {
-  name: "김노마드 / KIM NOMAD",
-  detail: "여권 M1234567 · 2031.04 만료",
-};
 
 function InfoRow({
   icon,
   title,
   subtitle,
   right,
+  href,
 }: {
   icon: ReactNode;
   title: string;
   subtitle: string;
   right: ReactNode;
+  href?: string;
 }) {
-  return (
-    <div className="flex items-center gap-3.5 py-2.5">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#D1EDFB] text-sky-500">
+  const content = (
+    <>
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-500">
         {icon}
       </div>
       <div className="flex-1">
-        <p className="text-sm text-neutral-900">{title}</p>
-        <p className="mt-1 text-[13px] text-[#BEC7D4]">{subtitle}</p>
+        <p className="text-sm font-medium text-neutral-900">{title}</p>
+        <p className="mt-0.5 text-xs text-neutral-400">{subtitle}</p>
       </div>
       {right}
-    </div>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5">
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className="flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5">{content}</div>;
 }
 
 export function MyPagePassportInfoPage() {
-  const [autoFill, setAutoFill] = useState(true);
+  const member = useAuthStore((state) => state.member);
+  const memberId = member ? Number(member.id) : null;
+  const { data: passport, isLoading, isError, refetch } = useMemberPassport(memberId);
+  const updatePassportMutation = useUpdatePassport(memberId);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -54,26 +68,45 @@ export function MyPagePassportInfoPage() {
 
         <p className="text-sm text-neutral-400">면세 구매와 항공편 등록에 사용되는 정보입니다.</p>
 
-        <div className="flex flex-col divide-y divide-sky-900/10 rounded-[20px] bg-[#E8F6FD] px-5 py-2">
-          <InfoRow
-            icon={<PassportIcon className="h-5 w-4" />}
-            title={PASSPORT.name}
-            subtitle={PASSPORT.detail}
-            right={<ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-300" />}
-          />
-          <InfoRow
-            icon={<UserPlusIcon className="h-6 w-6" />}
-            title="탑승객 추가"
-            subtitle="가족 · 동반자 정보 등록"
-            right={<ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-300" />}
-          />
-          <InfoRow
-            icon={<SparklesIcon className="h-6 w-6" />}
-            title="자동 입력 사용"
-            subtitle="면세 결제 시 여권 정보 자동 채움"
-            right={<Toggle checked={autoFill} onChange={setAutoFill} label="자동 입력 사용" />}
-          />
-        </div>
+        {isLoading && <WakingScreen />}
+        {isError && <ErrorState onRetry={() => refetch()} />}
+
+        {passport && (
+          <div className="flex flex-col gap-3">
+            <InfoRow
+              icon={<PassportIcon className="h-5 w-4" />}
+              title={passport.name}
+              subtitle={passport.formattedDetail}
+              right={<ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-300" />}
+              href={ROUTES.myPagePassportEdit}
+            />
+            <InfoRow
+              icon={<UserPlusIcon className="h-6 w-6" />}
+              title="탑승객 추가"
+              subtitle="가족 · 동반자 정보 등록"
+              right={<ChevronRightIcon className="h-3 w-2 shrink-0 text-neutral-300" />}
+              href={ROUTES.myPagePassportCompanion}
+            />
+            <InfoRow
+              icon={<SparklesIcon className="h-6 w-6" />}
+              title="자동 입력 사용"
+              subtitle="면세 결제 시 여권 정보 자동 채움"
+              right={
+                <Toggle
+                  checked={passport.autoFill}
+                  onChange={(value) => {
+                    updatePassportMutation.mutate({
+                      passportNumber: passport.passportNumber,
+                      expiryDate: passport.expiryDate,
+                      autoFill: value,
+                    });
+                  }}
+                  label="자동 입력 사용"
+                />
+              }
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-auto">

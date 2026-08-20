@@ -6,18 +6,23 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { Toggle } from "@/components/ui/Toggle";
 import { useAuthStore } from "@/store/authStore";
-import { useMemberSummary, useUpdateSettings } from "@/hooks/queries";
+import { useMemberSummary, useMyCoupons, useUpdateSettings } from "@/hooks/queries";
 import { ROUTES } from "@/constants/routes";
 import {
-  BellIcon,
-  CardIcon,
+  AppVersionIcon,
   ChevronRightIcon,
   CouponIcon,
-  LockIcon,
-  PassportIcon,
+  EditProfileIcon,
+  InquiryBubbleIcon,
+  LockOutlineIcon,
+  MarketingBellIcon,
+  MileageStarIcon,
+  PassportBookIcon,
+  PaymentMethodsIcon,
   PencilIcon,
-  StarIcon,
-  UserIcon,
+  QuestionCircleIcon,
+  TermsIcon,
+  TripNotificationIcon,
 } from "@/components/icons";
 
 function StatButton({ label, value, href }: { label: string; value: string; href: string }) {
@@ -102,6 +107,9 @@ export function MyPage() {
   const memberId = member ? Number(member.id) : null;
   const { data: summary } = useMemberSummary(memberId);
   const updateSettings = useUpdateSettings(memberId);
+  const { data: coupons } = useMyCoupons(memberId);
+  const urgentCouponCount =
+    coupons?.items.filter((item) => item.urgent && item.status === "AVAILABLE").length ?? 0;
 
   const settings = summary?.settings;
   const toggleSetting = (key: keyof NonNullable<typeof settings>, value: boolean) => {
@@ -178,11 +186,11 @@ export function MyPage() {
 
         <SectionCard title="마일리지">
           <MenuRow
-            icon={<StarIcon className="h-5 w-5" />}
+            icon={<MileageStarIcon className="h-5 w-5" />}
             title="마일리지 상세 내역"
             subtitle="적립 · 사용 · 소멸예정"
             badge="등록됨"
-            href={ROUTES.nomadMiles}
+            href={ROUTES.myPageMilesHistory}
           />
           <MenuRow
             icon={<CouponIcon className="h-4 w-5" />}
@@ -190,32 +198,34 @@ export function MyPage() {
             subtitle={
               summary ? `사용 가능 ${summary.couponCount}장` : "쿠폰 · 혜택 보관함"
             }
+            badge={urgentCouponCount > 0 ? `만료 임박 ${urgentCouponCount}장` : undefined}
+            badgeTone="warning"
             href={ROUTES.myPageCoupons}
           />
         </SectionCard>
 
         <SectionCard title="계정 관리">
           <MenuRow
-            icon={<UserIcon className="h-5 w-5" />}
+            icon={<EditProfileIcon className="h-5 w-5" />}
             title="회원정보 수정"
             subtitle="이름 · 연락처 · 이메일"
             href={ROUTES.myPageEditProfile}
           />
           <MenuRow
-            icon={<LockIcon className="h-4 w-5" />}
+            icon={<LockOutlineIcon className="h-5 w-5" />}
             title="비밀번호 재설정"
             subtitle="마지막 변경 3개월 전"
             href={ROUTES.myPagePasswordReset}
           />
           <MenuRow
-            icon={<PassportIcon className="h-4 w-5" />}
+            icon={<PassportBookIcon className="h-5 w-5" />}
             title="여권 · 탑승객 정보"
             subtitle="면세 구매 시 자동 입력"
             badge="등록됨"
             href={ROUTES.myPagePassportInfo}
           />
           <MenuRow
-            icon={<CardIcon className="h-5 w-4" />}
+            icon={<PaymentMethodsIcon className="h-5 w-5" />}
             title="결제 수단"
             subtitle="등록된 카드 관리"
             href={ROUTES.myPagePaymentMethods}
@@ -224,7 +234,7 @@ export function MyPage() {
 
         <SectionCard title="알림 · 설정">
           <MenuRow
-            icon={<BellIcon className="h-4 w-4" />}
+            icon={<MileageStarIcon className="h-4 w-4" />}
             title="마일리지 알림"
             subtitle="적립 · 소멸 예정 안내"
             toggle={{
@@ -233,7 +243,7 @@ export function MyPage() {
             }}
           />
           <MenuRow
-            icon={<BellIcon className="h-4 w-4" />}
+            icon={<TripNotificationIcon className="h-4 w-4" />}
             title="여정 알림"
             subtitle="탑승 · 게이트 변경 안내"
             toggle={{
@@ -242,7 +252,7 @@ export function MyPage() {
             }}
           />
           <MenuRow
-            icon={<BellIcon className="h-4 w-4" />}
+            icon={<MarketingBellIcon className="h-4 w-4" />}
             title="마케팅 · 혜택 수신"
             subtitle="팝업 · 프로모션 소식"
             toggle={{
@@ -254,25 +264,25 @@ export function MyPage() {
 
         <SectionCard title="고객 지원">
           <MenuRow
-            icon={<UserIcon className="h-5 w-5" />}
+            icon={<InquiryBubbleIcon className="h-5 w-5" />}
             title="1:1 문의"
-            subtitle="답변 1건"
+            subtitle="답변 2건"
             href={ROUTES.myPageInquiry}
           />
           <MenuRow
-            icon={<PassportIcon className="h-4 w-5" />}
+            icon={<TermsIcon className="h-5 w-5" />}
             title="약관 및 정책"
             subtitle="이용약관 · 개인정보처리방침"
             href={ROUTES.myPageTerms}
           />
           <MenuRow
-            icon={<StarIcon className="h-5 w-5" />}
+            icon={<QuestionCircleIcon className="h-5 w-5" />}
             title="자주 묻는 질문"
             subtitle="궁금한 점을 빠르게 확인해보세요"
             href={ROUTES.myPageFaq}
           />
           <MenuRow
-            icon={<CardIcon className="h-5 w-4" />}
+            icon={<AppVersionIcon className="h-5 w-5" />}
             title="앱 버전"
             subtitle="HER-STORY"
             badge="최신"

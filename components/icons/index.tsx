@@ -1227,3 +1227,272 @@ export function DiscountIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function AlertTriangleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="18"
+      viewBox="0 0 20 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M8.257 1.5c.77-1.333 2.716-1.333 3.486 0l7.312 12.667c.77 1.333-.192 3-1.732 3H2.677c-1.54 0-2.502-1.667-1.732-3L8.257 1.5z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M10 6.5v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="10" cy="13.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function MileageStarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M6.313 15.458L9.988 13.242L13.663 15.488L12.7 11.288L15.938 8.488L11.679 8.108L9.988 4.142L8.296 8.079L4.038 8.458L7.275 11.288L6.313 15.458ZM9.988 15.983L5.146 18.9C4.932 19.036 4.709 19.094 4.475 19.075C4.242 19.056 4.038 18.978 3.863 18.842C3.688 18.706 3.552 18.536 3.454 18.332C3.357 18.128 3.338 17.899 3.396 17.646L4.679 12.133L0.392 8.429C0.197 8.254 0.076 8.055 0.028 7.831C-0.02 7.607 -0.006 7.388 0.071 7.175C0.148 6.962 0.265 6.787 0.421 6.65C0.577 6.513 0.791 6.426 1.063 6.388L6.721 5.892L8.909 0.7C9.006 0.467 9.157 0.292 9.361 0.175C9.566 0.058 9.775 0 9.988 0C10.201 0 10.41 0.058 10.614 0.175C10.819 0.292 10.97 0.467 11.067 0.7L13.254 5.892L18.913 6.388C19.185 6.426 19.399 6.514 19.554 6.65C19.71 6.786 19.827 6.961 19.904 7.175C19.982 7.389 19.997 7.608 19.949 7.832C19.9 8.056 19.779 8.255 19.584 8.429L15.296 12.133L16.579 17.646C16.638 17.899 16.618 18.127 16.521 18.332C16.424 18.536 16.288 18.706 16.113 18.842C15.938 18.977 15.734 19.055 15.5 19.075C15.267 19.095 15.043 19.037 14.829 18.9L9.988 15.983Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function EditProfileIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M11.339 7.734C10.915 7.909 10.46 8 10 8C9.072 8 8.181 7.631 7.525 6.975C6.869 6.319 6.5 5.428 6.5 4.5C6.5 3.572 6.869 2.681 7.525 2.025C8.181 1.369 9.072 1 10 1C10.46 1 10.915 1.091 11.339 1.266C11.764 1.442 12.15 1.7 12.475 2.025C12.8 2.35 13.058 2.736 13.234 3.161C13.41 3.585 13.5 4.04 13.5 4.5C13.5 4.96 13.41 5.415 13.234 5.839C13.058 6.264 12.8 6.65 12.475 6.975C12.15 7.3 11.764 7.558 11.339 7.734Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M1 19V18.4C1 16.16 1 15.04 1.436 14.184C1.819 13.431 2.431 12.82 3.184 12.436C4.04 12 5.16 12 7.4 12H12.6C14.84 12 15.96 12 16.816 12.436C17.569 12.82 18.18 13.431 18.564 14.184C19 15.04 19 16.16 19 18.4V19H1Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function LockOutlineIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM9 6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8H9V6ZM18 20H6V10H18V20ZM12 17C13.1 17 14 16.1 14 15C14 13.9 13.1 13 12 13C10.9 13 10 13.9 10 15C10 16.1 10.9 17 12 17Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function PassportBookIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M7.25 7C7.25 6.801 7.329 6.61 7.47 6.47C7.61 6.329 7.801 6.25 8 6.25H16C16.199 6.25 16.39 6.329 16.53 6.47C16.671 6.61 16.75 6.801 16.75 7C16.75 7.199 16.671 7.39 16.53 7.53C16.39 7.671 16.199 7.75 16 7.75H8C7.801 7.75 7.61 7.671 7.47 7.53C7.329 7.39 7.25 7.199 7.25 7ZM8 9.75C7.801 9.75 7.61 9.829 7.47 9.97C7.329 10.11 7.25 10.301 7.25 10.5C7.25 10.699 7.329 10.89 7.47 11.03C7.61 11.171 7.801 11.25 8 11.25H13C13.199 11.25 13.39 11.171 13.53 11.03C13.671 10.89 13.75 10.699 13.75 10.5C13.75 10.301 13.671 10.11 13.53 9.97C13.39 9.829 13.199 9.75 13 9.75H8Z"
+        fill="currentColor"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9.945 1.25C8.578 1.25 7.475 1.25 6.608 1.367C5.708 1.487 4.95 1.747 4.348 2.348C3.746 2.95 3.488 3.708 3.367 4.608C3.25 5.475 3.25 6.578 3.25 7.945V16.055C3.25 17.422 3.25 18.525 3.367 19.392C3.487 20.292 3.747 21.05 4.348 21.652C4.95 22.254 5.708 22.512 6.608 22.634C7.475 22.75 8.578 22.75 9.945 22.75H14.055C15.422 22.75 16.525 22.75 17.392 22.634C18.292 22.512 19.05 22.254 19.652 21.652C20.254 21.05 20.512 20.292 20.634 19.392C20.75 18.525 20.75 17.422 20.75 16.055V7.945C20.75 6.578 20.75 5.475 20.634 4.608C20.512 3.708 20.254 2.95 19.652 2.348C19.05 1.746 18.292 1.488 17.392 1.367C16.525 1.25 15.422 1.25 14.055 1.25H9.945ZM5.41 3.409C5.687 3.132 6.075 2.952 6.81 2.853C7.564 2.752 8.566 2.75 10.001 2.75H14.001C15.436 2.75 16.437 2.752 17.193 2.853C17.927 2.952 18.315 3.133 18.592 3.409C18.869 3.686 19.049 4.074 19.148 4.809C19.249 5.563 19.251 6.565 19.251 8V15.25H7.782C6.964 15.25 6.406 15.25 5.927 15.378C5.506 15.492 5.108 15.677 4.75 15.926V8C4.75 6.565 4.752 5.563 4.853 4.808C4.952 4.074 5.134 3.686 5.41 3.409ZM4.777 18.249C4.792 18.603 4.816 18.914 4.853 19.192C4.952 19.926 5.133 20.314 5.409 20.591C5.686 20.868 6.074 21.048 6.809 21.147C7.563 21.248 8.565 21.25 10 21.25H14C15.435 21.25 16.436 21.248 17.192 21.147C17.926 21.048 18.314 20.867 18.591 20.591C18.868 20.314 19.048 19.926 19.147 19.191C19.23 18.576 19.246 17.796 19.249 16.75H7.898C6.92 16.75 6.578 16.756 6.315 16.827C5.963 16.922 5.638 17.1 5.37 17.348C5.102 17.596 4.899 17.905 4.777 18.249Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function PaymentMethodsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="16"
+      viewBox="0 0 20 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M1 6H19M5 11H5.01M9 11H11M1 4C1 3.204 1.316 2.441 1.879 1.879C2.441 1.316 3.204 1 4 1H16C16.796 1 17.559 1.316 18.121 1.879C18.684 2.441 19 3.204 19 4V12C19 12.796 18.684 13.559 18.121 14.121C17.559 14.684 16.796 15 16 15H4C3.204 15 2.441 14.684 1.879 14.121C1.316 13.559 1 12.796 1 12V4Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function TripNotificationIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="16"
+      height="17"
+      viewBox="0 0 13 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M6.084 11.28L1.134 13.396C0.956 13.466 0.79 13.48 0.637 13.439C0.483 13.397 0.353 13.322 0.245 13.215C0.137 13.108 0.062 12.973 0.021 12.811C-0.021 12.649 0 12.486 0.084 12.321L5.351 0.484C5.421 0.322 5.525 0.201 5.662 0.12C5.798 0.04 5.939 0 6.084 0C6.228 0 6.369 0.04 6.506 0.12C6.642 0.2 6.746 0.321 6.816 0.484L12.084 12.321C12.167 12.486 12.188 12.65 12.147 12.811C12.105 12.972 12.03 13.107 11.923 13.215C11.815 13.323 11.685 13.398 11.531 13.439C11.377 13.48 11.211 13.466 11.034 13.395L6.084 11.28Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function MarketingBellIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="18"
+      height="21"
+      viewBox="0 0 18 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M9 1V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M3 9C3 5.69 5.69 3 9 3C12.31 3 15 5.69 15 9V15C16 15 17 16 17 17H9H1C1 16 2 15 3 15V9Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 18C7 19.1 7.9 20 9 20C10.1 20 11 19.1 11 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function InquiryBubbleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M18 4H17V12C17 12.55 16.55 13 16 13H4V14C4 15.1 4.9 16 6 16H16L20 20V6C20 4.9 19.1 4 18 4ZM15 9V2C15 0.9 14.1 0 13 0H2C0.9 0 0 0.9 0 2V15L4 11H13C14.1 11 15 10.1 15 9Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function TermsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="16"
+      height="20"
+      viewBox="0 0 18 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M6 12H12M6 16H9M1 3V19C1 19.53 1.211 20.039 1.586 20.414C1.961 20.789 2.47 21 3 21H15C15.53 21 16.039 20.789 16.414 20.414C16.789 20.039 17 19.53 17 19V7.342C17 7.076 16.947 6.812 16.843 6.566C16.74 6.321 16.589 6.098 16.398 5.912L11.958 1.57C11.584 1.205 11.083 1 10.56 1H3C2.47 1 1.961 1.211 1.586 1.586C1.211 1.961 1 2.47 1 3Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11 1V5C11 5.53 11.211 6.039 11.586 6.414C11.961 6.789 12.47 7 13 7H17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function QuestionCircleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M10 8.484C10.5 7.494 11 7 12 7C13.246 7 14 7.989 14 8.978C14 9.967 13.5 10.461 12 11.451V13M12 16.5V17"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function AppVersionIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M1 10H2M10 1V2M18 10H19M10 18V19M3.6 3.6L4.3 4.3M16.4 3.6L15.7 4.3M15.7 15.7L16.4 16.4M4.3 15.7L3.6 16.4M6 10C6 11.061 6.421 12.078 7.172 12.828C7.922 13.579 8.939 14 10 14C11.061 14 12.078 13.579 12.828 12.828C13.579 12.078 14 11.061 14 10C14 8.939 13.579 7.922 12.828 7.172C12.078 6.421 11.061 6 10 6C8.939 6 7.922 6.421 7.172 7.172C6.421 7.922 6 8.939 6 10Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
