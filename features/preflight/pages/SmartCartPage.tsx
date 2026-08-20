@@ -6,11 +6,14 @@ import Link from "next/link";
 import { useJourneyStore } from "@/store/journeyStore";
 import { useAuthStore } from "@/store/authStore";
 import { useAddToCart, useCart, useStyleRecommendations } from "@/hooks/queries";
+import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
+import { WakingScreen } from "@/components/system/WakingScreen";
 import { ROUTES } from "@/constants/routes";
 import type { Product, ProductCategory } from "@/types/api.types";
-import { ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
+import { CheckCircleIcon, ShirtIcon, SpotIcon, TicketIcon } from "@/components/icons";
 
 const CATEGORY_LABELS: Record<ProductCategory, string> = {
   WATERPROOF: "방수",
@@ -42,17 +45,24 @@ export function SmartCartPage() {
 
   const [activeFilter, setActiveFilter] = useState(0);
   const [pendingProductId, setPendingProductId] = useState<number | null>(null);
+  const [justAdded, setJustAdded] = useState(false);
 
   const handleAdd = (productId: number) => {
     setPendingProductId(productId);
     addToCart.mutate(
       { productId },
-      { onSettled: () => setPendingProductId(null) }
+      {
+        onSuccess: () => setJustAdded(true),
+        onSettled: () => setPendingProductId(null),
+      }
     );
   };
 
   const hero = products?.[0];
-  const restProducts = products?.slice(1) ?? [];
+  const heroInCart = hero ? (cart?.items.some((item) => item.productId === hero.id) ?? false) : false;
+  // 추천 상품이 1개뿐일 때도(hero만 있고 slice(1)이 비어) 큐레이션 목록이 통째로
+  // 비어 보이지 않도록, hero를 제외하지 않고 전체 목록을 그대로 필터링합니다.
+  const restProducts = products ?? [];
   const activeCategories = CATEGORY_FILTERS[activeFilter].categories;
   const filteredProducts = activeCategories
     ? restProducts.filter((product) => activeCategories.includes(product.category))
@@ -64,47 +74,63 @@ export function SmartCartPage() {
 
       <div className="flex flex-1 flex-col px-6 py-5">
         {!journeyId && (
-          <Link
-            href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
-          >
-            <TicketIcon className="mb-1 text-neutral-400" />
-            <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
-            <p className="text-sm text-neutral-400">
-              탑승권을 스캔하면 맞춤 스타일 추천을 볼 수 있어요
-            </p>
-            <span className="mt-3 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-sky-50">
-              탑승권 스캔하기
-            </span>
-          </Link>
+          <>
+            <BackButton className="mb-3" />
+            <Link
+              href={ROUTES.boardingPass}
+              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            >
+              <TicketIcon className="mb-1 text-neutral-400" />
+              <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
+              <p className="text-sm text-neutral-400">
+                탑승권을 스캔하면 맞춤 스타일 추천을 볼 수 있어요
+              </p>
+              <span className="mt-3 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-sky-50">
+                탑승권 스캔하기
+              </span>
+            </Link>
+          </>
         )}
 
         {journeyId && isLoading && (
-          <div className="h-[420px] animate-pulse rounded-[20px] bg-neutral-100" />
+          <>
+            <BackButton className="mb-3" />
+            <WakingScreen message="맞춤 스타일 추천을 불러오는 중입니다." />
+          </>
         )}
 
         {journeyId && products && (
           <>
-            <div className="mb-5 flex items-center gap-2">
-              <span className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50">
-                <ShirtIcon className="h-4 w-4 shrink-0" />
-                피팅 {cart?.items.length ?? 0}개 준비 완료
-              </span>
-              <span className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900">
+            <div className="mb-5 flex items-stretch gap-2">
+              <BackButton className="self-center" />
+              <Link
+                href={ROUTES.vipFitting}
+                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+              >
+                <ShirtIcon className="h-6 w-6 shrink-0" />
+                <span className="flex flex-col">
+                  <span>피팅 {cart?.items.length ?? 0}개 준비 완료</span>
+                  <span className="ml-1.5">[피팅룸으로 가기]</span>
+                </span>
+              </Link>
+              <Link
+                href={ROUTES.terminalMap}
+                className="flex items-center gap-1 rounded-full bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-900"
+              >
                 <SpotIcon className="h-3.5 w-3.5 shrink-0 text-neutral-500" />
                 터미널 1
-              </span>
+              </Link>
             </div>
 
             {hero && (
               <div className="mb-5 rounded-[20px] bg-neutral-100 p-3.5">
-                <div className="relative mb-3 h-[180px] overflow-hidden rounded-[16px] bg-neutral-200">
+                <div className="relative mb-3 h-[250px] overflow-hidden rounded-[16px] bg-neutral-200">
                   <Image
                     src={hero.imageUrl}
                     alt={hero.name}
                     fill
                     sizes="360px"
-                    className="object-contain"
+                    className="object-cover"
                   />
                 </div>
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-sky-700">
@@ -115,12 +141,28 @@ export function SmartCartPage() {
                 <button
                   type="button"
                   onClick={() => handleAdd(hero.id)}
-                  disabled={!memberId || pendingProductId === hero.id}
-                  className="w-full rounded-[20px] bg-sky-500 py-3 text-sm font-semibold text-sky-50 disabled:opacity-40"
+                  disabled={!memberId || heroInCart || pendingProductId === hero.id}
+                  className={`flex w-full items-center justify-center gap-1.5 rounded-[20px] py-3 text-sm font-semibold disabled:opacity-40 ${
+                    heroInCart ? "bg-neutral-200 text-neutral-500" : "bg-sky-500 text-sky-50"
+                  }`}
                 >
-                  스마트 피팅 담기
+                  {heroInCart && <CheckCircleIcon className="h-4 w-4 shrink-0" />}
+                  {heroInCart ? "담기 완료" : "스마트 피팅 담기"}
                 </button>
               </div>
+            )}
+
+            {justAdded && (
+              <Link
+                href={ROUTES.vipFitting}
+                className="animate-slide-up-in mb-5 flex items-center justify-between gap-3 rounded-[20px] bg-sky-500 px-5 py-4 text-sky-50"
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold">
+                  <CheckCircleIcon className="h-4 w-4 shrink-0" />
+                  장바구니에 담았어요. 피팅룸에서 바로 입어보세요
+                </span>
+                <span className="shrink-0 text-lg">›</span>
+              </Link>
             )}
 
             <div className="mb-5 flex items-center gap-2">
@@ -140,16 +182,27 @@ export function SmartCartPage() {
               ))}
             </div>
 
-            <div className="mb-4 flex flex-col gap-3.5">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  disabled={!memberId || pendingProductId === product.id}
-                  onAdd={() => handleAdd(product.id)}
-                />
-              ))}
-            </div>
+            {filteredProducts.length === 0 ? (
+              <p className="py-8 text-center text-sm text-neutral-400">
+                이 카테고리에는 추천 상품이 아직 없어요
+              </p>
+            ) : (
+              <div className="mb-4 flex flex-col gap-3.5">
+                {filteredProducts.map((product, index) => {
+                  const inCart = cart?.items.some((item) => item.productId === product.id) ?? false;
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      index={index}
+                      disabled={!memberId || inCart || pendingProductId === product.id}
+                      onAdd={() => handleAdd(product.id)}
+                      inCart={inCart}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -163,15 +216,27 @@ export function SmartCartPage() {
 
 function ProductCard({
   product,
+  index,
   disabled,
   onAdd,
+  inCart,
 }: {
   product: Product;
+  index: number;
   disabled: boolean;
   onAdd: () => void;
+  inCart: boolean;
 }) {
+  const { ref, inView } = useInView<HTMLDivElement>();
+
   return (
-    <div className="flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5">
+    <div
+      ref={ref}
+      className={`flex gap-3 rounded-[20px] bg-neutral-100/60 p-3.5 transition-all duration-700 ease-out ${
+        inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+      }`}
+      style={{ transitionDelay: inView ? `${index * 100}ms` : "0ms" }}
+    >
       <div className="relative h-[75px] w-[75px] shrink-0 overflow-hidden rounded-2xl bg-neutral-200">
         <Image src={product.imageUrl} alt={product.name} fill sizes="75px" className="object-cover" />
       </div>
@@ -187,9 +252,14 @@ function ProductCard({
           type="button"
           onClick={onAdd}
           disabled={disabled}
-          className="mt-2 self-end rounded-[20px] border border-sky-500 bg-sky-50 px-3.5 py-1 text-sm font-medium text-sky-500 disabled:opacity-40"
+          className={`mt-2 flex items-center gap-1 self-end rounded-[20px] border px-3.5 py-1 text-sm font-medium disabled:opacity-40 ${
+            inCart
+              ? "border-neutral-300 bg-neutral-100 text-neutral-500"
+              : "border-sky-500 bg-sky-50 text-sky-500"
+          }`}
         >
-          + 담기
+          {inCart && <CheckCircleIcon className="h-3.5 w-3.5 shrink-0" />}
+          {inCart ? "담김" : "+ 담기"}
         </button>
       </div>
     </div>

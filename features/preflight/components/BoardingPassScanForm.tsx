@@ -42,13 +42,9 @@ export function BoardingPassScanForm() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <h1 className="mb-4 ml-6 mt-6 text-[28px] font-bold text-[#1E1E1E]">
+      <h1 className="mb-6 ml-6 mt-6 text-[28px] font-bold text-[#1E1E1E]">
         탑승권을 스캔해주세요
       </h1>
-
-      <div className="mx-6 mb-4 rounded-[20px] bg-[#D9D9D980] px-4 py-2 text-center">
-        <p className="text-[15px] text-[#0A0A0A]">OCR로 인쇄 탑승권도 인식됩니다.</p>
-      </div>
 
       {cameraOpen ? (
         <div className="mx-6 mb-3 rounded-[20px] border-[3px] border-[#0EA5E9] bg-black p-1">
@@ -121,8 +117,6 @@ export function BoardingPassScanForm() {
           </button>
         </div>
       )}
-
-      <div className="h-[60px] bg-[#E7F6FC]" aria-hidden />
     </div>
   );
 }

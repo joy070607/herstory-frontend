@@ -8,9 +8,12 @@ import { useJourneyAnalysis } from "@/hooks/queries";
 import { useInView } from "@/hooks/useInView";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { WakingScreen } from "@/components/system/WakingScreen";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
 import { WeatherIcon, TicketIcon } from "@/components/icons";
+import { parseWeatherInfo } from "@/utils/weather";
+import { stripAiTagPrefix } from "@/utils/format";
 import type { Product, ProductCategory } from "@/types/api.types";
 
 const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
@@ -23,30 +26,19 @@ const CATEGORY_RECOMMEND_LABEL: Record<ProductCategory, string> = {
   LIMITED_EDITION: "한정판 아이템을 추천해요",
 };
 
-// weatherInfo는 자유 문장이라("Bangkok 현지 기후: 기온 27.3°C, ... (우천/스콜 예상)")
-// 온도/날씨 요약만 정규식으로 뽑아 씁니다.
-function parseWeather(weatherInfo: string) {
-  const tempMatch = weatherInfo.match(/기온\s*([\d.]+)\s*°C/);
-  const conditionMatch = weatherInfo.match(/\(([^)]+)\)/);
-  return {
-    temp: tempMatch ? Math.round(Number(tempMatch[1])) : null,
-    condition: conditionMatch ? conditionMatch[1] : null,
-  };
-}
-
 export function StyleEnginePage() {
   const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: analysis, isLoading } = useJourneyAnalysis(journeyId);
   const [showRain, setShowRain] = useState(true);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const weather = analysis ? parseWeather(analysis.weatherInfo) : null;
+  const weather = analysis ? parseWeatherInfo(analysis.weatherInfo) : null;
   const selectedProduct =
     analysis?.recommendedProducts.find((product) => product.id === selectedId) ??
     analysis?.recommendedProducts[0];
   const recommendLabel = selectedProduct
     ? CATEGORY_RECOMMEND_LABEL[selectedProduct.category]
-    : analysis?.recommendationReason;
+    : analysis && stripAiTagPrefix(analysis.recommendationReason);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -68,7 +60,7 @@ export function StyleEnginePage() {
         )}
 
         {journeyId && isLoading && (
-          <div className="h-[420px] animate-pulse rounded-[20px] bg-neutral-100" />
+          <WakingScreen message="AI가 여정에 맞는 스타일을 분석하고 있어요." />
         )}
 
         {journeyId && analysis && (
@@ -76,7 +68,7 @@ export function StyleEnginePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-500 px-6 pb-6 pt-7 text-left"
+              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
             >
               {showRain && <RainOverlay />}
               <div className="relative z-10 flex items-center gap-3">
@@ -86,15 +78,15 @@ export function StyleEnginePage() {
                     {weather?.temp != null ? `${weather.temp}°` : "-"}
                   </p>
                   <p className="mt-1 text-sm text-sky-50/90">
-                    {weather?.condition ?? analysis.climateSummary}
+                    {weather?.condition ?? analysis.weatherInfo}
                   </p>
                 </div>
               </div>
-              <div className="relative z-10 border-t border-sky-400/50 pt-4">
-                <p className="text-base text-sky-50/90">
+              <div className="relative z-10 rounded-[14px] bg-black/15 px-4 py-4">
+                <p className="text-sm font-semibold text-white">
                   비소식 {analysis.rainProbability} 예상됩니다.
                 </p>
-                <p className="mt-1 text-xl font-bold leading-snug text-sky-50">{recommendLabel}</p>
+                <p className="mt-1.5 text-xl font-bold leading-snug text-white">{recommendLabel}</p>
               </div>
             </button>
 

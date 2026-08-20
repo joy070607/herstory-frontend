@@ -6,6 +6,7 @@ import { useFlightLookup, useLiveCard } from "@/hooks/queries";
 import { useCountdown } from "@/hooks/useCountdown";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
 import { FLIGHT_STATUS_STYLE } from "@/constants/flightStatus";
 import { formatFlightTime, formatMinutesKorean } from "@/utils/format";
@@ -42,7 +43,6 @@ export function LiveCardPage() {
   const { data: liveCard, isLoading } = useLiveCard(journeyId);
   // 30초마다 오는 서버 값 대신, 남은 시간은 초 단위로 직접 카운트다운합니다.
   const countdown = useCountdown(liveCard?.departureDateTime ?? null);
-  // 인천공항 실제 전광판과 1분 단위로 동기화되는 AODB 실시간 조회
   const { data: flightLookup } = useFlightLookup(liveCard?.flightNumber);
 
   return (
@@ -50,6 +50,8 @@ export function LiveCardPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-2 px-6 py-5">
+        <BackButton className="mb-1" />
+
         {journeyId && (isLoading || !liveCard) && (
           <div className="h-[320px] animate-pulse rounded-[20px] bg-neutral-100" />
         )}

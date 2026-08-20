@@ -25,6 +25,13 @@ export function formatFlightTime(isoDateTime: string): string {
   }).format(new Date(isoDateTime));
 }
 
+// recommendationReason 앞에 붙는 "[SILVER VIP AI 큐레이션]" 같은 내부 태그를 제거합니다.
+// 템플릿이 등급명 뒤에 항상 리터럴 "VIP"를 붙이기 때문에, VIP 등급 회원에게는
+// "[VIP VIP AI 큐레이션]"으로 중복되어 보이는 문제도 함께 해결됩니다.
+export function stripAiTagPrefix(text: string): string {
+  return text.replace(/^\[[^\]]*\]\s*/, "");
+}
+
 export function formatMinutesKorean(totalMinutes: number): string {
   if (totalMinutes <= 0) return "0분";
   if (totalMinutes < 60) return `약 ${totalMinutes}분`;

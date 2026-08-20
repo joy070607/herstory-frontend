@@ -1,18 +1,32 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
-import { useCart } from "@/hooks/queries";
+import { useJourneyStore } from "@/store/journeyStore";
+import { useCart, useStartFitting } from "@/hooks/queries";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
+import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
-import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
+import { HangerIcon, TicketIcon } from "@/components/icons";
 
 export function VipFittingPage() {
   const member = useAuthStore((state) => state.member);
   const memberId = member ? Number(member.id) : null;
+  const journeyId = useJourneyStore((state) => state.journeyId);
   const { data: cart, isLoading } = useCart(memberId);
+  const startFitting = useStartFitting();
+
+  const requestedJourneyId = useRef<string | null>(null);
+  useEffect(() => {
+    if (journeyId && requestedJourneyId.current !== journeyId) {
+      requestedJourneyId.current = journeyId;
+      startFitting.mutate(journeyId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [journeyId]);
 
   const items = cart?.items ?? [];
 
@@ -21,53 +35,60 @@ export function VipFittingPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col gap-6 px-5 py-6">
-        <div className="rounded-[20px] bg-[#E7F6FD] px-6 py-6">
-          <div className="mb-5 flex flex-col items-center gap-5">
-            <div className="flex h-[68px] w-[68px] items-center justify-center rounded-[24px] bg-sky-500">
-              <HangerIcon className="h-[30px] w-[34px]" />
-            </div>
-            <div className="flex flex-col items-center gap-2 text-center">
-              <p className="text-lg font-bold text-sky-800">Room 03 · 준비 중</p>
-              <p className="text-xs leading-relaxed text-sky-800">
-                선택하신 의상을 비치하고 있습니다.
-                <br />
-                준비가 완료되면 즉시 알려드립니다.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white"
-            >
-              피팅룸 위치 보기
-            </button>
-            <Link
-              href={ROUTES.smartCart}
-              className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500"
-            >
-              상품 추가
-            </Link>
-          </div>
-        </div>
+        <BackButton />
 
-        <div className="flex items-center gap-4 rounded-[20px] bg-neutral-50 px-6 py-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-            <UserIcon className="h-6 w-6" />
-          </div>
-          <div className="flex flex-1 flex-col gap-3">
-            <div>
-              <p className="text-sm font-bold text-neutral-900">엘레나 R.</p>
-              <p className="text-xs text-neutral-400">신뢰 판매원</p>
+        {!journeyId && (
+          <Link
+            href={ROUTES.boardingPass}
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+          >
+            <TicketIcon className="mb-1 text-neutral-400" />
+            <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
+            <p className="text-sm text-neutral-400">탑승권을 스캔하면 VIP 피팅을 신청할 수 있어요</p>
+          </Link>
+        )}
+
+        {journeyId && (
+          <div className="rounded-[20px] bg-[#E7F6FD] px-6 py-6">
+            <div className="mb-5 flex flex-col items-center gap-5">
+              <div className="flex h-[68px] w-[68px] items-center justify-center rounded-[24px] bg-sky-500">
+                <HangerIcon className="h-[30px] w-[34px] text-[#E6F7FF]" />
+              </div>
+              <div className="flex flex-col items-center gap-2 text-center">
+                {startFitting.isSuccess && startFitting.data ? (
+                  <p className="text-sm leading-relaxed text-sky-800">{startFitting.data.message}</p>
+                ) : startFitting.isError ? (
+                  <p className="text-sm leading-relaxed text-red-600">
+                    VIP 피팅 신청에 실패했어요. 다시 시도해 주세요.
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-lg font-bold text-sky-800">VIP 피팅 신청 중</p>
+                    <p className="text-xs leading-relaxed text-sky-800">
+                      선택하신 의상을 비치하고 있습니다.
+                      <br />
+                      준비가 완료되면 즉시 알려드립니다.
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-            <button
-              type="button"
-              className="self-start rounded-full border-2 border-[#BEC7D4] px-4 py-1 text-xs text-neutral-900"
-            >
-              메시지 보내기
-            </button>
+            <div className="flex items-center gap-4">
+              <Link
+                href={ROUTES.airportMap}
+                className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white"
+              >
+                피팅룸 위치 보기
+              </Link>
+              <Link
+                href={ROUTES.smartCart}
+                className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500"
+              >
+                상품 추가
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           <h2 className="mb-3.5 text-base font-bold text-neutral-900">
@@ -84,7 +105,7 @@ export function VipFittingPage() {
 
           {memberId && cart && items.length === 0 && (
             <Link
-              href={ROUTES.boardingPass}
+              href={ROUTES.smartCart}
               className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center"
             >
               <TicketIcon className="mb-1 text-neutral-400" />
@@ -120,6 +141,15 @@ export function VipFittingPage() {
             </div>
           )}
         </div>
+
+        {journeyId && (
+          <Link
+            href={ROUTES.fastCheckout}
+            className="rounded-[20px] bg-sky-500 py-3.5 text-center text-base font-bold text-white"
+          >
+            구매하기
+          </Link>
+        )}
       </div>
 
       <div className="mt-auto">

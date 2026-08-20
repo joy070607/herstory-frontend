@@ -12,13 +12,12 @@ import { EyeIcon, EyeOffIcon } from "@/components/icons";
 import { Logo } from "@/components/Logo";
 import type { Member } from "@/types/api.types";
 
-// Render 무료 티어 백엔드는 오래 쉬면 콜드스타트로 최대 90초까지 걸릴 수 있는데,
-// 이 경우 axios 타임아웃/네트워크 에러(응답 status 없음)로 잡혀서 실제 비밀번호
-// 오류와 똑같은 문구가 뜨면 혼란스러우니 구분해서 안내합니다.
+// 네트워크 타임아웃 등으로 응답 status가 없는 경우 실제 비밀번호 오류와
+// 똑같은 문구가 뜨면 혼란스러우니 구분해서 안내합니다.
 function resolveLoginErrorMessage(error: ApiError | null): string {
   if (!error) return "";
   if (error.status == null) {
-    return "서버 응답이 지연되고 있어요 (콜드스타트일 수 있어요). 잠시 후 다시 시도해주세요.";
+    return "일시적인 오류로 로그인에 실패했습니다. 잠시 후 다시 시도해주세요.";
   }
   return error.message || "로그인에 실패했습니다.";
 }
@@ -46,7 +45,7 @@ export function LoginPage() {
       </div>
 
       <form
-        className="flex flex-col gap-7 px-9 pb-8"
+        className="flex flex-col gap-7 px-9 pb-8 pt-5"
         onSubmit={(e) => {
           e.preventDefault();
           loginMutation.mutate();
@@ -123,12 +122,6 @@ export function LoginPage() {
             비밀번호 찾기
           </Link>
         </div>
-
-        {loginMutation.isPending && (
-          <p className="text-xs text-neutral-400">
-            서버를 깨우는 중일 수 있어요. 최대 1분 정도 걸릴 수 있습니다.
-          </p>
-        )}
 
         {loginMutation.isError && (
           <p className="text-xs text-red-600">{resolveLoginErrorMessage(loginMutation.error)}</p>

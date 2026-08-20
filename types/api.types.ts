@@ -111,7 +111,6 @@ export interface LiveCardResponse {
 }
 
 // 실제 API 스키마 그대로 (GET /api/v1/flight/lookup?flightNumber=)
-// 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
 export interface FlightLookupResponse {
   flightNumber: string;
   airlineName: string;
@@ -314,6 +313,14 @@ export interface CareGoogleMapsSpot {
   careServiceAvailable: string;
 }
 
+// 실제 API 스키마 그대로 (GET /api/v1/style/popup-spots?memberId=)
+export interface PopupSpotsResponse {
+  destination: string;
+  pushNotificationMessage: string;
+  visetosSpots: CareGoogleMapsSpot[];
+  recommendedItems: Product[];
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/journey/apple-wallet-pass/{journeyId})
 export interface AppleWalletPassField {
   key: string;
@@ -361,21 +368,42 @@ export interface CheckInResponse {
   visitedAt: string;
 }
 
-// GET /api/v1/store/re-entry-options/{memberId}
-export interface ReEntryResponse {
+// 실제 API 스키마 그대로 (POST /api/v1/airport/{journeyId}/fitting)
+export interface FittingResponse {
+  journeyId: number;
   memberId: number;
-  memberName: string;
-  purchaseStatus: PurchaseStatus;
-  hasPendingCart: boolean;
-  pendingCartItemCount: number;
-  recommendedAction: string;
-  availableOptions: string[];
+  choiceFit: boolean;
+  message: string;
 }
 
 // 실제 API 스키마 그대로 (POST /api/v1/order/checkout)
 export interface CheckoutRequest {
   memberId: number;
   journeyId: number;
+  pickupMonth?: string;
+  pickupDay?: string;
+  pickupTime?: string;
+  pickupLocation?: string;
+}
+
+// 실제 API 스키마 그대로 (GET /api/v1/airport/{journeyId}/pickup-schedule)
+export interface PickupScheduleResponse {
+  journeyId: number;
+  pnr: string;
+  flightNumber: string;
+  airportName: string;
+  terminal: string;
+  departureDateTime: string;
+  departureDate: string;
+  departureTime: string;
+  pickupDeskLocation: string;
+  months: string[];
+  days: string[];
+  times: string[];
+  defaultMonth: string;
+  defaultDay: string;
+  defaultTime: string;
+  recommendedNotice: string;
 }
 
 export interface OrderItemDetail {
@@ -396,4 +424,129 @@ export interface OrderResponse {
   orderStatus: string;
   items: OrderItemDetail[];
   createdAt: string;
+}
+
+// 마이페이지 & 계정/설정 관련 타입
+export interface NotificationSettings {
+  milesAlert: boolean;
+  journeyAlert: boolean;
+  marketingOptIn: boolean;
+}
+
+export interface UpdateSettingsRequest {
+  milesAlert: boolean;
+  journeyAlert: boolean;
+  marketingOptIn: boolean;
+}
+
+// GET /api/v1/members/summary/{memberId}
+export interface SummaryResponse {
+  memberId: number;
+  name: string;
+  initial: string;
+  email: string;
+  vipTier: VipTier;
+  miles: number;
+  couponCount: number;
+  journeyCount: number;
+  nextTier: string;
+  milesToNextTier: number;
+  tierProgressPercent: number;
+  settings: NotificationSettings;
+}
+
+// GET/PUT /api/v1/members/profile/{memberId}
+export interface ProfileResponse {
+  memberId: number;
+  name: string;
+  englishName: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  vipTier: VipTier;
+  nomadMiles: number;
+}
+
+export interface UpdateProfileRequest {
+  englishName: string;
+  email: string;
+}
+
+// GET/PUT /api/v1/members/passport/{memberId}
+export interface PassportResponse {
+  memberId: number;
+  name: string;
+  englishName: string;
+  passportNumber: string;
+  maskedPassportNumber: string;
+  expiryDate: string;
+  formattedDetail: string;
+  autoFill: boolean;
+  companionCount: number;
+}
+
+export interface UpdatePassportRequest {
+  passportNumber: string;
+  expiryDate: string;
+  autoFill: boolean;
+}
+
+// POST /api/v1/members/password/change/{memberId}
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+// GET/POST /api/v1/members/payment-methods/{memberId}
+export interface PaymentMethodItem {
+  cardId: number;
+  cardName: string;
+  cardNumberMasked: string;
+  subtitle: string;
+  isDefault: boolean;
+}
+
+export interface AddCardRequest {
+  cardName: string;
+  cardNumber: string;
+  isDefault: boolean;
+}
+
+// GET /api/v1/coupon/my?memberId=
+export type CouponCategory = "DISCOUNT" | "LOUNGE" | "VIP_FITTING" | "LEATHER_CARE" | "AIRPORT_PICKUP";
+export type CouponStatus = "AVAILABLE" | "USED" | "EXPIRED";
+
+export interface CouponItem {
+  couponId: number;
+  couponCode: string;
+  title: string;
+  subtitle: string;
+  category: CouponCategory;
+  status: CouponStatus;
+  validUntil: string;
+  urgent: boolean;
+  discountRate: number | null;
+}
+
+export interface CouponListResponse {
+  memberId: number;
+  totalCoupons: number;
+  items: CouponItem[];
+}
+
+// GET /api/v1/journey/list?memberId=
+export interface JourneySummaryItem {
+  journeyId: number;
+  pnr: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  flightStatus: FlightStatus;
+  destinationWeather: string;
+}
+
+export interface MyJourneysResponse {
+  memberId: number;
+  totalJourneys: number;
+  journeys: JourneySummaryItem[];
 }

@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  airportApi,
   cartApi,
   careApi,
+  couponApi,
   flightApi,
   healthApi,
   journeyApi,
+  membersApi,
   milesApi,
   orderApi,
   storeApi,
@@ -15,12 +18,17 @@ import { saveBlobResponse } from "@/utils/download";
 import { useAuthStore } from "@/store/authStore";
 import { useJourneyStore } from "@/store/journeyStore";
 import type {
+  AddCardRequest,
+  ChangePasswordRequest,
   CheckInRequest,
   CheckoutRequest,
   JourneyScanRequest,
   RedeemBenefitRequest,
   StampCheckInRequest,
   TransferMilesRequest,
+  UpdatePassportRequest,
+  UpdateProfileRequest,
+  UpdateSettingsRequest,
   UseMilesRequest,
 } from "@/types/api.types";
 
@@ -35,11 +43,18 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
+  popupSpots: (memberId: number) => ["style", "popup-spots", memberId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
   cart: (memberId: number) => ["cart", memberId] as const,
-  reEntryOptions: (memberId: number) => ["store", "re-entry-options", memberId] as const,
   milesHistory: (memberId: number) => ["miles", "history", memberId] as const,
+  memberSummary: (memberId: number) => ["members", "summary", memberId] as const,
+  memberProfile: (memberId: number) => ["members", "profile", memberId] as const,
+  memberPassport: (memberId: number) => ["members", "passport", memberId] as const,
+  paymentMethods: (memberId: number) => ["members", "payment-methods", memberId] as const,
+  myCoupons: (memberId: number) => ["coupon", "my", memberId] as const,
+  myJourneys: (memberId: number) => ["journey", "list", memberId] as const,
+  pickupSchedule: (journeyId: string) => ["airport", "pickup-schedule", journeyId] as const,
 };
 
 // 백엔드 테스트 데이터가 리셋되면 로컬에 저장해둔 journeyId가 더 이상 존재하지 않는
@@ -131,6 +146,13 @@ export function useCityStampCheckIn() {
   });
 }
 
+export function usePopupSpots(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.popupSpots(memberId ?? 0),
+    queryFn: () => styleApi.getPopupSpots(memberId ?? undefined),
+  });
+}
+
 export function useScanJourney() {
   return useMutation({
     mutationFn: (payload: JourneyScanRequest) =>
@@ -195,17 +217,23 @@ export function useAddToCart(memberId: number | null) {
   });
 }
 
-export function useCheckIn() {
+export function useStartFitting() {
   return useMutation({
-    mutationFn: (payload: CheckInRequest) => storeApi.checkIn(payload),
+    mutationFn: (journeyId: string) => airportApi.startFitting(journeyId),
   });
 }
 
-export function useReEntryOptions(memberId: number | null) {
+export function usePickupSchedule(journeyId: string | null) {
   return useQuery({
-    queryKey: queryKeys.reEntryOptions(memberId ?? 0),
-    queryFn: () => storeApi.getReEntryOptions(memberId as number),
-    enabled: memberId != null,
+    queryKey: queryKeys.pickupSchedule(journeyId ?? ""),
+    queryFn: () => airportApi.getPickupSchedule(journeyId as string),
+    enabled: Boolean(journeyId),
+  });
+}
+
+export function useCheckIn() {
+  return useMutation({
+    mutationFn: (payload: CheckInRequest) => storeApi.checkIn(payload),
   });
 }
 
@@ -265,5 +293,125 @@ export function useRedeemBenefit(memberId: number | null) {
         queryClient.invalidateQueries({ queryKey: queryKeys.milesHistory(memberId) });
       }
     },
+  });
+}
+
+export function useMemberSummary(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.memberSummary(memberId ?? 0),
+    queryFn: () => membersApi.getSummary(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useUpdateSettings(memberId: number | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdateSettingsRequest) =>
+      membersApi.updateSettings(memberId as number, payload),
+    onSuccess: () => {
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.memberSummary(memberId) });
+      }
+    },
+  });
+}
+
+export function useMemberProfile(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.memberProfile(memberId ?? 0),
+    queryFn: () => membersApi.getProfile(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useUpdateProfile(memberId: number | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdateProfileRequest) =>
+      membersApi.updateProfile(memberId as number, payload),
+    onSuccess: () => {
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.memberProfile(memberId) });
+        queryClient.invalidateQueries({ queryKey: queryKeys.memberSummary(memberId) });
+      }
+    },
+  });
+}
+
+export function useMemberPassport(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.memberPassport(memberId ?? 0),
+    queryFn: () => membersApi.getPassport(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useUpdatePassport(memberId: number | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdatePassportRequest) =>
+      membersApi.updatePassport(memberId as number, payload),
+    onSuccess: () => {
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.memberPassport(memberId) });
+      }
+    },
+  });
+}
+
+export function useChangePassword(memberId: number | null) {
+  return useMutation({
+    mutationFn: (payload: ChangePasswordRequest) =>
+      membersApi.changePassword(memberId as number, payload),
+  });
+}
+
+export function usePaymentMethods(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.paymentMethods(memberId ?? 0),
+    queryFn: () => membersApi.getPaymentMethods(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useAddPaymentMethod(memberId: number | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: AddCardRequest) =>
+      membersApi.addPaymentMethod(memberId as number, payload),
+    onSuccess: () => {
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.paymentMethods(memberId) });
+      }
+    },
+  });
+}
+
+export function useDeletePaymentMethod(memberId: number | null) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (cardId: number) => membersApi.deletePaymentMethod(memberId as number, cardId),
+    onSuccess: () => {
+      if (memberId != null) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.paymentMethods(memberId) });
+      }
+    },
+  });
+}
+
+export function useMyCoupons(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.myCoupons(memberId ?? 0),
+    queryFn: () => couponApi.getMy(memberId as number),
+    enabled: memberId != null,
+  });
+}
+
+export function useMyJourneys(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.myJourneys(memberId ?? 0),
+    queryFn: () => journeyApi.getMyJourneys(memberId as number),
+    enabled: memberId != null,
   });
 }

@@ -10,7 +10,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { RainOverlay } from "@/features/preflight/components/RainOverlay";
 import { ROUTES } from "@/constants/routes";
-import { formatKRW } from "@/utils/format";
+import { formatKRW, stripAiTagPrefix } from "@/utils/format";
 import type { Journey, JourneyAnalysisResponse, TimelineItem } from "@/types/api.types";
 import {
   BagIcon,
@@ -35,7 +35,6 @@ function resolveStepIcon(item: TimelineItem) {
   return { Icon: PlaneInFlightIcon, circleClassName: "bg-sky-500" };
 }
 
-// 항공 상태(flightStatus)와 실제 출발 시각을 비교해 3단계(출발/비행중/도착) 중 현재 위치를 계산합니다.
 function resolveJourneyStage(journey: Journey): number {
   if (journey.flightStatus === "COMPLETED") return 2;
   if (journey.flightStatus === "CANCELLED") return 0;
@@ -80,7 +79,7 @@ function TimelineStepRow({
               <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">{item.description}</p>
             )}
           </div>
-          <span className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-medium text-neutral-600">
+          <span className="shrink-0 rounded-full bg-neutral-900 px-3 py-1.5 text-sm font-medium text-white">
             {item.time}
           </span>
         </div>
@@ -114,7 +113,7 @@ function RecommendedSection({ analysis }: { analysis: JourneyAnalysisResponse })
       </div>
       {analysis.recommendationReason && (
         <p className="mb-4 text-xs leading-relaxed text-neutral-500">
-          {analysis.recommendationReason}
+          {stripAiTagPrefix(analysis.recommendationReason)}
         </p>
       )}
       <div className="flex flex-col gap-3">
@@ -122,9 +121,9 @@ function RecommendedSection({ analysis }: { analysis: JourneyAnalysisResponse })
           <div
             key={product.id}
             className={`flex items-center gap-3.5 rounded-[20px] bg-[#F0F0F0] p-3 transition-all duration-700 ease-out ${
-              inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              inView ? "translate-y-0 scale-100 opacity-100" : "translate-y-12 scale-95 opacity-0"
             }`}
-            style={{ transitionDelay: inView ? `${150 + index * 120}ms` : "0ms" }}
+            style={{ transitionDelay: inView ? `${200 + index * 180}ms` : "0ms" }}
           >
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-white">
               <Image src={product.imageUrl} alt={product.name} fill sizes="64px" className="object-cover" />
@@ -224,18 +223,22 @@ export function JourneyTimelinePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-8 flex w-full items-center gap-4 overflow-hidden rounded-[20px] bg-[#E7F6FD] px-5 py-4 text-left"
+              className="relative mb-8 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
             >
               {showRain && <RainOverlay />}
-              <WeatherIcon className="relative z-10 h-9 w-8 shrink-0 text-sky-500" />
-              <div className="relative z-10 flex-1">
-                <p className="text-xs font-medium uppercase tracking-wide text-sky-500">
-                  {analysis.destination} 강수확률
+              <div className="relative z-10 flex items-center gap-3">
+                <WeatherIcon className="h-9 w-8 shrink-0" />
+                <div>
+                  <p className="text-2xl font-bold leading-none text-white">
+                    {analysis.rainProbability}
+                  </p>
+                  <p className="mt-1 text-sm text-white/90">{analysis.destination} 강수확률</p>
+                </div>
+              </div>
+              <div className="relative z-10 rounded-[14px] bg-black/15 px-4 py-4">
+                <p className="text-sm font-medium leading-relaxed text-white">
+                  {analysis.weatherInfo}
                 </p>
-                <p className="mb-1 text-2xl font-bold leading-none text-sky-700">
-                  {analysis.rainProbability}
-                </p>
-                <p className="text-xs leading-relaxed text-sky-700/80">{analysis.climateSummary}</p>
               </div>
             </button>
 
