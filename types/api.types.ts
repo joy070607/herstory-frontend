@@ -313,6 +313,33 @@ export interface CareGoogleMapsSpot {
   careServiceAvailable: string;
 }
 
+export type CareStatus = "OPTIMAL" | "CONDITIONING_NEEDED" | "CARE_RECOMMENDED";
+
+// 실제 API 스키마 그대로 (GET /api/v1/care/collection/{memberId})
+export interface CareCollectionItem {
+  itemId: number;
+  productId: number;
+  name: string;
+  brand: string;
+  category: string;
+  imageUrl: string;
+  purchaseDate: string;
+  lastCareDate: string;
+  lastCaredDaysAgo: number;
+  careStatus: CareStatus;
+  careStatusLabel: string;
+  careStatusColor: string;
+  careTip: string;
+}
+
+export interface MyCollectionResponse {
+  memberId: number;
+  memberName: string;
+  totalCount: number;
+  featuredItem: CareCollectionItem;
+  items: CareCollectionItem[];
+}
+
 // 실제 API 스키마 그대로 (GET /api/v1/style/popup-spots?memberId=)
 export interface PopupSpotsResponse {
   destination: string;

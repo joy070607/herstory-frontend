@@ -4,6 +4,7 @@ import type {
   CartResponse,
   AppleWalletPassResponse,
   CareGoogleMapsSpot,
+  MyCollectionResponse,
   ChangePasswordRequest,
   CheckInRequest,
   PopupSpotsResponse,
@@ -194,6 +195,8 @@ export const careApi = {
     apiClient
       .post<StampCheckInResponse>("/care/stamp-checkin", payload)
       .then((res) => res.data),
+  getMyCollection: (memberId: number) =>
+    apiClient.get<MyCollectionResponse>(`/care/collection/${memberId}`).then((res) => res.data),
 };
 
 // 마이페이지 대시보드 요약, 회원 프로필/여권/결제수단/알림설정

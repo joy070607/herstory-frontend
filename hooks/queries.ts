@@ -43,6 +43,7 @@ export const queryKeys = {
     ["care", "google-maps", destination, brand] as const,
   aiCareTip: (productName: string, weather: string, lang: string) =>
     ["care", "ai-care-tip", productName, weather, lang] as const,
+  myCollection: (memberId: number) => ["care", "collection", memberId] as const,
   popupSpots: (memberId: number) => ["style", "popup-spots", memberId] as const,
   styleRecommendations: (journeyId: string) =>
     ["style", "recommendations", journeyId] as const,
@@ -135,6 +136,14 @@ export function useAiCareTip(params: { productName?: string; weather?: string; l
   return useQuery({
     queryKey: queryKeys.aiCareTip(productName, weather, lang),
     queryFn: () => careApi.getAiCareTip({ productName, weather, lang }),
+  });
+}
+
+export function useMyCollection(memberId: number | null) {
+  return useQuery({
+    queryKey: queryKeys.myCollection(memberId ?? 0),
+    queryFn: () => careApi.getMyCollection(memberId as number),
+    enabled: memberId != null,
   });
 }
 
