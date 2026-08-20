@@ -5,21 +5,36 @@ import { notFound } from "next/navigation";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
+import { useAuthStore } from "@/store/authStore";
 import { useSettingsStore } from "@/store/settingsStore";
+import { useMemberSummary, useUpdateSettings } from "@/hooks/queries";
 import { MARKETING_CONSENT_SLUG, getPolicyBySlug } from "@/constants/policies";
 
 export function TermsDetailPage({ slug }: { slug: string }) {
   const policy = getPolicyBySlug(slug);
   const [downloaded, setDownloaded] = useState(false);
 
-  const marketingOptIn = useSettingsStore((state) => state.marketingOptIn);
-  const setMarketingOptIn = useSettingsStore((state) => state.setMarketingOptIn);
+  const member = useAuthStore((state) => state.member);
+  const memberId = member ? Number(member.id) : null;
+  const { data: summary } = useMemberSummary(memberId);
+  const updateSettings = useUpdateSettings(memberId);
+
+  // 마케팅 수신 동의는 실제 /members/settings API 값입니다. 제3자 정보 제공 동의는
+  // 대응하는 백엔드 필드가 없어 로컬 상태로만 관리합니다.
   const thirdPartySharingAgreed = useSettingsStore((state) => state.thirdPartySharingAgreed);
   const setThirdPartySharingAgreed = useSettingsStore((state) => state.setThirdPartySharingAgreed);
 
   const isMarketingConsent = slug === MARKETING_CONSENT_SLUG;
-  const agreed = isMarketingConsent ? marketingOptIn : thirdPartySharingAgreed;
-  const setAgreed = isMarketingConsent ? setMarketingOptIn : setThirdPartySharingAgreed;
+  const settings = summary?.settings;
+  const agreed = isMarketingConsent ? (settings?.marketingOptIn ?? false) : thirdPartySharingAgreed;
+  const setAgreed = (value: boolean) => {
+    if (isMarketingConsent) {
+      if (!settings) return;
+      updateSettings.mutate({ ...settings, marketingOptIn: value });
+    } else {
+      setThirdPartySharingAgreed(value);
+    }
+  };
 
   if (!policy) {
     notFound();

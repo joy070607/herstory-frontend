@@ -1,12 +1,15 @@
 import { apiClient } from "./client";
 import type {
+  AddCardRequest,
   CartResponse,
   AppleWalletPassResponse,
   CareGoogleMapsSpot,
+  ChangePasswordRequest,
   CheckInRequest,
   PopupSpotsResponse,
   CheckInResponse,
   CheckoutRequest,
+  CouponListResponse,
   FittingResponse,
   FlightLookupResponse,
   HealthCheckResponse,
@@ -19,9 +22,13 @@ import type {
   Member,
   MilesBalanceResponse,
   MilesHistoryResponse,
+  MyJourneysResponse,
   OrderResponse,
+  PassportResponse,
   PasswordResponse,
+  PaymentMethodItem,
   Product,
+  ProfileResponse,
   RedeemBenefitRequest,
   RedeemBenefitResponse,
   ReEntryResponse,
@@ -30,8 +37,12 @@ import type {
   SendPhoneCodeResponse,
   StampCheckInRequest,
   StampCheckInResponse,
+  SummaryResponse,
   TransferMilesRequest,
   TransferMilesResponse,
+  UpdatePassportRequest,
+  UpdateProfileRequest,
+  UpdateSettingsRequest,
   UseMilesRequest,
   UseMilesResponse,
   VerifyPhoneCodeRequest,
@@ -99,6 +110,10 @@ export const journeyApi = {
     apiClient.get(`/journey/apple-wallet-pass/download-file/${journeyId}`, {
       responseType: "blob",
     }),
+  getMyJourneys: (memberId: number) =>
+    apiClient
+      .get<MyJourneysResponse>("/journey/list", { params: { memberId } })
+      .then((res) => res.data),
 };
 
 // 인천국제공항공사 관제 AODB와 1분 단위로 동기화되는 실시간 항공편 조회
@@ -181,5 +196,48 @@ export const careApi = {
   checkInCityStamp: (payload: StampCheckInRequest) =>
     apiClient
       .post<StampCheckInResponse>("/care/stamp-checkin", payload)
+      .then((res) => res.data),
+};
+
+// 마이페이지 대시보드 요약, 회원 프로필/여권/결제수단/알림설정 (6. MyPage API)
+export const membersApi = {
+  getSummary: (memberId: number) =>
+    apiClient.get<SummaryResponse>(`/members/summary/${memberId}`).then((res) => res.data),
+  getProfile: (memberId: number) =>
+    apiClient.get<ProfileResponse>(`/members/profile/${memberId}`).then((res) => res.data),
+  updateProfile: (memberId: number, payload: UpdateProfileRequest) =>
+    apiClient
+      .put<ProfileResponse>(`/members/profile/${memberId}`, payload)
+      .then((res) => res.data),
+  getPassport: (memberId: number) =>
+    apiClient.get<PassportResponse>(`/members/passport/${memberId}`).then((res) => res.data),
+  updatePassport: (memberId: number, payload: UpdatePassportRequest) =>
+    apiClient
+      .put<PassportResponse>(`/members/passport/${memberId}`, payload)
+      .then((res) => res.data),
+  changePassword: (memberId: number, payload: ChangePasswordRequest) =>
+    apiClient
+      .post<PasswordResponse>(`/members/password/change/${memberId}`, payload)
+      .then((res) => res.data),
+  getPaymentMethods: (memberId: number) =>
+    apiClient
+      .get<PaymentMethodItem[]>(`/members/payment-methods/${memberId}`)
+      .then((res) => res.data),
+  addPaymentMethod: (memberId: number, payload: AddCardRequest) =>
+    apiClient
+      .post<PaymentMethodItem>(`/members/payment-methods/${memberId}`, payload)
+      .then((res) => res.data),
+  deletePaymentMethod: (memberId: number, cardId: number) =>
+    apiClient.delete(`/members/payment-methods/${memberId}/${cardId}`),
+  updateSettings: (memberId: number, payload: UpdateSettingsRequest) =>
+    apiClient
+      .put<UpdateSettingsRequest>(`/members/settings/${memberId}`, payload)
+      .then((res) => res.data),
+};
+
+export const couponApi = {
+  getMy: (memberId: number) =>
+    apiClient
+      .get<CouponListResponse>("/coupon/my", { params: { memberId } })
       .then((res) => res.data),
 };

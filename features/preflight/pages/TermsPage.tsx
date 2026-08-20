@@ -5,14 +5,24 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { Toggle } from "@/components/ui/Toggle";
-import { useSettingsStore } from "@/store/settingsStore";
+import { useAuthStore } from "@/store/authStore";
+import { useMemberSummary, useUpdateSettings } from "@/hooks/queries";
 import { ROUTES } from "@/constants/routes";
 import { POLICIES } from "@/constants/policies";
 import { ChevronRightIcon, DocumentIcon } from "@/components/icons";
 
 export function TermsPage() {
-  const marketingOptIn = useSettingsStore((state) => state.marketingOptIn);
-  const setMarketingOptIn = useSettingsStore((state) => state.setMarketingOptIn);
+  const member = useAuthStore((state) => state.member);
+  const memberId = member ? Number(member.id) : null;
+  const { data: summary } = useMemberSummary(memberId);
+  const updateSettings = useUpdateSettings(memberId);
+
+  const settings = summary?.settings;
+  const marketingOptIn = settings?.marketingOptIn ?? false;
+  const setMarketingOptIn = (value: boolean) => {
+    if (!settings) return;
+    updateSettings.mutate({ ...settings, marketingOptIn: value });
+  };
 
   return (
     <div className="flex flex-1 flex-col">

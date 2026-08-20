@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { PaymentMethodsPage } from "@/features/preflight/pages/PaymentMethodsPage";
 
 export default function Page() {
-  return <PlaceholderPage title="결제 수단" />;
+  return <PaymentMethodsPage />;
 }

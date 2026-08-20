@@ -413,3 +413,128 @@ export interface OrderResponse {
   items: OrderItemDetail[];
   createdAt: string;
 }
+
+// 실제 API 스키마 그대로 (6. MyPage API - 마이페이지 & 계정/설정)
+export interface NotificationSettings {
+  milesAlert: boolean;
+  journeyAlert: boolean;
+  marketingOptIn: boolean;
+}
+
+export interface UpdateSettingsRequest {
+  milesAlert: boolean;
+  journeyAlert: boolean;
+  marketingOptIn: boolean;
+}
+
+// GET /api/v1/members/summary/{memberId}
+export interface SummaryResponse {
+  memberId: number;
+  name: string;
+  initial: string;
+  email: string;
+  vipTier: VipTier;
+  miles: number;
+  couponCount: number;
+  journeyCount: number;
+  nextTier: string;
+  milesToNextTier: number;
+  tierProgressPercent: number;
+  settings: NotificationSettings;
+}
+
+// GET/PUT /api/v1/members/profile/{memberId}
+export interface ProfileResponse {
+  memberId: number;
+  name: string;
+  englishName: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  vipTier: VipTier;
+  nomadMiles: number;
+}
+
+export interface UpdateProfileRequest {
+  englishName: string;
+  email: string;
+}
+
+// GET/PUT /api/v1/members/passport/{memberId}
+export interface PassportResponse {
+  memberId: number;
+  name: string;
+  englishName: string;
+  passportNumber: string;
+  maskedPassportNumber: string;
+  expiryDate: string;
+  formattedDetail: string;
+  autoFill: boolean;
+  companionCount: number;
+}
+
+export interface UpdatePassportRequest {
+  passportNumber: string;
+  expiryDate: string;
+  autoFill: boolean;
+}
+
+// POST /api/v1/members/password/change/{memberId}
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+// GET/POST /api/v1/members/payment-methods/{memberId}
+export interface PaymentMethodItem {
+  cardId: number;
+  cardName: string;
+  cardNumberMasked: string;
+  subtitle: string;
+  isDefault: boolean;
+}
+
+export interface AddCardRequest {
+  cardName: string;
+  cardNumber: string;
+  isDefault: boolean;
+}
+
+// GET /api/v1/coupon/my?memberId=
+export type CouponCategory = "DISCOUNT" | "LOUNGE" | "VIP_FITTING" | "LEATHER_CARE" | "AIRPORT_PICKUP";
+export type CouponStatus = "AVAILABLE" | "USED" | "EXPIRED";
+
+export interface CouponItem {
+  couponId: number;
+  couponCode: string;
+  title: string;
+  subtitle: string;
+  category: CouponCategory;
+  status: CouponStatus;
+  validUntil: string;
+  urgent: boolean;
+  discountRate: number | null;
+}
+
+export interface CouponListResponse {
+  memberId: number;
+  totalCoupons: number;
+  items: CouponItem[];
+}
+
+// GET /api/v1/journey/list?memberId=
+export interface JourneySummaryItem {
+  journeyId: number;
+  pnr: string;
+  origin: string;
+  destination: string;
+  departureDateTime: string;
+  flightStatus: FlightStatus;
+  destinationWeather: string;
+}
+
+export interface MyJourneysResponse {
+  memberId: number;
+  totalJourneys: number;
+  journeys: JourneySummaryItem[];
+}
