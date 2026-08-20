@@ -97,13 +97,16 @@ export function SmartCartPage() {
 
         {journeyId && products && (
           <>
-            <div className="mb-5 flex items-center gap-2">
+            <div className="mb-5 flex items-stretch gap-2">
               <Link
                 href={ROUTES.vipFitting}
-                className="flex flex-1 items-center gap-2 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+                className="flex flex-1 items-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
               >
-                <ShirtIcon className="h-4 w-4 shrink-0" />
-                피팅 {cart?.items.length ?? 0}개 준비 완료 [피팅룸으로 가기]
+                <ShirtIcon className="h-6 w-6 shrink-0" />
+                <span className="flex flex-col">
+                  <span>피팅 {cart?.items.length ?? 0}개 준비 완료</span>
+                  <span className="ml-1.5">[피팅룸으로 가기]</span>
+                </span>
               </Link>
               <Link
                 href={ROUTES.terminalMap}
