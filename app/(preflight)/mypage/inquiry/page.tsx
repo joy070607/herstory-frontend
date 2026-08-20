@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/system/PlaceholderPage";
+import { InquiryPage } from "@/features/preflight/pages/InquiryPage";
 
 export default function Page() {
-  return <PlaceholderPage title="1:1 문의" />;
+  return <InquiryPage />;
 }
