@@ -13,7 +13,7 @@ import { CheckCircleIcon, LockOutlineIcon } from "@/components/icons";
 import type { CareGoogleMapsSpot, StampCheckInResponse } from "@/types/api.types";
 
 // Google Places 실시간 검색이라 실제 브랜드를 못 알아본 곳은 brand가 "LUXURY BRAND"로
-// 뭉뚱그려 내려와요. 이 경우 브랜드명 대신 매장 이름을 보여줍니다.
+// 디자인을 명시합니다. 이 경우 브랜드명 대신 매장 이름을 보여줍니다.
 const GENERIC_BRAND = "LUXURY BRAND";
 
 function spotLabel(spot: CareGoogleMapsSpot) {
