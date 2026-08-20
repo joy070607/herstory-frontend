@@ -1,5 +1,4 @@
 export const ROUTES = {
-  install: "/install",
   login: "/login",
   signup: "/signup",
   forgotPassword: "/forgot-password",
