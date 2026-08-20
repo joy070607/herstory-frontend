@@ -19,7 +19,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`h-12 rounded-full px-6 text-sm font-medium transition-colors disabled:opacity-40 ${VARIANT_CLASSES[variant]} ${className}`}
+      className={`h-12 rounded-full px-6 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100 ${VARIANT_CLASSES[variant]} ${className}`}
       {...props}
     />
   );

@@ -41,7 +41,7 @@ export function TermsPage() {
               <Link
                 key={policy.slug}
                 href={`${ROUTES.myPageTerms}/${policy.slug}`}
-                className="flex items-center gap-3 py-4"
+                className="flex items-center gap-3 py-4 transition-transform active:scale-[0.98]"
               >
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-500">
                   <DocumentIcon className="h-5 w-5" />

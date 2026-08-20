@@ -58,7 +58,7 @@ export function ForgotPasswordPage() {
         </p>
         <Link
           href={ROUTES.login}
-          className="mt-2 rounded-[20px] bg-sky-500 px-8 py-3 text-sm font-semibold text-sky-50"
+          className="mt-2 rounded-[20px] bg-sky-500 px-8 py-3 text-sm font-semibold text-sky-50 transition-transform active:scale-95"
         >
           로그인하러 가기
         </Link>
@@ -73,7 +73,7 @@ export function ForgotPasswordPage() {
           type="button"
           onClick={() => router.back()}
           aria-label="뒤로가기"
-          className="flex h-8 w-8 items-center justify-center text-neutral-900"
+          className="flex h-8 w-8 items-center justify-center text-neutral-900 transition-transform active:scale-90"
         >
           <ChevronLeftIcon />
         </button>
@@ -134,7 +134,7 @@ export function ForgotPasswordPage() {
               type="button"
               onClick={() => sendCodeMutation.mutate()}
               disabled={!phone.trim() || sendCodeMutation.isPending || phoneVerified}
-              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 disabled:opacity-40"
+              className="shrink-0 rounded-full bg-sky-500 px-2.5 py-1.5 text-sm text-sky-50 transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
             >
               {phoneSent ? "재전송" : "인증번호 전송"}
             </button>
@@ -162,7 +162,7 @@ export function ForgotPasswordPage() {
                 type="button"
                 onClick={() => verifyCodeMutation.mutate()}
                 disabled={!verificationCode.trim() || verifyCodeMutation.isPending}
-                className="shrink-0 rounded-full bg-neutral-900 px-3.5 py-1.5 text-sm text-white disabled:opacity-40"
+                className="shrink-0 rounded-full bg-neutral-900 px-3.5 py-1.5 text-sm text-white transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
               >
                 확인
               </button>
@@ -196,7 +196,7 @@ export function ForgotPasswordPage() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="shrink-0 text-neutral-300"
+              className="shrink-0 text-neutral-300 transition-transform active:scale-90"
               aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
             >
               {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -219,7 +219,7 @@ export function ForgotPasswordPage() {
             <button
               type="button"
               onClick={() => setShowPasswordConfirm((prev) => !prev)}
-              className="shrink-0 text-neutral-300"
+              className="shrink-0 text-neutral-300 transition-transform active:scale-90"
               aria-label={showPasswordConfirm ? "비밀번호 숨기기" : "비밀번호 표시"}
             >
               {showPasswordConfirm ? <EyeOffIcon /> : <EyeIcon />}
@@ -240,7 +240,7 @@ export function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={!phoneVerified || resetMutation.isPending}
-          className="w-full rounded-[20px] bg-sky-500 py-4 text-lg font-bold text-sky-50 transition-colors hover:bg-sky-600 disabled:opacity-40"
+          className="w-full rounded-[20px] bg-sky-500 py-4 text-lg font-bold text-sky-50 transition-all hover:bg-sky-600 active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
         >
           비밀번호 재설정
         </button>

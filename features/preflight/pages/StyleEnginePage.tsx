@@ -48,7 +48,7 @@ export function StyleEnginePage() {
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -68,7 +68,7 @@ export function StyleEnginePage() {
             <button
               type="button"
               onClick={() => setShowRain((prev) => !prev)}
-              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left"
+              className="relative mb-10 flex w-full flex-col gap-4 overflow-hidden rounded-[20px] bg-sky-600 px-6 pb-6 pt-7 text-left transition-transform active:scale-[0.98]"
             >
               {showRain && <RainOverlay />}
               <div className="relative z-10 flex items-center gap-3">
@@ -150,7 +150,7 @@ function ProductCard({
       ref={ref}
       type="button"
       onClick={onSelect}
-      className={`flex items-start gap-4 rounded-[20px] border-2 p-4 text-left transition-all duration-700 ease-out ${
+      className={`flex items-start gap-4 rounded-[20px] border-2 p-4 text-left transition-all duration-700 ease-out active:duration-100 active:scale-[0.98] ${
         selected ? "border-sky-500 bg-sky-50" : "border-transparent bg-neutral-50"
       } ${inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"}`}
       style={{ transitionDelay: inView ? `${index * 100}ms` : "0ms" }}

@@ -104,7 +104,7 @@ function FaqRow({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-transform active:scale-[0.99]"
       >
         <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky-100 text-xs font-bold text-sky-600">
           Q
@@ -128,7 +128,7 @@ function FaqRow({
             <button
               type="button"
               onClick={() => onFeedback("helpful")}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
                 feedback === "helpful"
                   ? "bg-sky-500 text-white"
                   : "bg-neutral-100 text-neutral-500"
@@ -139,7 +139,7 @@ function FaqRow({
             <button
               type="button"
               onClick={() => onFeedback("unhelpful")}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
                 feedback === "unhelpful"
                   ? "bg-neutral-700 text-white"
                   : "bg-neutral-100 text-neutral-500"
@@ -198,7 +198,7 @@ export function FaqPage() {
           <button
             type="button"
             onClick={() => setActiveCategory("all")}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all active:scale-95 ${
               activeCategory === "all"
                 ? "bg-sky-500 text-white"
                 : "border border-neutral-200 bg-white text-neutral-600"
@@ -211,7 +211,7 @@ export function FaqPage() {
               key={category}
               type="button"
               onClick={() => setActiveCategory(category)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all active:scale-95 ${
                 activeCategory === category
                   ? "bg-sky-500 text-white"
                   : "border border-neutral-200 bg-white text-neutral-600"
@@ -247,7 +247,7 @@ export function FaqPage() {
           <p className="text-sm font-medium text-neutral-900">원하는 답변이 없나요?</p>
           <Link
             href={ROUTES.myPageInquiry}
-            className="w-full rounded-full bg-sky-500 py-3.5 text-sm font-bold text-white"
+            className="w-full rounded-full bg-sky-500 py-3.5 text-sm font-bold text-white transition-transform active:scale-[0.98]"
           >
             1:1 문의하기
           </Link>

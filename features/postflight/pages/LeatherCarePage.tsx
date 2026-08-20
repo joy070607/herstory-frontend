@@ -60,7 +60,7 @@ export function LeatherCarePage() {
           <button
             type="button"
             onClick={() => setShowRain((prev) => !prev)}
-            className={`relative w-full px-6 py-5 text-left transition-colors ${cardColorClass}`}
+            className={`relative w-full px-6 py-5 text-left transition-all active:scale-[0.98] ${cardColorClass}`}
           >
             {showRain && <RainOverlay />}
             <div className="relative z-10 flex items-center gap-3">
@@ -108,7 +108,7 @@ export function LeatherCarePage() {
 
         <Link
           href={ROUTES.visetosMap}
-          className="mx-6 mb-7 flex items-center gap-3 rounded-[20px] bg-neutral-900 px-5 py-4"
+          className="mx-6 mb-7 flex items-center gap-3 rounded-[20px] bg-neutral-900 px-5 py-4 transition-transform active:scale-[0.98]"
         >
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/20 text-sky-400">
             <SpotIcon className="h-5 w-5" />

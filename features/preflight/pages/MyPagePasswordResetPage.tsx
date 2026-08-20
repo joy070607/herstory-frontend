@@ -135,7 +135,7 @@ export function MyPagePasswordResetPage() {
           <button
             type="submit"
             disabled={!canSubmit || changePasswordMutation.isPending}
-            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] disabled:opacity-40"
+            className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
           >
             {changePasswordMutation.isPending ? "변경 중..." : "비밀번호 변경"}
           </button>

@@ -40,7 +40,7 @@ export function VipFittingPage() {
         {!journeyId && (
           <Link
             href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center transition-transform active:scale-[0.98]"
           >
             <TicketIcon className="mb-1 text-neutral-400" />
             <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
@@ -76,13 +76,13 @@ export function VipFittingPage() {
             <div className="flex items-center gap-4">
               <Link
                 href={ROUTES.airportMap}
-                className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white"
+                className="flex-1 rounded-[30px] bg-sky-500 py-3.5 text-center text-sm text-white transition-transform active:scale-[0.97]"
               >
                 피팅룸 위치 보기
               </Link>
               <Link
                 href={ROUTES.smartCart}
-                className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500"
+                className="flex-1 rounded-[30px] border-2 border-sky-500 py-3.5 text-center text-sm text-sky-500 transition-transform active:scale-[0.97]"
               >
                 상품 추가
               </Link>
@@ -106,7 +106,7 @@ export function VipFittingPage() {
           {memberId && cart && items.length === 0 && (
             <Link
               href={ROUTES.smartCart}
-              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center"
+              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-8 text-center transition-transform active:scale-[0.98]"
             >
               <TicketIcon className="mb-1 text-neutral-400" />
               <p className="text-sm text-neutral-500">아직 준비된 상품이 없어요</p>
@@ -145,7 +145,7 @@ export function VipFittingPage() {
         {journeyId && (
           <Link
             href={ROUTES.fastCheckout}
-            className="rounded-[20px] bg-sky-500 py-3.5 text-center text-base font-bold text-white"
+            className="rounded-[20px] bg-sky-500 py-3.5 text-center text-base font-bold text-white transition-transform active:scale-[0.98]"
           >
             구매하기
           </Link>

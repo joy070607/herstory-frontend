@@ -33,7 +33,7 @@ function CouponRow({ coupon }: { coupon: CouponItem }) {
   return (
     <Link
       href={`${ROUTES.myPageCoupons}/${coupon.couponId}`}
-      className={`flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5 ${expired ? "opacity-50" : ""}`}
+      className={`flex items-center gap-3 rounded-2xl bg-neutral-50 px-4 py-3.5 transition-transform active:scale-[0.98] ${expired ? "opacity-50" : ""}`}
     >
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-500">
         {CATEGORY_ICON[coupon.category]}

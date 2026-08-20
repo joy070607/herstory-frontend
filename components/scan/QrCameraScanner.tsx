@@ -77,7 +77,7 @@ export function QrCameraScanner({ onDecode, onCancel }: QrCameraScannerProps) {
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-full bg-neutral-200 px-4 py-2 text-xs font-medium text-neutral-700"
+          className="rounded-full bg-neutral-200 px-4 py-2 text-xs font-medium text-neutral-700 transition-transform active:scale-[0.96]"
         >
           닫기
         </button>
@@ -93,7 +93,7 @@ export function QrCameraScanner({ onDecode, onCancel }: QrCameraScannerProps) {
       <button
         type="button"
         onClick={onCancel}
-        className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs text-white"
+        className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs text-white transition-transform active:scale-[0.96]"
       >
         취소
       </button>

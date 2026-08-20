@@ -130,7 +130,7 @@ export function MyPagePassportEditPage() {
             <button
               type="submit"
               disabled={updatePassportMutation.isPending}
-              className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] disabled:opacity-40"
+              className="rounded-[25px] bg-sky-500 py-3.5 text-center text-lg font-bold text-[#E6F7FF] transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
             >
               {updatePassportMutation.isPending ? "저장 중..." : "변경사항 저장"}
             </button>

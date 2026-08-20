@@ -30,7 +30,7 @@ function StatButton({ label, value, href }: { label: string; value: string; href
   return (
     <Link
       href={href}
-      className="flex flex-1 flex-col gap-1 rounded-2xl bg-white/10 px-3 py-2.5"
+      className="flex flex-1 flex-col gap-1 rounded-2xl bg-white/10 px-3 py-2.5 transition-transform active:scale-[0.97]"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs text-[#E6F7FF]/70">{label}</span>
@@ -97,7 +97,7 @@ function MenuRow({
   }
 
   return (
-    <Link href={href} className="flex items-center gap-3 py-3.5">
+    <Link href={href} className="flex items-center gap-3 py-3.5 transition-transform active:scale-[0.98]">
       {content}
     </Link>
   );
@@ -146,7 +146,7 @@ export function MyPage() {
             <Link
               href={ROUTES.myPageEditProfile}
               aria-label="회원정보 수정"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#64A9D8] text-white"
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#64A9D8] text-white transition-transform active:scale-90"
             >
               <PencilIcon className="h-3 w-3" />
             </Link>

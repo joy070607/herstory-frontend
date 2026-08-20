@@ -84,7 +84,7 @@ export function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="text-neutral-400"
+                className="text-neutral-400 transition-transform active:scale-90"
                 aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
               >
                 {showPassword ? <EyeOffIcon /> : <EyeIcon />}
@@ -118,7 +118,10 @@ export function LoginPage() {
             </span>
             로그인 유지
           </label>
-          <Link href={ROUTES.forgotPassword} className="text-sm text-neutral-900">
+          <Link
+            href={ROUTES.forgotPassword}
+            className="text-sm text-neutral-900 transition-opacity active:opacity-60"
+          >
             비밀번호 찾기
           </Link>
         </div>
@@ -131,13 +134,13 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={loginMutation.isPending}
-            className="w-full rounded-[20px] bg-sky-500 py-[17px] text-lg font-bold text-sky-50 transition-colors hover:bg-sky-600 disabled:opacity-40"
+            className="w-full rounded-[20px] bg-sky-500 py-[17px] text-lg font-bold text-sky-50 transition-all hover:bg-sky-600 active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
           >
             {loginMutation.isPending ? "로그인 중..." : "로그인"}
           </button>
           <p className="text-sm">
             <span className="text-neutral-400">계정이 없으신가요? </span>
-            <Link href={ROUTES.signup} className="text-sky-700">
+            <Link href={ROUTES.signup} className="text-sky-700 transition-opacity active:opacity-60">
               회원가입하기
             </Link>
           </p>

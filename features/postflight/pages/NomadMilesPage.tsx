@@ -163,14 +163,14 @@ export function NomadMilesPage() {
                 <button
                   type="button"
                   onClick={() => togglePanel("use")}
-                  className="rounded-[20px] bg-[#0EA5E9] px-5 py-3 text-[13px] font-bold text-[#E6F7FF]"
+                  className="rounded-[20px] bg-[#0EA5E9] px-5 py-3 text-[13px] font-bold text-[#E6F7FF] transition-transform active:scale-95"
                 >
                   마일리지 사용
                 </button>
                 <button
                   type="button"
                   onClick={() => togglePanel("transfer")}
-                  className="rounded-[20px] border border-[#E6F7FF80] px-11 py-3 text-[13px] font-bold text-[#E6F7FF]"
+                  className="rounded-[20px] border border-[#E6F7FF80] px-11 py-3 text-[13px] font-bold text-[#E6F7FF] transition-transform active:scale-95"
                 >
                   양도
                 </button>
@@ -251,7 +251,7 @@ export function NomadMilesPage() {
                 <button
                   type="button"
                   onClick={() => togglePanel("benefits")}
-                  className="rounded-[20px] bg-[#0EA5E9] px-4 py-1.5 text-xs font-medium text-[#E6F7FF]"
+                  className="rounded-[20px] bg-[#0EA5E9] px-4 py-1.5 text-xs font-medium text-[#E6F7FF] transition-transform active:scale-95"
                 >
                   {panel === "benefits" ? "닫기" : "+ 혜택 적용"}
                 </button>
@@ -264,7 +264,7 @@ export function NomadMilesPage() {
                       type="button"
                       onClick={() => handleRedeem(benefit.code)}
                       disabled={redeemBenefit.isPending || data.totalMiles < benefit.cost}
-                      className="flex items-center justify-between rounded-[16px] bg-white px-4 py-3 text-left disabled:opacity-40"
+                      className="flex items-center justify-between rounded-[16px] bg-white px-4 py-3 text-left transition-transform active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100"
                     >
                       <span className="text-sm text-neutral-900">{benefit.label}</span>
                       <span className="shrink-0 text-xs font-semibold text-sky-700">
