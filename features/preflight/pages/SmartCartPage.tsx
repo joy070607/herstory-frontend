@@ -73,34 +73,39 @@ export function SmartCartPage() {
       <AppHeader />
 
       <div className="flex flex-1 flex-col px-6 py-5">
-        <BackButton className="mb-3" />
-
         {!journeyId && (
-          <Link
-            href={ROUTES.boardingPass}
-            className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
-          >
-            <TicketIcon className="mb-1 text-neutral-400" />
-            <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
-            <p className="text-sm text-neutral-400">
-              탑승권을 스캔하면 맞춤 스타일 추천을 볼 수 있어요
-            </p>
-            <span className="mt-3 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-sky-50">
-              탑승권 스캔하기
-            </span>
-          </Link>
+          <>
+            <BackButton className="mb-3" />
+            <Link
+              href={ROUTES.boardingPass}
+              className="flex flex-col items-center gap-2 rounded-[20px] border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-10 text-center"
+            >
+              <TicketIcon className="mb-1 text-neutral-400" />
+              <p className="text-base font-semibold text-neutral-700">아직 등록된 여정이 없어요</p>
+              <p className="text-sm text-neutral-400">
+                탑승권을 스캔하면 맞춤 스타일 추천을 볼 수 있어요
+              </p>
+              <span className="mt-3 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-sky-50">
+                탑승권 스캔하기
+              </span>
+            </Link>
+          </>
         )}
 
         {journeyId && isLoading && (
-          <WakingScreen message="맞춤 스타일 추천을 불러오는 중입니다." />
+          <>
+            <BackButton className="mb-3" />
+            <WakingScreen message="맞춤 스타일 추천을 불러오는 중입니다." />
+          </>
         )}
 
         {journeyId && products && (
           <>
             <div className="mb-5 flex items-stretch gap-2">
+              <BackButton className="self-center" />
               <Link
                 href={ROUTES.vipFitting}
-                className="flex flex-1 items-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
+                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-sky-500 px-4 py-3 text-sm font-medium text-sky-50"
               >
                 <ShirtIcon className="h-6 w-6 shrink-0" />
                 <span className="flex flex-col">
