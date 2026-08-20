@@ -10,7 +10,7 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { AiHotBar } from "@/components/layout/AiHotBar";
 import { BackButton } from "@/components/layout/BackButton";
 import { ROUTES } from "@/constants/routes";
-import { HangerIcon, TicketIcon, UserIcon } from "@/components/icons";
+import { HangerIcon, TicketIcon } from "@/components/icons";
 
 export function VipFittingPage() {
   const member = useAuthStore((state) => state.member);
@@ -89,24 +89,6 @@ export function VipFittingPage() {
             </div>
           </div>
         )}
-
-        <div className="flex items-center gap-4 rounded-[20px] bg-neutral-50 px-6 py-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-            <UserIcon className="h-6 w-6" />
-          </div>
-          <div className="flex flex-1 flex-col gap-3">
-            <div>
-              <p className="text-sm font-bold text-neutral-900">엘레나 R.</p>
-              <p className="text-xs text-neutral-400">신뢰 판매원</p>
-            </div>
-            <button
-              type="button"
-              className="self-start rounded-full border-2 border-[#BEC7D4] px-4 py-1 text-xs text-neutral-900"
-            >
-              메시지 보내기
-            </button>
-          </div>
-        </div>
 
         <div>
           <h2 className="mb-3.5 text-base font-bold text-neutral-900">
