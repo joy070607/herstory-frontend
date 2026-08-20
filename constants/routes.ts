@@ -32,6 +32,7 @@ export const ROUTES = {
   myPageCoupons: "/mypage/coupons",
   myPageJourneyHistory: "/mypage/journey-history",
   myPageMilesHistory: "/mypage/miles-history",
+  myPagePickupSchedule: "/mypage/pickup-schedule",
   myPageInquiry: "/mypage/inquiry",
   myPageTerms: "/mypage/terms",
   myPageFaq: "/mypage/faq",
